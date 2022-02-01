@@ -3,8 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
+                "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
-                "/usr/include/qt/QtCore"
+                "${workspaceFolder}/Log/include"
             ],
             "configurationProvider": "ms-vscode.cmake-tools"
         }

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
+include_directories(include)
+
 add_subdirectory(Log)
 include_directories(Log/include)
 
