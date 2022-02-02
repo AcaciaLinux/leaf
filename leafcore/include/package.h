@@ -39,7 +39,10 @@ public:
 	 */
 	bool						checkFileProvided(std::string filePath);
 
+#ifndef FRIEND_PACKAGE
 private:
+#endif
+
 	std::string					_name;
 	std::string					_description;
 

@@ -1,3 +1,6 @@
 [submodule "Log"]
 	path = Log
 	url = https://github.com/maxkofler/Log
+[submodule "googletest"]
+	path = googletest
+	url = https://github.com/google/googletest

@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
 include_directories(include)
+include_directories(leafcore/include)
+
+enable_testing(true)
+
+add_subdirectory(leafcore)
+add_subdirectory(googletest)
+add_subdirectory(tests)
 
 add_subdirectory(Log)
 include_directories(Log/include)
@@ -12,4 +19,4 @@ file (GLOB_RECURSE CXXSOURCES "src/**.cpp")
 file (GLOB_RECURSE HEADERS "include/**.h")
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
-target_link_libraries(${PNAME} log)
+target_link_libraries(${PNAME} log leafcore)
