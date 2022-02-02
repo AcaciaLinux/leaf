@@ -33,7 +33,7 @@ void Package::addProvidedFile(std::string filepath){
 	_provided_files.push_back(filepath);
 }
 
-std::list<std::string>& Package::getProvidedFiles(){
+std::vector<std::string>& Package::getProvidedFiles(){
 	return _provided_files;
 }
 
@@ -49,6 +49,6 @@ bool Package::checkFileProvided(std::string filepath){
 		LOGF(msg + filepath + "\"");
 	}
 
-	std::list<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
+	std::vector<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
 	return _provided_files.end() != results;
 }

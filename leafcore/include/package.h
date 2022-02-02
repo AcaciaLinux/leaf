@@ -4,7 +4,7 @@
 #include "file.h"
 
 #include <string>
-#include <list>
+#include <vector>
 
 class Package{
 
@@ -31,7 +31,7 @@ public:
 	 * @brief	Returns a reference to the files provided by this package
 	 * @return	std::vector<std::string> 
 	 */
-	std::list<std::string>&		getProvidedFiles();
+	std::vector<std::string>&	getProvidedFiles();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package
@@ -46,7 +46,7 @@ private:
 	std::string					_name;
 	std::string					_description;
 
-	std::list<std::string>		_provided_files;
+	std::vector<std::string>	_provided_files;
 };
 
 #endif
