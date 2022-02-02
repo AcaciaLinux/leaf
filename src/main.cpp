@@ -9,24 +9,20 @@
 Log::Log* hlog;
 
 int main(){
-	hlog = new Log::Log(Log::F);
+	hlog = new Log::Log(Log::U);
 	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
 	
 	FUN();
 
 	LOGU("Welcome to leaf package manager!");
 
-	Package package("mypackage");
-	package.addProvidedFile("/home/myfile");
-	package.addProvidedFile("/home/myuser/mycofig");
+	LeafDB db;
+	db.newPackage("MyPackage")->addProvidedFile("MyNewFile");
+	db.newPackage("SecondPackage")->addProvidedFile("MyNewFile");
 
-	LOGU("Files provided by package \"" + package.getName() + "\":");
-	auto files = package.getProvidedFiles();
-	for(std::string file : files){
-		LOGU("-> " + file);
-	}
-
-	if (package.checkFileProvided("/home/myfile")){
-		LOGU("Package " + package.getName() + " provides file /home/myfile!");
+	auto providers = db.findFileProviders("MyNewFile");
+	LOGU("Providers for file:");
+	for (auto i : providers){
+		LOGU("-> " + i->getName());
 	}
 }
