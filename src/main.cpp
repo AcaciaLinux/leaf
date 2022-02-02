@@ -4,19 +4,29 @@
 
 #include <log.h>
 
-#include "file.h"
-#include "package.h"
+#include "leafdb.h"
 
 Log::Log* hlog;
 
 int main(){
 	hlog = new Log::Log(Log::F);
-	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, true);
+	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
 	
 	FUN();
 
 	LOGU("Welcome to leaf package manager!");
 
-	File file("MyNewFile", "////hello/akdh/kdafjn", "mypackage");
 	Package package("mypackage");
+	package.addProvidedFile("/home/myfile");
+	package.addProvidedFile("/home/myuser/mycofig");
+
+	LOGU("Files provided by package \"" + package.getName() + "\":");
+	auto files = package.getProvidedFiles();
+	for(std::string file : files){
+		LOGU("-> " + file);
+	}
+
+	if (package.checkFileProvided("/home/myfile")){
+		LOGU("Package " + package.getName() + " provides file /home/myfile!");
+	}
 }
