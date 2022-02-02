@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
 include_directories(include)
+include_directories(args)
 include_directories(leafcore/include)
 
 enable_testing(true)
