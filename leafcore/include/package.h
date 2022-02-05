@@ -40,16 +40,21 @@ public:
 	 */
 	bool						checkFileProvided(std::string filePath);
 
+	/**
+	 * @brief	Returns the package described in a string 
+	 */
+	std::string					toString();
+
 #ifndef FRIEND_PACKAGE
 private:
 #endif
 
-	std::string									_name;
-	std::string									_description;
-	std::unordered_map<std::string, Package*>	_dependencies;
-	std::string									_fetchURL;
+	std::string					_name;
+	std::string					_description;
+	std::vector<std::string>	_dependencies;
+	std::string					_fetchURL;
 	
-	std::vector<std::string>					_provided_files;
+	std::vector<std::string>	_provided_files;
 };
 
 #endif

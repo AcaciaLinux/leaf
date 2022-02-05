@@ -52,3 +52,13 @@ bool Package::checkFileProvided(std::string filepath){
 	std::vector<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
 	return _provided_files.end() != results;
 }
+
+std::string Package::toString(){
+	std::string buf = "Package ";
+	buf += _name + " (" + _description + ")";
+	for (std::string dep : _dependencies)
+		buf += " [" + dep + "]";
+	buf += " " + _fetchURL;
+
+	return buf;
+}

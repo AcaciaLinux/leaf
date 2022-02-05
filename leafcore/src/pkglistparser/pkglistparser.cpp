@@ -54,9 +54,9 @@ bool PackageListParser::parse(std::istream& in){
 			LOGD(logbuf);
 		}
 
-		//TODO: parse dependencies
 		Package* newPackage = new Package(blocks.at(0));
 		newPackage->_description = blocks.at(1);
+		newPackage->_dependencies = parseDependenciesString(blocks.at(2));
 		newPackage->_fetchURL = blocks.at(3);
 
 		_packages.push_back(newPackage);
@@ -93,4 +93,30 @@ bool PackageListParser::applyToDB(LeafDB& db){
 
 std::string PackageListParser::getError(){
 	return _error;
+}
+
+std::vector<std::string> PackageListParser::parseDependenciesString(std::string deps){
+	FUN();
+
+	std::string buf = "";
+	std::vector<std::string> list;
+
+	for (char c : deps){
+		switch (c){
+			case '[':
+				buf = "";
+				break;
+
+			case ']':
+				list.push_back(buf);
+				buf = "";
+				break;
+
+			default:
+				buf += c;
+				break;
+		}
+	}
+
+	return list;
 }

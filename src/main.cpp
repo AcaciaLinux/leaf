@@ -67,7 +67,7 @@ int main(int argc, char** argv){
 			LOGUE("Could not find package in database!");
 			return -1;
 		}
-		LOGU("Description: " + available->getDescription());
+		LOGU(available->toString());
 	}
 
 	{
