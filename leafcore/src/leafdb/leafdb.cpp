@@ -15,3 +15,17 @@ LeafDB::~LeafDB(){
 
 	_packages.clear();
 }
+
+bool LeafDB::addPackage(Package* newPackage){
+	FUN();
+
+	//Check for existing package
+	for (auto pkg : _packages){
+		if (pkg.second->getName() == newPackage->getName())
+			return false;
+	}
+
+	_packages[newPackage->getName()] = newPackage;
+	
+	return true;
+}

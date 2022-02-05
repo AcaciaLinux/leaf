@@ -21,6 +21,13 @@ public:
 	Package*						newPackage(std::string name);
 
 	/**
+	 * @brief	Adds the supplied package to the database
+	 * @param	package				The package to add
+	 * @return	false if the package exists
+	 */
+	bool							addPackage(Package* package);
+
+	/**
 	 * @brief	Returns the package with the specified name, nullptr if no package was found
 	 * @param	name				The name of the package to get
 	 */

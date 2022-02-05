@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class Package{
 
@@ -43,10 +44,12 @@ public:
 private:
 #endif
 
-	std::string					_name;
-	std::string					_description;
-
-	std::vector<std::string>	_provided_files;
+	std::string									_name;
+	std::string									_description;
+	std::unordered_map<std::string, Package*>	_dependencies;
+	std::string									_fetchURL;
+	
+	std::vector<std::string>					_provided_files;
 };
 
 #endif
