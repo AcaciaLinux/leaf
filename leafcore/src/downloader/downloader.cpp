@@ -32,24 +32,20 @@ static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 	return size*nmemb;
 }
 
-/*
-0	Success
--1	not initialized
--2	out stream not opened
--3	curl error
-*/
-int Downloader::download(std::string url, std::ostream& out){
+bool Downloader::download(std::string url, std::ostream& out){
 	FUN();
 	CURLcode res;
 
 	if (!_curl){
 		LOGE("curl was not initialized");
-		return -1;
+		_error = "curl was not initialized";
+		return false;
 	}
 
 	if (!out.good()){
 		LOGE("Out stream is not ok");
-		return -2;
+		_error = "Out stream is not ok";
+		return false;
 	}
 
 	curl_easy_setopt(_curl, CURLOPT_URL, "https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list");
@@ -60,9 +56,14 @@ int Downloader::download(std::string url, std::ostream& out){
 	res = curl_easy_perform(_curl);
 
 	if (res != CURLE_OK){
-		LOGE("curl error");
-		return -3;
+		LOGE("curl error: " + std::string(curl_easy_strerror(res)));
+		_error = "curl error: " + std::string(curl_easy_strerror(res));
+		return false;
 	}
 
-	return 0;
+	return true;
+}
+
+std::string Downloader::getError(){
+	return _error;
 }

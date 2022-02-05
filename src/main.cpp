@@ -30,7 +30,9 @@ int main(int argc, char** argv){
 		std::ofstream outFile;
 		outFile.open("packages.list", std::ios::out);
 
-		dl.download("https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list", outFile);
+		if (!dl.download("https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list", outFile)){
+			LOGUE("Error: " + dl.getError());
+		}
 
 		outFile.close();
 		return 0;
