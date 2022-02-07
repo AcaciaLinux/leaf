@@ -10,6 +10,7 @@
 
 #include "downloader.h"
 #include "pkglistparser.h"
+#include "leafcore.h"
 
 Arguments arguments;
 
@@ -25,21 +26,20 @@ int main(int argc, char** argv){
 	}
 
 	if (arguments.getAction() == ACTION_UPDATE){
-		Downloader dl;
-		dl.init();
 
-		std::ofstream outFile;
-		outFile.open("packages.list", std::ios::out);
+		Leafcore leaf(".");
+		leaf.a_update();
 
-		if (!dl.download("https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list", outFile)){
-			LOGUE("Error: " + dl.getError());
-		}
-
-		outFile.close();
 		return 0;
 	} else if (arguments.getAction() == ACTION_INSTALL) {
 		if (arguments.getPackages().size() == 0){
 			LOGUE("Specify at least one package!");
+			return -1;
+		}
+
+		Leafcore leaf(".");
+		if (!leaf.parsePackageList()){
+			LOGUE("Leaf core parser error: " + leaf.getError());
 			return -1;
 		}
 
