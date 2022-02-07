@@ -13,16 +13,6 @@ public:
 	Package(std::string name);
 
 	/**
-	 * @brief	Returns the name of the package
-	 */
-	std::string					getName();
-
-	/**
-	 * @brief	Returns the description of the package
-	 */
-	std::string					getDescription();
-
-	/**
 	 * @brief	Adds the supplied file path to the supplied files by the package
 	 * @param	filenPath		The path to the file relative to root (/) that the package provides
 	 */
@@ -39,6 +29,24 @@ public:
 	 * @return	std::vector<std::string>& 
 	 */
 	std::vector<std::string>&	getDependencies();
+
+	/**
+	 * @brief	The name of the package
+	 */
+	void						setName(std::string);
+	std::string					getName();
+
+	/**
+	 * @brief	The description of the package
+	 */
+	void						setDescription(std::string);
+	std::string					getDescription();
+
+	/**
+	 * @brief	The fetch URL the package can be received from
+	 */
+	void						setFetchURL(std::string);
+	std::string					getFetchURL();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package

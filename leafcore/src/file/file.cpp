@@ -1,3 +1,10 @@
+/**
+ * @file		file/file.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The core implementation of File
+ * @copyright 	Copyright (c) 2022
+ */
+
 #include "log.h"
 #include "file.h"
 

@@ -1,3 +1,10 @@
+/**
+ * @file		leafcore/leafcore.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The core implementation of Leafcore
+ * @copyright 	Copyright (c) 2022
+ */
+
 #include "log.h"
 #include "leafcore.h"
 

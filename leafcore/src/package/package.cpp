@@ -1,3 +1,10 @@
+/**
+ * @file		package/package.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The core implementation of Package
+ * @copyright 	Copyright (c) 2022
+ */
+
 #include "log.h"
 #include "package.h"
 
@@ -7,16 +14,6 @@ Package::Package(std::string name){
 	FUN();
 	_name = name;
 	LOGF("Created package \"" + name + "\"");
-}
-
-std::string Package::getName(){
-	FUN();
-	return _name;
-}
-
-std::string Package::getDescription(){
-	FUN();
-	return _description;
 }
 
 void Package::addProvidedFile(std::string filepath){
@@ -33,14 +30,6 @@ void Package::addProvidedFile(std::string filepath){
 	_provided_files.push_back(filepath);
 }
 
-std::vector<std::string>& Package::getProvidedFiles(){
-	return _provided_files;
-}
-
-std::vector<std::string>& Package::getDependencies(){
-	return _dependencies;
-}
-
 bool Package::checkFileProvided(std::string filepath){
 	FUN();
 
@@ -55,14 +44,4 @@ bool Package::checkFileProvided(std::string filepath){
 
 	std::vector<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
 	return _provided_files.end() != results;
-}
-
-std::string Package::toString(){
-	std::string buf = "Package ";
-	buf += _name + " (" + _description + ")";
-	for (std::string dep : _dependencies)
-		buf += " [" + dep + "]";
-	buf += " " + _fetchURL;
-
-	return buf;
 }

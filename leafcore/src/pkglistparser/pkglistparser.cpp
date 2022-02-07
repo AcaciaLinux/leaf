@@ -1,3 +1,10 @@
+/**
+ * @file		pkglistparser/pkglistparser.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The core implementation of PackageListParser
+ * @copyright 	Copyright (c) 2022
+ */
+
 #include "log.h"
 
 #define FRIEND_PACKAGE
@@ -92,10 +99,6 @@ bool PackageListParser::applyToDB(LeafDB& db){
 	_packages.clear();
 
 	return ret;
-}
-
-std::string PackageListParser::getError(){
-	return _error;
 }
 
 std::vector<std::string> PackageListParser::parseDependenciesString(std::string deps){

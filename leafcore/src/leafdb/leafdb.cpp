@@ -1,3 +1,10 @@
+/**
+ * @file		leafdb/leafdb.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The core implementation of LeafDB
+ * @copyright 	Copyright (c) 2022
+ */
+
 #include "log.h"
 #include "leafdb.h"
 
@@ -104,8 +111,4 @@ std::vector<Package*> LeafDB::resolveDependencies(Package* package){
 	}
 
 	return dependencies;
-}
-
-std::string LeafDB::getError(){
-	return _error;
 }
