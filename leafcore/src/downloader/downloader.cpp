@@ -8,8 +8,10 @@ Downloader::Downloader(){
 Downloader::~Downloader(){
 	FUN();
 
-	if (_curl)
+	if (_curl){
 		curl_easy_cleanup(_curl);
+		LOGD("Cleaed up libcurl");
+	}
 }
 
 bool Downloader::init(){
@@ -20,6 +22,8 @@ bool Downloader::init(){
 		LOGE("Failed to initialize curl");
 		return false;
 	}
+
+	LOGD("Initialized libcurl");
 
 	return true;
 }
