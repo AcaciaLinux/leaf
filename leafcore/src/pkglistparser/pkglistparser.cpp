@@ -76,6 +76,9 @@ bool PackageListParser::applyToDB(LeafDB& db){
 			LOGE("Failed to add package " + package->getName() + ", already existing");
 			ret = false;
 			err += " {" + package->getName() + "}";
+			
+			//If the apply fails, clean the memory
+			delete package;
 		}
 	}
 
