@@ -39,12 +39,28 @@ public:
 	 */
 	std::vector<Package*>			findFileProviders(std::string filepath);
 
+	/**
+	 * @brief	Resolves the dependencies of the provided package
+	 * @param	package				The package to find the dependencies of
+	 * @return	Empty vector if there was an error
+	 */
+	std::vector<Package*>			resolveDependencies(Package* package);
+
+	/**
+	 * @brief	Returns the last error in a string
+	 */
+	std::string						getError();
+
 #ifdef FRIEND_LEAFDB
 private:
 #endif
 
 	std::unordered_map<std::string, Package*>	_packages;
 	std::unordered_map<std::string, File*>		_files;
+
+	std::string									_error;
+
+	bool										resolveDependencies(std::vector<Package*>* dependencies, Package* package);
 };
 
 #endif

@@ -62,12 +62,21 @@ int main(int argc, char** argv){
 			LOGUE("Failed to apply to database: " + parser.getError());
 		}
 
-		auto available = db.getPackage(arguments.getPackages().at(0));
+		Package* available = db.getPackage(arguments.getPackages().at(0));
 		if (available == nullptr){
 			LOGUE("Could not find package in database!");
 			return -1;
 		}
-		LOGU(available->toString());
+		
+		auto dependencies = db.resolveDependencies(available);
+		if (dependencies.size() == 0 && !db.getError().empty()){
+			LOGUE("Resolving dependencies failed: " + db.getError());
+		} else {
+			LOGU("Dependencies for " + available->getName() + ":");
+			for (Package* p : dependencies){
+				LOGU(" -> " + p->getName());
+			}
+		}
 	}
 
 	{

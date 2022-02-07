@@ -30,9 +30,15 @@ public:
 
 	/**
 	 * @brief	Returns a reference to the files provided by this package
-	 * @return	std::vector<std::string> 
+	 * @return	std::vector<std::string>&
 	 */
 	std::vector<std::string>&	getProvidedFiles();
+
+	/**
+	 * @brief	Returns a reference to the dependencies needed by this package
+	 * @return	std::vector<std::string>& 
+	 */
+	std::vector<std::string>&	getDependencies();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package

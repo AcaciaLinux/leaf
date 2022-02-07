@@ -37,6 +37,10 @@ std::vector<std::string>& Package::getProvidedFiles(){
 	return _provided_files;
 }
 
+std::vector<std::string>& Package::getDependencies(){
+	return _dependencies;
+}
+
 bool Package::checkFileProvided(std::string filepath){
 	FUN();
 
