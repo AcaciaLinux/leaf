@@ -94,7 +94,3 @@ bool Leafcore::a_update(){
 
 	return true;
 }
-
-std::string Leafcore::getError(){
-	return _error;
-}
