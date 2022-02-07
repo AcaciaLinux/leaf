@@ -2,6 +2,7 @@
 #define __LEAFCORE_H__
 
 #include <string>
+#include <vector>
 
 #include "leafdb.h"
 
@@ -28,6 +29,12 @@ public:
 	 * @brief	Updates the local package list
 	 */
 	bool						a_update();
+
+	/**
+	 * @brief	Installs the provided package with all of its dependencies
+	 * @param	packages		The packages to process
+	 */
+	bool						a_install(std::vector<std::string> packages);
 
 	/**
 	 * @brief	The root leaf should deploy packages to (normally "/")
@@ -58,6 +65,7 @@ private:
 
 	//Where the currently loaded package list file is
 	std::string					_pkglistFile = "packages.list";
+	bool						_loadedPkgList = false;
 
 	//The URL where to fetch the package list from
 	std::string					_pkglistURL = "https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list";

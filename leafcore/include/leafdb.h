@@ -45,6 +45,13 @@ public:
 	 * @return	Empty vector if there was an error
 	 */
 	std::vector<Package*>			resolveDependencies(Package* package);
+	
+	/**
+	 * @brief	The recursive version of resolveDependencies(Package*), gets used by it too
+	 * @param	dependencies		A pointer to the dependencies vector to append to
+	 * @param	package				The package to resolve the dependencies for
+	 */
+	bool							resolveDependencies(std::vector<Package*>* dependencies, Package* package);
 
 	/**
 	 * @brief	Returns the last error in a string
@@ -59,8 +66,6 @@ private:
 	std::unordered_map<std::string, File*>		_files;
 
 	std::string									_error;
-
-	bool										resolveDependencies(std::vector<Package*>* dependencies, Package* package);
 };
 
 #endif

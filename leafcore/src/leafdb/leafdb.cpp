@@ -71,6 +71,7 @@ std::vector<Package*> LeafDB::findFileProviders(std::string filepath){
 
 bool LeafDB::resolveDependencies(std::vector<Package*>* dependencies, Package* package){
 	FUN();
+	LOGI("Resolving dependencies for " + package->getName());
 
 	for (std::string depString : package->getDependencies()){
 		//Resolve the dependency string
