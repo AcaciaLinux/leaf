@@ -65,6 +65,9 @@
 		"forward_list": "cpp",
 		"optional": "cpp",
 		"iomanip": "cpp",
-		"variant": "cpp"
+		"variant": "cpp",
+		"bitset": "cpp",
+		"regex": "cpp",
+		"future": "cpp"
 	}
 }
