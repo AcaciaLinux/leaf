@@ -84,13 +84,17 @@ bool LeafDB::resolveDependencies(std::vector<Package*>* dependencies, Package* p
 			return false;
 		}
 
+		bool circular_dependency = false;
 		//Check if the package has not been added already (circular dependency)
 		for (Package* pkg : *dependencies){
 			if (pkg == dep){
 				LOGI("Circular dependency: " + dep->getName());
-				continue;
+				circular_dependency = true;
 			}
 		}
+
+		if (circular_dependency)
+			continue;
 
 		//Add the dependency and scan it for its dependencies
 		dependencies->push_back(dep);
