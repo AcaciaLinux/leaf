@@ -8,4 +8,4 @@ file (GLOB_RECURSE CXXSOURCES "src/**.cpp")
 file (GLOB_RECURSE HEADERS "include/**.h")
 
 add_library(leafcore ${HEADERS} ${CXXSOURCES})
-target_link_libraries(leafcore curl)
+target_link_libraries(leafcore curl archive)
