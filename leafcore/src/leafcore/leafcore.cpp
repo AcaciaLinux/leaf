@@ -12,6 +12,7 @@
 #include "downloader.h"
 
 #include <fstream>
+#include <filesystem>
 
 Leafcore::Leafcore(std::string rootPath){
 	FUN();
@@ -129,7 +130,6 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 	}
 
 	std::vector<Package*> install_packages;
-
 	LOGU("Resolving dependencies...");
 	for (std::string packageName : packages){
 		Package* package = _db.getPackage(packageName);
@@ -139,19 +139,95 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 			LOGE("Failed to perform install action: " + _error);
 			return false;
 		}
-
+		install_packages.push_back(package);
 		_db.resolveDependencies(&install_packages, package);
 	}
 	LOGU("Done");
 
 	{//Inform the user about the packages to install
-		std::string msg = "Following dependencies are needed:";
+		std::string msg = "Following packages will be fetched:";
 		for (Package* pkg : install_packages)
 			msg += " " + pkg->getName();
 		LOGU(msg);
 	}
 
 	//TODO: fetch and install packages
+
+	for (Package* package : install_packages){
+		LOGU("Downloading package " + package->getName() + "...");
+		if (!fetchPackage(package)){
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Leafcore::fetchPackage(Package* package){
+	FUN();
+
+	if (package == nullptr){
+		_error = "Invalid package (nullptr)";
+		LOGE("Failed to fetch package: " + _error);
+		return false;
+	}
+
+	if (!std::filesystem::exists(_cachePath)){
+		_error = "Cache path " + _cachePath + " does not exist";
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		return false;
+	}
+
+	if (!std::filesystem::is_directory(_cachePath)){
+		_error = "Cache path " + _cachePath + " is not a directory";
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		return false;
+	}
+
+	if (package->getFetchURL().empty()){
+		_error = "Empty package URL for package " + package->getName();
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		return false;
+	}
+
+	std::string downloadPath = _cachePath + "downloads/";
+
+	if (!std::filesystem::exists(downloadPath)){
+		LOGI("Download path " + downloadPath + " does not exist, creating");
+		if (!std::filesystem::create_directories(downloadPath)){
+			_error = "Download path " + downloadPath + " could not be created";
+			LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+			return false;
+		}
+	}
+	
+
+	std::string filePath = downloadPath + package->getName() + ".tar.xz";
+	std::ofstream outFile;
+	outFile.open(filePath, std::ios::binary | std::ios::out);
+
+	if (!outFile.is_open()){
+		_error = "Failed to open " + filePath + " for writing";
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		return false;
+	}
+
+	Downloader dl;
+	if (!dl.init()){
+		_error = "Failed to initialize Downloader: " + dl.getError();
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		outFile.close();
+		return false;
+	}
+
+	if (!dl.download(package->getFetchURL(), outFile)){
+		_error = "Failed download from " + package->getFetchURL() + ": " + dl.getError();
+		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		outFile.close();
+		return false;
+	}
+
+	outFile.close();
 
 	return true;
 }

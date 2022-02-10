@@ -36,9 +36,7 @@ bool Downloader::init(){
 }
 
 static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
-	LOGD("Received chunk \"" + std::string((char*)ptr) + "\"");
-
-	*s << (char*)ptr;
+	(*s).write(((char*)ptr), size*nmemb);
 
 	return size*nmemb;
 }
@@ -59,7 +57,7 @@ bool Downloader::download(std::string url, std::ostream& out){
 		return false;
 	}
 
-	curl_easy_setopt(_curl, CURLOPT_URL, "https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list");
+	curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);

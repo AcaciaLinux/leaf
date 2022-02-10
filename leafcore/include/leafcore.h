@@ -16,7 +16,7 @@ public:
 	 * @brief	Create the leaf core context and set the root path
 	 * @param	rootPath		The root leaf should deploy packages to (normally "/")
 	 */
-	Leafcore(std::string rootPath);	
+	Leafcore(std::string rootPath);
 
 	/**
 	 * @brief	Reads the package list at the supplied path
@@ -35,6 +35,12 @@ public:
 	 * @param	packages		The packages to process
 	 */
 	bool						a_install(std::vector<std::string> packages);
+
+	/**
+	 * @brief	Fetches the supplied package tarball into the working directory (wd/downloads)
+	 * @param	package			The package to fetch
+	 */
+	bool						fetchPackage(Package* package);
 
 	/**
 	 * @brief	The root leaf should deploy packages to (normally "/")
@@ -62,6 +68,9 @@ public:
 private:
 	//The path to apply leaf packages to (should be "/")
 	std::string					_rootPath;
+
+	//The directory leaf can work in
+	std::string					_cachePath = "cache/";
 
 	//Where the currently loaded package list file is
 	std::string					_pkglistFile = "packages.list";
