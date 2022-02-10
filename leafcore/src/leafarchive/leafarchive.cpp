@@ -149,5 +149,7 @@ bool LeafArchive::extract(std::string destination){
 	archive_write_close(ext);
 	archive_write_free(ext);
 
+	std::filesystem::current_path(prevDir);
+
 	return true;
 }
