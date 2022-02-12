@@ -43,6 +43,12 @@ public:
 	bool						fetchPackage(Package* package);
 
 	/**
+	 * @brief	Extracts the supplied package
+	 * @param	package			The package to process
+	 */
+	bool						extractPackage(Package* package);
+
+	/**
 	 * @brief	The root leaf should deploy packages to (normally "/")
 	 */
 	void						setRootPath(std::string);

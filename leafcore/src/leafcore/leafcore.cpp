@@ -10,6 +10,7 @@
 
 #include "pkglistparser.h"
 #include "downloader.h"
+#include "leafarchive.h"
 
 #include <fstream>
 #include <filesystem>
@@ -160,6 +161,13 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 		}
 	}
 
+	for (Package* package : install_packages){
+		LOGU("Extracting package " + package->getName() + "...");
+		if (!extractPackage(package)){
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -228,6 +236,49 @@ bool Leafcore::fetchPackage(Package* package){
 	}
 
 	outFile.close();
+
+	return true;
+}
+
+bool Leafcore::extractPackage(Package* package){
+	FUN();
+
+	if (package == nullptr){
+		_error = "Invalid package (nullptr)";
+		LOGE("Failed to extract package: " + _error);
+		return false;
+	}
+
+	std::string packagePath = _cachePath + "/downloads/" + package->getName() + ".tar.xz";
+
+	if (!std::filesystem::exists(packagePath)){
+		_error = "Package does not seem to be fetched";
+		LOGE("Failed to extract package: " + _error);
+		return false;
+	}
+
+	std::string extractedPath = _cachePath + "/packages/" + package->getName();
+
+	if (!std::filesystem::exists(extractedPath)){
+		if (!std::filesystem::create_directories(extractedPath)){
+			_error = "Could not create extracted directory " + extractedPath;
+			LOGE("Failed to extract package: " + _error);
+			return false;
+		}
+	}
+	
+	LeafArchive archive;
+	if (!archive.load(packagePath)){
+		_error = "Failed to load package into LeafArchive: " + archive.getError();
+		LOGE("Failed to extract package: " + _error);
+		return false;
+	}
+	
+	if (!archive.extract(extractedPath)){
+		_error = "Failed extract package using LeafArchive: " + archive.getError();
+		LOGE("Failed to extract package: " + _error);
+		return false;
+	}
 
 	return true;
 }
