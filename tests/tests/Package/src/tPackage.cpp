@@ -20,7 +20,7 @@ TEST(Package, Constructor){
 
 	LOGD("Generated random name with length " + std::to_string(len) + ": \"" + name + "\"");
 	
-	Package package(name);
+	Package package(name, "0.0");
 
 	if (package._name != name)
 		FAIL();
@@ -39,7 +39,7 @@ TEST(Package, addProvidedFile){
 
 	LOGD("Generated random filename with length " + std::to_string(len) + ": \"" + filename + "\"");
 
-	Package package("Testpackage");
+	Package package("Testpackage", "0.0");
 	package.addProvidedFile(filename);
 
 	if (package._provided_files.back() != filename)
@@ -59,7 +59,7 @@ TEST(Package, checkFileProvided){
 
 	LOGD("Generated random filename with length " + std::to_string(len) + ": \"" + filename + "\"");
 
-	Package package("Testpackage");
+	Package package("Testpackage", "0.0");
 	package.addProvidedFile(filename);
 
 	//Fail if Package finds a file that is not contained

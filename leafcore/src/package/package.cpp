@@ -10,10 +10,11 @@
 
 #include <algorithm>
 
-Package::Package(std::string name){
+Package::Package(std::string name, std::string version){
 	FUN();
 	_name = name;
-	LOGF("Created package \"" + name + "\"");
+	_versionString = version;
+	LOGF("Created package \"" + getFullName() + "\"");
 }
 
 void Package::addProvidedFile(std::string filepath){

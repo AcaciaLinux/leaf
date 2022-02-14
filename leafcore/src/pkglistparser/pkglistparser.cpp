@@ -48,7 +48,7 @@ bool PackageListParser::parse(std::istream& in){
 		//Push the last block
 		blocks.push_back(buf);
 
-		if (blocks.size() != 4){
+		if (blocks.size() != 5){
 			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/4");
 			continue;
 		}
@@ -61,10 +61,10 @@ bool PackageListParser::parse(std::istream& in){
 			LOGD(logbuf);
 		}
 
-		Package* newPackage = new Package(blocks.at(0));
-		newPackage->_description = blocks.at(1);
-		newPackage->_dependencies = parseDependenciesString(blocks.at(2));
-		newPackage->_fetchURL = blocks.at(3);
+		Package* newPackage = new Package(blocks.at(0), blocks.at(1));
+		newPackage->_description = blocks.at(2);
+		newPackage->_dependencies = parseDependenciesString(blocks.at(3));
+		newPackage->_fetchURL = blocks.at(4);
 
 		_packages.push_back(newPackage);
 	}

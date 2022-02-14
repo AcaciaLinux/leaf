@@ -23,6 +23,18 @@ std::string Package::getName(){
 	return _name;
 }
 
+std::string Package::getFullName(){
+	return _name + "-" + _versionString;
+}
+
+void Package::setVersion(std::string version){
+	_versionString = version;
+}
+
+std::string Package::getVersion(){
+	return _versionString;
+}
+
 void Package::setDescription(std::string description){
 	_description = description;
 }

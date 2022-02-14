@@ -49,6 +49,12 @@ public:
 	bool						extractPackage(Package* package);
 
 	/**
+	 * @brief	Deploys the supplied package to the specified _rootPath ("/")
+	 * @param	package			The package to deploy
+	 */
+	bool						deployPackage(Package* package);
+
+	/**
 	 * @brief	The root leaf should deploy packages to (normally "/")
 	 */
 	void						setRootPath(std::string);

@@ -10,7 +10,7 @@
 class Package{
 
 public:
-	Package(std::string name);
+	Package(std::string name, std::string version);
 
 	/**
 	 * @brief	Adds the supplied file path to the supplied files by the package
@@ -35,6 +35,18 @@ public:
 	 */
 	void						setName(std::string);
 	std::string					getName();
+	
+	/**
+	 * @brief	Returns the package name in the following format: "name-version":
+	 * 			eg: "mypackage-12.31.3"
+	 */
+	std::string					getFullName();
+
+	/**
+	 * @brief	The version string of the package
+	 */
+	void						setVersion(std::string);
+	std::string					getVersion();
 
 	/**
 	 * @brief	The description of the package
@@ -64,6 +76,7 @@ private:
 #endif
 
 	std::string					_name;
+	std::string					_versionString;
 	std::string					_description;
 	std::vector<std::string>	_dependencies;
 	std::string					_fetchURL;

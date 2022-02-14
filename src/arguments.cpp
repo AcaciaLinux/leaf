@@ -9,6 +9,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::ArgumentParser parser("leaf package manager", "Leaf package manager is the package manager for acacia linux");
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
+	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::Positional<std::string> a_action(parser, "Action", "The action that should be performed by leaf");
 	args::PositionalList<std::string> a_packages(parser, "packages", "The packages to operate on");
 
@@ -32,6 +33,11 @@ bool Arguments::parse(int argc, char** argv){
 		LOGE(std::string("Failed to parse options: ") + std::string(e.what()));
 		std::cerr << parser;
 		return false;
+	}
+
+	if (f_rootPath){
+		this->rootPath = args::get(f_rootPath);
+		LOGD("Using root path " + this->rootPath);
 	}
 
 	this->verbose = args::get(f_verbose);
@@ -77,6 +83,10 @@ bool Arguments::getVerbose(){
 
 e_action Arguments::getAction(){
 	return this->action;
+}
+
+std::string Arguments::getRootPath(){
+	return this->rootPath;
 }
 
 std::vector<std::string> Arguments::getPackages(){

@@ -26,13 +26,12 @@ int main(int argc, char** argv){
 	}
 
 	if (arguments.getAction() == ACTION_UPDATE){
-
-		Leafcore leaf(".");
+		Leafcore leaf(arguments.getRootPath());
 		leaf.a_update();
 
 		return 0;
 	} else if (arguments.getAction() == ACTION_INSTALL) {
-		Leafcore leaf(".");
+		Leafcore leaf(arguments.getRootPath());
 		leaf.parsePackageList();
 
 		if (!leaf.a_install(arguments.getPackages())){

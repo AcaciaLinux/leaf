@@ -33,6 +33,11 @@ public:
 	e_action					getAction();
 
 	/**
+	 * @brief	Returns the root path leaf should use
+	 */
+	std::string					getRootPath();
+
+	/**
 	 * @brief	Returns the packages that should be operated on
 	 */
 	std::vector<std::string>	getPackages();
@@ -43,6 +48,9 @@ private:
 
 	//The action to perform
 	e_action					action;
+
+	//The root path leaf should use (for development is ./root)
+	std::string					rootPath = "./root/";
 
 	//The packages to perform the action on
 	std::vector<std::string>	packages;

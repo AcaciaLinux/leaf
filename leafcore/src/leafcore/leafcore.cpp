@@ -148,22 +148,29 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 	{//Inform the user about the packages to install
 		std::string msg = "Following packages will be fetched:";
 		for (Package* pkg : install_packages)
-			msg += " " + pkg->getName();
+			msg += " " + pkg->getFullName();
 		LOGU(msg);
 	}
 
 	//TODO: fetch and install packages
 
 	for (Package* package : install_packages){
-		LOGU("Downloading package " + package->getName() + "...");
+		LOGU("Downloading package " + package->getFullName() + "...");
 		if (!fetchPackage(package)){
 			return false;
 		}
 	}
 
 	for (Package* package : install_packages){
-		LOGU("Extracting package " + package->getName() + "...");
+		LOGU("Extracting package " + package->getFullName() + "...");
 		if (!extractPackage(package)){
+			return false;
+		}
+	}
+
+	for (Package* package : install_packages){
+		LOGU("Deploying package " + package->getFullName() + "...");
+		if (!deployPackage(package)){
 			return false;
 		}
 	}
@@ -182,19 +189,19 @@ bool Leafcore::fetchPackage(Package* package){
 
 	if (!std::filesystem::exists(_cachePath)){
 		_error = "Cache path " + _cachePath + " does not exist";
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
 	if (!std::filesystem::is_directory(_cachePath)){
 		_error = "Cache path " + _cachePath + " is not a directory";
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
 	if (package->getFetchURL().empty()){
-		_error = "Empty package URL for package " + package->getName();
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		_error = "Empty package URL for package " + package->getFullName();
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
@@ -204,33 +211,33 @@ bool Leafcore::fetchPackage(Package* package){
 		LOGI("Download path " + downloadPath + " does not exist, creating");
 		if (!std::filesystem::create_directories(downloadPath)){
 			_error = "Download path " + downloadPath + " could not be created";
-			LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+			LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 			return false;
 		}
 	}
 	
 
-	std::string filePath = downloadPath + package->getName() + ".tar.xz";
+	std::string filePath = downloadPath + package->getFullName() + ".tar.xz";
 	std::ofstream outFile;
 	outFile.open(filePath, std::ios::binary | std::ios::out);
 
 	if (!outFile.is_open()){
 		_error = "Failed to open " + filePath + " for writing";
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
 	Downloader dl;
 	if (!dl.init()){
 		_error = "Failed to initialize Downloader: " + dl.getError();
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		outFile.close();
 		return false;
 	}
 
 	if (!dl.download(package->getFetchURL(), outFile)){
 		_error = "Failed download from " + package->getFetchURL() + ": " + dl.getError();
-		LOGE("Failed to fetch package " + package->getName() + ": " + _error);
+		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		outFile.close();
 		return false;
 	}
@@ -249,7 +256,7 @@ bool Leafcore::extractPackage(Package* package){
 		return false;
 	}
 
-	std::string packagePath = _cachePath + "/downloads/" + package->getName() + ".tar.xz";
+	std::string packagePath = _cachePath + "/downloads/" + package->getFullName() + ".tar.xz";
 
 	if (!std::filesystem::exists(packagePath)){
 		_error = "Package does not seem to be fetched";
@@ -257,7 +264,7 @@ bool Leafcore::extractPackage(Package* package){
 		return false;
 	}
 
-	std::string extractedPath = _cachePath + "/packages/" + package->getName();
+	std::string extractedPath = _cachePath + "/packages/";
 
 	if (!std::filesystem::exists(extractedPath)){
 		if (!std::filesystem::create_directories(extractedPath)){
@@ -280,5 +287,48 @@ bool Leafcore::extractPackage(Package* package){
 		return false;
 	}
 
+	return true;
+}
+
+bool Leafcore::deployPackage(Package* package){
+	FUN();
+
+	if (package == nullptr){
+		_error = "Invalid package (nullptr)";
+		LOGE("Failed to deploy package: " + _error);
+		return false;
+	}
+
+	if (!std::filesystem::exists(_rootPath)){
+		_error = "Root filesystem " + _rootPath + " does not exist";
+		LOGE("Failed to deploy package: " + _error);
+		return false;
+	}
+
+	std::string extractedPath = _cachePath + "/packages/" + package->getFullName() + "/";
+
+	if (!std::filesystem::exists(extractedPath)){
+		_error = "Package directory " + extractedPath + " does not exist, package may not be extracted";
+		LOGE("Failed to deploy package: " + _error);
+		return false;
+	}
+
+	std::string dataPath = extractedPath + "/data/";
+
+	if (!std::filesystem::exists(dataPath)){
+		_error = "Data directory " + dataPath + " does not exist, package may be corrupted";
+		LOGE("Failed to deploy package: " + _error);
+		return false;
+	}
+
+	namespace fs = std::filesystem;
+
+	const auto copyOptions = 	fs::copy_options::update_existing
+							|	fs::copy_options::recursive;
+
+	LOGI("Deploying package " + package->getFullName() + " to " + _rootPath);
+
+	fs::copy(dataPath, _rootPath, copyOptions);
+	
 	return true;
 }
