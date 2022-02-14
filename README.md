@@ -8,11 +8,7 @@ leaf is a work in progress project that is **<u>*FAR*</u>** from finished. leaf 
 
 - Packages are installed to your ROOT (yes)
 
-<<<<<<< HEAD
-- /etc/laef will be manipulated
-=======
 - /etc/leaf will be manipulated
->>>>>>> ea135fe (ARMED leaf)
 
 - /var/cache/leaf will be manipulates
 
