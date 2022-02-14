@@ -2,6 +2,18 @@
 
 This is the package manager made for AcaciaLinux, written in C++ and supporting a really simple packaging format
 
+# WARNING
+
+leaf is a work in progress project that is **<u>*FAR*</u>** from finished. leaf is now **<u>ARMED</u>** (yes we mean that), it has any safety paths pointed to their final destination, means:
+
+- Packages are installed to your ROOT (yes)
+
+- /etc/laef will be manipulated
+
+- /var/cache/leaf will be manipulates
+
+- Anything else install scripts may do
+
 # Installation
 
 ### Dependencies

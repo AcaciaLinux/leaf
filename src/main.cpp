@@ -27,7 +27,11 @@ int main(int argc, char** argv){
 
 	if (arguments.getAction() == ACTION_UPDATE){
 		Leafcore leaf(arguments.getRootPath());
-		leaf.a_update();
+
+		if (!leaf.a_update()){
+			LOGUE("Failed to update package list: " + leaf.getError());
+			return -1;
+		}
 
 		return 0;
 	} else if (arguments.getAction() == ACTION_INSTALL) {

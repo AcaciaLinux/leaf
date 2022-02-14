@@ -82,10 +82,10 @@ private:
 	std::string					_rootPath;
 
 	//The directory leaf can work in
-	std::string					_cachePath = "cache/";
+	std::string					_cachePath = "/var/cache/leaf/";
 
 	//Where the currently loaded package list file is
-	std::string					_pkglistFile = "packages.list";
+	std::string					_pkglistFile = "/etc/leaf/packages.list";
 	bool						_loadedPkgList = false;
 
 	//The URL where to fetch the package list from

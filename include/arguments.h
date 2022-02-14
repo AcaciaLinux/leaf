@@ -50,7 +50,7 @@ private:
 	e_action					action;
 
 	//The root path leaf should use (for development is ./root)
-	std::string					rootPath = "./root/";
+	std::string					rootPath = "/";
 
 	//The packages to perform the action on
 	std::vector<std::string>	packages;
