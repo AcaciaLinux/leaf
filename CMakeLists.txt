@@ -5,6 +5,9 @@ include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
 
+find_package(CURL)
+find_package(ARCHIVE)
+
 if (CMAKE_BUILD_TYPE)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		enable_testing(true)
