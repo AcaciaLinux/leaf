@@ -5,11 +5,15 @@ include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
 
-enable_testing(true)
+if (CMAKE_BUILD_TYPE)
+	if (CMAKE_BUILD_TYPE MATCHES Debug)
+		enable_testing(true)
+		add_subdirectory(googletest)
+		add_subdirectory(tests)
+	endif()
+endif()
 
 add_subdirectory(leafcore)
-add_subdirectory(googletest)
-add_subdirectory(tests)
 
 add_subdirectory(Log)
 include_directories(Log/include)

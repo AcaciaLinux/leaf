@@ -38,6 +38,13 @@ cmake ..
 make -j <jobs>
 ```
 
+If you want to build tests too, use
+
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make -j <jobs>
+```
+
 You may replace <jobs> with your amount of jobs to use
 
 ### Installing
