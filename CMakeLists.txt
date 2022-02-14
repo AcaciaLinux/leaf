@@ -21,3 +21,5 @@ file (GLOB_RECURSE HEADERS "include/**.h")
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
 target_link_libraries(${PNAME} log leafcore)
+
+install (TARGETS ${PNAME} RUNTIME DESTINATION /usr/bin)
