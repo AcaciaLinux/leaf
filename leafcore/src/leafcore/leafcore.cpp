@@ -17,6 +17,7 @@
 
 #include <fstream>
 #include <filesystem>
+#include <iostream>
 
 Leafcore::Leafcore(std::string rootPath){
 	FUN();
@@ -155,7 +156,16 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 		LOGU(msg);
 	}
 
-	//TODO: fetch and install packages
+	{//Ask the user for permission
+		std::cout << "Do you want to continue? (y/N): ";
+		std::string answer;
+		std::cin >> answer;
+		
+		if (answer != "y"){
+			_error = "User aborted";
+			return false;
+		}
+	}
 
 	for (Package* package : install_packages){
 		LOGU("Downloading package " + package->getFullName() + "...");
