@@ -16,7 +16,6 @@ LeafDB::~LeafDB(){
 	FUN();
 
 	for (auto entry : _packages){
-		LOGD("Removing package " + entry.first);
 		delete entry.second;
 	}
 

@@ -5,12 +5,15 @@
  * @copyright 	Copyright (c) 2022
  */
 
+#define FRIEND_PACKAGE
+
 #include "log.h"
 #include "leafcore.h"
 
 #include "pkglistparser.h"
 #include "downloader.h"
 #include "leafarchive.h"
+#include "leaffs.h"
 
 #include <fstream>
 #include <filesystem>
@@ -218,6 +221,12 @@ bool Leafcore::fetchPackage(Package* package){
 	
 
 	std::string filePath = downloadPath + package->getFullName() + ".tar.xz";
+
+	if (std::filesystem::exists(filePath)){
+		LOGI("Skipping download of " + filePath + ", alredy existing");
+		return true;
+	}
+
 	std::ofstream outFile;
 	outFile.open(filePath, std::ios::binary | std::ios::out);
 
@@ -321,14 +330,24 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
-	namespace fs = std::filesystem;
+	LeafFS fs(dataPath);
 
-	const auto copyOptions = 	fs::copy_options::update_existing
-							|	fs::copy_options::recursive;
+	LOGU("Indexing package " + package->getFullName() + "...");
+
+	if (!fs.readFiles(true, true)){
+		_error = "Could not index data directory: " + fs.getError();
+		LOGE("Failed to deploy package: " + _error);
+		return false;
+	}
+
+	package->_provided_files = fs.getFiles();
+
+	const auto copyOptions = 	std::filesystem::copy_options::update_existing
+							|	std::filesystem::copy_options::recursive;
 
 	LOGI("Deploying package " + package->getFullName() + " to " + _rootPath);
 
-	fs::copy(dataPath, _rootPath, copyOptions);
+	std::filesystem::copy(dataPath, _rootPath, copyOptions);
 	
 	return true;
 }
