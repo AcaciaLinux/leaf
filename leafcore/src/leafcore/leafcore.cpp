@@ -348,6 +348,40 @@ bool Leafcore::deployPackage(Package* package){
 	LOGI("Deploying package " + package->getFullName() + " to " + _rootPath);
 
 	std::filesystem::copy(dataPath, _rootPath, copyOptions);
+
+	LOGI("Creating .leafinstalled file...");
+
+	{
+		std::string installedDir = "/etc/leaf/installed/";
+
+		if (!std::filesystem::exists(installedDir)){
+			if (!std::filesystem::create_directories(installedDir)){
+				_error = "Could not create installed directory " + extractedPath;
+				LOGE("Failed to deploy package: " + _error);
+				return false;
+			}
+		}
+
+		std::string installedPath = installedDir + package->getName() + ".leafinstalled";
+
+		std::ofstream file;
+		file.open(installedPath, std::ios::out);
+
+		if (!file.is_open()){
+			_error = "Could not open installed file " + installedPath;
+			LOGE("Failed to deploy package: " + _error);
+			return false;
+		}
+
+		if (!package->createInstalledFile(file)){
+			_error = "Could not create installed file " + installedPath;
+			LOGE("Failed to deploy package: " + _error);
+			file.close();
+			return false;
+		}
+
+		file.close();
+	}
 	
 	return true;
 }

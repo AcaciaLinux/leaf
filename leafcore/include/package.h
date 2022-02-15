@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <ostream>
+#include <istream>
 
 class Package{
 
@@ -17,6 +19,18 @@ public:
 	 * @param	filenPath		The path to the file relative to root (/) that the package provides
 	 */
 	void						addProvidedFile(std::string filenPath);
+
+	/**
+	 * @brief	Outputs the .leafinstalled file from the package
+	 * @param	out				The output stream to write to
+	 */
+	bool						createInstalledFile(std::ostream& out);
+
+	/**
+	 * @brief	Parse a .leafinstalled file to this package, everything will be overwritten
+	 * @param	in				The input stream to parse
+	 */
+	bool						parseInstalledFile(std::istream& in);
 
 	/**
 	 * @brief	Returns a reference to the files provided by this package
@@ -67,13 +81,25 @@ public:
 	bool						checkFileProvided(std::string filePath);
 
 	/**
+	 * @brief	Clears all the contents of this package
+	 */
+	void						clear();
+
+	/**
 	 * @brief	Returns the package described in a string 
 	 */
 	std::string					toString();
 
+	/**
+	 * @brief	Returns the last error thrown
+	 */
+	std::string					getError();
+
 #ifndef FRIEND_PACKAGE
 private:
 #endif
+
+	std::string					_error;
 
 	std::string					_name;
 	std::string					_versionString;

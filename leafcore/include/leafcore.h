@@ -85,11 +85,11 @@ private:
 	std::string					_cachePath = "/var/cache/leaf/";
 
 	//Where the currently loaded package list file is
-	std::string					_pkglistFile = "/etc/leaf/packages.list";
+	std::string					_pkglistFile = "/etc/leaf/leaf.pkglist";
 	bool						_loadedPkgList = false;
 
 	//The URL where to fetch the package list from
-	std::string					_pkglistURL = "https://raw.githubusercontent.com/AcaciaLinux/leaf_packages/main/packages.list";
+	std::string					_pkglistURL = "http://84.252.121.236/packages/leaf.pkglist";
 
 	//The main database leaf works with
 	LeafDB						_db;
