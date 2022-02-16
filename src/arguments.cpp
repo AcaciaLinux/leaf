@@ -10,6 +10,7 @@ bool Arguments::parse(int argc, char** argv){
 
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
+	args::Flag f_sVerbode(parser, "super verbose", "Display eben more verbose output", {'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::Positional<std::string> a_action(parser, "Action", "The action that should be performed by leaf");
 	args::PositionalList<std::string> a_packages(parser, "packages", "The packages to operate on");
@@ -43,6 +44,10 @@ bool Arguments::parse(int argc, char** argv){
 
 	this->verbose = args::get(f_verbose);
 	if (this->verbose)
+		hlog->setLevel(Log::I);
+
+	this->superverbose = args::get(f_sVerbode);
+	if (this->superverbose)
 		hlog->setLevel(Log::D);
 
 	if (!this->setAction(args::get(a_action)))

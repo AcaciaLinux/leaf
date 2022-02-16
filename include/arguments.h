@@ -46,6 +46,9 @@ private:
 	//If the program should be verbose
 	bool						verbose = false;
 
+	//If the program should be super verbose
+	bool						superverbose = false;
+
 	//The action to perform
 	e_action					action;
 

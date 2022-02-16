@@ -106,10 +106,10 @@ bool Leafcore::parseInstalled(){
 		return true;
 	}
 
-	LOGI("Installed packages: ");
+	LOGD("Installed packages: ");
 	for (std::string file : installedFiles){
 		file.erase(0, 1);
-		LOGI(" -> " + file);
+		LOGD(" -> " + file);
 
 		Package* newPack = _installedDB.newPackage("", "");
 

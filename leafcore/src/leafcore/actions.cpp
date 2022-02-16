@@ -106,7 +106,7 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 			return false;
 		}
 	}
-	LOGU("Done");
+	LOGI("Done resolving dependencies");
 
 	{//Inform the user about the packages to install
 		std::string msg = "Following packages will be fetched:";
@@ -116,11 +116,11 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 	}
 
 	{//Ask the user for permission
-		std::cout << "Do you want to continue? (y/N): ";
+		std::cout << "Do you want to continue? (Y/n): ";
 		std::string answer;
-		std::cin >> answer;
+		getline(std::cin, answer);
 		
-		if (answer != "y"){
+		if (!(answer == "y" || answer == "Y" || answer == "")){
 			_error = "User aborted";
 			return false;
 		}
