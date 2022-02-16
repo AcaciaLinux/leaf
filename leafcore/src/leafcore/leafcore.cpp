@@ -146,15 +146,16 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 		}
 
 		if (!package->getFetchURL().empty())
+			install_packages.push_back(package);
+		else 
 			if (!package->getDependencies().empty())
-				install_packages.push_back(package);
+				LOGU("Package " + package->getName() + " will be treated as collection");
 			else {
 				_error = "Package " + package->getName() + " has no fetch URL and is no collection";
 				LOGE("Failed to perform install action: " + _error);
 				return false;
 			}
-		else 
-			LOGU("Package " + package->getName() + " will be treated as collection");
+			
 
 		_db.resolveDependencies(&install_packages, package);
 	}

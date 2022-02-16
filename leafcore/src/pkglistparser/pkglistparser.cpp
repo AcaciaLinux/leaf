@@ -49,7 +49,7 @@ bool PackageListParser::parse(std::istream& in){
 		blocks.push_back(buf);
 
 		if (blocks.size() != 5){
-			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/4");
+			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/5");
 			continue;
 		}
 
