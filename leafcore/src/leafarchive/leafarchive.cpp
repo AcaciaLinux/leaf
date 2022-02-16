@@ -116,6 +116,9 @@ bool LeafArchive::extract(std::string destination){
 				std::filesystem::current_path(prevDir);
 				return false;
 			}
+
+			LOGI("Processing " + std::string(archive_entry_pathname(entry)));
+
 			r = archive_write_header(ext, entry);
 			if (r < ARCHIVE_OK){
 				if (!_error.empty())
