@@ -92,7 +92,22 @@ bool LeafDB::resolveDependencies(std::vector<Package*>* dependencies, Package* p
 			continue;
 
 		//Add the dependency and scan it for its dependencies
-		dependencies->push_back(dep);
+
+		//If the package has a download URL, add it
+		if (!dep->getFetchURL().empty())
+			dependencies->push_back(dep);
+		
+		else
+			//If there are dependenceis, treat the package as collection
+			if (!dep->getDependencies().empty())
+				LOGI("Treating package " + dep->getName() + " as collection");
+			//Else error out
+			else{
+				_error = "Package " + package->getName() + " has no fetch URL and is no collection";
+				LOGE("Failed resolve dependencies: " + _error);
+				return false;
+			}
+
 		if (!resolveDependencies(dependencies, dep))
 			return false;
 	}
