@@ -2,6 +2,8 @@
 
 This is the package manager made for AcaciaLinux, written in C++ and supporting a really simple packaging format
 
+# For guides, you may refer to the [WIKI]([Home · AcaciaLinux/leaf Wiki · GitHub](https://github.com/AcaciaLinux/leaf/wiki))
+
 # WARNING
 
 leaf is a work in progress project that is **<u>*FAR*</u>** from finished. leaf is now **<u>ARMED</u>** (yes we mean that), it has any safety paths pointed to their final destination, means:
