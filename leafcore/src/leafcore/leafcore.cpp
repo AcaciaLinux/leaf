@@ -144,7 +144,18 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 			LOGE("Failed to perform install action: " + _error);
 			return false;
 		}
-		install_packages.push_back(package);
+
+		if (!package->getFetchURL().empty())
+			if (!package->getDependencies().empty())
+				install_packages.push_back(package);
+			else {
+				_error = "Package " + package->getName() + " has no fetch URL and is no collection";
+				LOGE("Failed to perform install action: " + _error);
+				return false;
+			}
+		else 
+			LOGU("Package " + package->getName() + " will be treated as collection");
+
 		_db.resolveDependencies(&install_packages, package);
 	}
 	LOGU("Done");
@@ -228,7 +239,6 @@ bool Leafcore::fetchPackage(Package* package){
 			return false;
 		}
 	}
-	
 
 	std::string filePath = downloadPath + package->getFullName() + ".tar.xz";
 
@@ -342,7 +352,7 @@ bool Leafcore::deployPackage(Package* package){
 
 	LeafFS fs(dataPath);
 
-	LOGU("Indexing package " + package->getFullName() + "...");
+	LOGI("Indexing package " + package->getFullName() + "...");
 
 	if (!fs.readFiles(true, true)){
 		_error = "Could not index data directory: " + fs.getError();

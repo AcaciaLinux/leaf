@@ -3,10 +3,11 @@
 
 #include "args.hxx"
 
+static args::ArgumentParser parser("leaf package manager", "Leaf package manager is the package manager for acacia linux");
+
 bool Arguments::parse(int argc, char** argv){
 	FUN();
 
-	args::ArgumentParser parser("leaf package manager", "Leaf package manager is the package manager for acacia linux");
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
@@ -70,7 +71,7 @@ bool Arguments::setAction(std::string a){
 		this->action = ACTION_REMOVE;
 
 	else{
-		LOGUE("Unsupported action \"" + a + "\"");
+		std::cout << parser;
 		return false;
 	}
 
