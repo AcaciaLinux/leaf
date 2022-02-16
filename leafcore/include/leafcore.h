@@ -38,14 +38,16 @@ public:
 	/**
 	 * @brief	Installs the provided package with all of its dependencies
 	 * @param	packages		The packages to process
+	 * @param	force			Force leaf to fetch the package, even if it is in the cache
 	 */
-	bool						a_install(std::vector<std::string> packages);
+	bool						a_install(std::vector<std::string> packages, bool force = false);
 
 	/**
 	 * @brief	Fetches the supplied package tarball into the working directory (wd/downloads)
 	 * @param	package			The package to fetch
+	 * @param	force			Force leaf to fetch the package, even if it is in the cache
 	 */
-	bool						fetchPackage(Package* package);
+	bool						fetchPackage(Package* package, bool force = false);
 
 	/**
 	 * @brief	Extracts the supplied package
@@ -76,6 +78,12 @@ public:
 	 */
 	void						setPkgListURL(std::string);
 	std::string					getPkgListURL();
+
+	/**
+	 * @brief	Get the path to the package download destination
+	 * @param	package			The package to process
+	 */
+	std::string					getDownloadPath(Package* package);
 
 	/**
 	 * @brief	Returns the last error

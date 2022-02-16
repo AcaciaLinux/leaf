@@ -31,6 +31,10 @@ std::string Leafcore::getPkgListURL(){
 	return _pkglistURL;
 }
 
+std::string Leafcore::getDownloadPath(Package* package){
+	return _cachePath + "/downloads/" + package->getFullName() + ".tar.xz";
+}
+
 std::string Leafcore::getError(){
 	return _error;
 }

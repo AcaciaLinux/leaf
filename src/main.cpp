@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 			LOGUE("Failed to install: " + leaf.getError());
 		}
 
-		if (!leaf.a_install(arguments.getPackages())){
+		if (!leaf.a_install(arguments.getPackages(), arguments.getRedownload())){
 			LOGUE("Failed to install: " + leaf.getError());
 		}
 	}

@@ -137,7 +137,7 @@ bool Leafcore::parseInstalled(){
 	return true;
 }
 
-bool Leafcore::fetchPackage(Package* package){
+bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 	FUN();
 
 	if (package == nullptr){
@@ -175,18 +175,16 @@ bool Leafcore::fetchPackage(Package* package){
 		}
 	}
 
-	std::string filePath = downloadPath + package->getFullName() + ".tar.xz";
-
-	if (std::filesystem::exists(filePath)){
-		LOGI("Skipping download of " + filePath + ", alredy existing");
+	if (std::filesystem::exists(getDownloadPath(package)) && !forceDownload){
+		LOGI("Skipping fetching of package " + package->getFullName() + ", already fetched");
 		return true;
 	}
 
 	std::ofstream outFile;
-	outFile.open(filePath, std::ios::binary | std::ios::out);
+	outFile.open(getDownloadPath(package), std::ios::out);
 
 	if (!outFile.is_open()){
-		_error = "Failed to open " + filePath + " for writing";
+		_error = "Failed to open " + getDownloadPath(package) + " for writing";
 		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}

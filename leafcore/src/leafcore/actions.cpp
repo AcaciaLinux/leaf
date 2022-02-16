@@ -10,8 +10,10 @@
 
 #include "downloader.h"
 
+#include <list>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 bool Leafcore::a_update(){
 	FUN();
@@ -48,7 +50,7 @@ bool Leafcore::a_update(){
 	return true;
 }
 
-bool Leafcore::a_install(std::vector<std::string> packages){
+bool Leafcore::a_install(std::vector<std::string> packages, bool forceDownload){
 	FUN();
 	_error = "";
 
@@ -128,7 +130,21 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 
 	for (Package* package : install_packages){
 		LOGU("Downloading package " + package->getFullName() + "...");
-		if (!fetchPackage(package)){
+
+		bool force = false;
+
+		//If the package is in the packages vector and it is desired, force the download
+		if (forceDownload){
+			for (std::string ask : packages){
+				if (package->getName() == ask){
+					LOGI("Forcing download of package " + package->getName());
+					force = true;
+					break;
+				}
+			}
+		}
+
+		if (!fetchPackage(package, force)){
 			return false;
 		}
 	}

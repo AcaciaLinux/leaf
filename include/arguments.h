@@ -22,10 +22,11 @@ public:
 	 */
 	bool						parse(int argc, char** argv);
 
-	/**
-	 * @brief	Returns if the program should be verbose
-	 */
 	bool						getVerbose();
+
+	bool						getSuperVerbose();
+
+	bool						getRedownload();
 
 	/**
 	 * @brief	Returns the action to perform
@@ -48,6 +49,9 @@ private:
 
 	//If the program should be super verbose
 	bool						superverbose = false;
+
+	//Forces leaf to redownload the specified package
+	bool						redownload = false;
 
 	//The action to perform
 	e_action					action;
