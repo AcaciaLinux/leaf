@@ -61,6 +61,7 @@ bool Downloader::download(std::string url, std::ostream& out){
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);
+	curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 
 	res = curl_easy_perform(_curl);
 
