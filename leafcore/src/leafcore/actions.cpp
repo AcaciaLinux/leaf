@@ -17,7 +17,9 @@
 
 bool Leafcore::a_update(){
 	FUN();
-	_error = "";
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	LOGI("Fetching package list from " + _pkglistURL + " to " + _pkglistFile);
 
@@ -52,7 +54,9 @@ bool Leafcore::a_update(){
 
 bool Leafcore::a_install(std::vector<std::string> packages, bool forceDownload){
 	FUN();
-	_error = "";
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	//Check if the package list is loaded
 	if (!_loadedPkgList){

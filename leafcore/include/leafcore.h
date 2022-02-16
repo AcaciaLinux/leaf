@@ -62,10 +62,22 @@ public:
 	bool						deployPackage(Package* package);
 
 	/**
+	 * @brief	Checks the leaf directories and prompts the user if something is wrong
+	 */
+	bool						checkDirectories();
+
+	/**
+	 * @brief	Asks the user for permission to do something in the format "question (y/n)"
+	 * @param	question		The question to ask
+	 * @param	defaultOption	If agreeing option should be checked or the negating option
+	 */
+	bool						askUserOK(std::string question, bool defaultOption = true);
+
+	/**
 	 * @brief	The root leaf should deploy packages to (normally "/")
 	 */
-	void						setRootPath(std::string);
-	std::string					getRootPath();
+	void						setRootDir(std::string);
+	std::string					getRootDir();
 	
 	/**
 	 * @brief	The path to the package list file (has default)
@@ -80,10 +92,25 @@ public:
 	std::string					getPkgListURL();
 
 	/**
+	 * @brief	Returns the directory leaf is storing downloads
+	 */
+	std::string					getDownloadDir();
+
+	/**
+	 * @brief	Returns the directory leaf is extracting and caching its packages
+	 */
+	std::string					getPackagesDir();
+
+	/**
 	 * @brief	Get the path to the package download destination
 	 * @param	package			The package to process
 	 */
 	std::string					getDownloadPath(Package* package);
+
+	/**
+	 * @brief	Get the path to the extracted package destination
+	 */
+	std::string					getExtractedDirectory(Package* package);
 
 	/**
 	 * @brief	Returns the last error
@@ -92,13 +119,16 @@ public:
 
 private:
 	//The path to apply leaf packages to (should be "/")
-	std::string					_rootPath;
+	std::string					_rootDir;
 
 	//The directory leaf can work in
-	std::string					_cachePath = "/var/cache/leaf/";
+	std::string					_cacheDir;
+
+	//The leaf configuration path
+	std::string					_leafDir;
 
 	//Where the currently loaded package list file is
-	std::string					_pkglistFile = "/etc/leaf/leaf.pkglist";
+	std::string					_pkglistFile;
 	bool						_loadedPkgList = false;
 
 	//The URL where to fetch the package list from

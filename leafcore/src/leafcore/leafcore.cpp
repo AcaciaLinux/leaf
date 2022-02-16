@@ -19,10 +19,10 @@
 #include <filesystem>
 #include <iostream>
 
-Leafcore::Leafcore(std::string rootPath){
+Leafcore::Leafcore(std::string rootDir){
 	FUN();
 
-	this->_rootPath = rootPath;
+	setRootDir(rootDir);
 }
 
 bool Leafcore::parsePackageList(){
@@ -32,7 +32,9 @@ bool Leafcore::parsePackageList(){
 
 bool Leafcore::parsePackageList(std::string path){
 	FUN();
-	_error = "";
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	_packageListDB.clear();
 
@@ -78,6 +80,9 @@ bool Leafcore::parsePackageList(std::string path){
 
 bool Leafcore::parseInstalled(){
 	FUN();
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	_installedDB.clear();
 
@@ -139,22 +144,13 @@ bool Leafcore::parseInstalled(){
 
 bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 	FUN();
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	if (package == nullptr){
 		_error = "Invalid package (nullptr)";
 		LOGE("Failed to fetch package: " + _error);
-		return false;
-	}
-
-	if (!std::filesystem::exists(_cachePath)){
-		_error = "Cache path " + _cachePath + " does not exist";
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-		return false;
-	}
-
-	if (!std::filesystem::is_directory(_cachePath)){
-		_error = "Cache path " + _cachePath + " is not a directory";
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
@@ -164,12 +160,10 @@ bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 		return false;
 	}
 
-	std::string downloadPath = _cachePath + "downloads/";
-
-	if (!std::filesystem::exists(downloadPath)){
-		LOGI("Download path " + downloadPath + " does not exist, creating");
-		if (!std::filesystem::create_directories(downloadPath)){
-			_error = "Download path " + downloadPath + " could not be created";
+	if (!std::filesystem::exists(getDownloadDir())){
+		LOGI("Download path " + getDownloadDir() + " does not exist, creating");
+		if (!std::filesystem::create_directories(getDownloadDir())){
+			_error = "Download path " + getDownloadDir() + " could not be created";
 			LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
 			return false;
 		}
@@ -211,6 +205,9 @@ bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 
 bool Leafcore::extractPackage(Package* package){
 	FUN();
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	if (package == nullptr){
 		_error = "Invalid package (nullptr)";
@@ -218,32 +215,28 @@ bool Leafcore::extractPackage(Package* package){
 		return false;
 	}
 
-	std::string packagePath = _cachePath + "/downloads/" + package->getFullName() + ".tar.xz";
-
-	if (!std::filesystem::exists(packagePath)){
+	if (!std::filesystem::exists(getDownloadDir())){
 		_error = "Package does not seem to be fetched";
 		LOGE("Failed to extract package: " + _error);
 		return false;
 	}
 
-	std::string extractedPath = _cachePath + "/packages/";
-
-	if (!std::filesystem::exists(extractedPath)){
-		if (!std::filesystem::create_directories(extractedPath)){
-			_error = "Could not create extracted directory " + extractedPath;
+	if (!std::filesystem::exists(getExtractedDirectory(package))){
+		if (!std::filesystem::create_directories(getExtractedDirectory(package))){
+			_error = "Could not create extracted directory " + getExtractedDirectory(package);
 			LOGE("Failed to extract package " + package->getFullName() + ": " + _error);
 			return false;
 		}
 	}
 	
 	LeafArchive archive;
-	if (!archive.load(packagePath)){
+	if (!archive.load(getDownloadPath(package))){
 		_error = "Failed to load package " + package->getFullName() + " into LeafArchive: " + archive.getError();
 		LOGE("Failed to extract package: " + _error);
 		return false;
 	}
 	
-	if (!archive.extract(extractedPath)){
+	if (!archive.extract(getPackagesDir())){
 		_error = "Failed extract package " + package->getFullName() + " using LeafArchive: " + archive.getError();
 		LOGE("Failed to extract package: " + _error);
 		return false;
@@ -254,6 +247,9 @@ bool Leafcore::extractPackage(Package* package){
 
 bool Leafcore::deployPackage(Package* package){
 	FUN();
+	_error.clear();
+	if (!checkDirectories())
+		return false;
 
 	if (package == nullptr){
 		_error = "Invalid package (nullptr)";
@@ -261,21 +257,19 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
-	if (!std::filesystem::exists(_rootPath)){
-		_error = "Root filesystem " + _rootPath + " does not exist";
+	if (!std::filesystem::exists(getRootDir())){
+		_error = "Root filesystem " + getRootDir() + " does not exist";
 		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
-	std::string extractedPath = _cachePath + "/packages/" + package->getFullName() + "/";
-
-	if (!std::filesystem::exists(extractedPath)){
-		_error = "Package directory " + extractedPath + " does not exist, package may not be extracted";
+	if (!std::filesystem::exists(getExtractedDirectory(package))){
+		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
 		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
-	std::string dataPath = extractedPath + "/data/";
+	std::string dataPath = getExtractedDirectory(package) + "/data/";
 
 	if (!std::filesystem::exists(dataPath)){
 		_error = "Data directory " + dataPath + " does not exist, package may be corrupted";
@@ -298,9 +292,9 @@ bool Leafcore::deployPackage(Package* package){
 	const auto copyOptions = 	std::filesystem::copy_options::update_existing
 							|	std::filesystem::copy_options::recursive;
 
-	LOGI("Deploying package " + package->getFullName() + " to " + _rootPath);
+	LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
-	std::filesystem::copy(dataPath, _rootPath, copyOptions);
+	std::filesystem::copy(dataPath, getRootDir(), copyOptions);
 
 	LOGI("Creating .leafinstalled file...");
 
@@ -309,7 +303,7 @@ bool Leafcore::deployPackage(Package* package){
 
 		if (!std::filesystem::exists(installedDir)){
 			if (!std::filesystem::create_directories(installedDir)){
-				_error = "Could not create installed directory " + extractedPath;
+				_error = "Could not create installed directory " + getExtractedDirectory(package);
 				LOGE("Failed to deploy package: " + _error);
 				return false;
 			}
@@ -337,4 +331,88 @@ bool Leafcore::deployPackage(Package* package){
 	}
 	
 	return true;
+}
+
+bool Leafcore::checkDirectories(){
+	FUN();
+
+	LOGD("Checking leaf directories...");
+
+	{//Check the leaf directory
+		LOGD("Checking configuration directory...");
+		if (!std::filesystem::exists(_leafDir)){
+			if (askUserOK("Configuration directory " + _leafDir + " does not exist, create it?"), true){
+				if (!std::filesystem::create_directories(_leafDir)){
+					_error = "Could not create configuration directory " + _leafDir;
+					LOGE(_error);
+					return false;
+				}
+			}
+			else
+			{
+				_error = "User disagreed to create configuration directory " + _leafDir;
+				LOGE(_error);
+				return false;
+			}
+		}
+
+		if (!std::filesystem::is_directory(_leafDir)){
+			_error = "Configuration directory " + _leafDir + " is not a directory";
+			LOGE(_error);
+			return false;
+		}
+	}
+
+	{//Check the cache directory
+		LOGD("Checking cache directory...");
+		if (!std::filesystem::exists(_cacheDir)){
+			if (askUserOK("Cache directory " + _cacheDir + " does not exist, create it?"), true){
+				if (!std::filesystem::create_directories(_cacheDir)){
+					_error = "Could not create cache directory " + _cacheDir;
+					LOGE(_error);
+					return false;
+				}
+			}
+			else
+			{
+				_error = "User disagreed to create cache directory " + _cacheDir;
+				LOGE(_error);
+				return false;
+			}
+		}
+
+		if (!std::filesystem::is_directory(_cacheDir)){
+			_error = "Cache directory " + _cacheDir + " is not a directory";
+			LOGE(_error);
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Leafcore::askUserOK(std::string question, bool defaultOption){
+	FUN();
+
+	if (defaultOption){
+		std::cout << question << " (Y/n): ";
+		std::string answer;
+		getline(std::cin, answer);
+		
+		if (answer == "y" || answer == "Y" || answer == "")
+			return true;
+		else 
+			return false;
+	} 
+	else
+	{
+		std::cout << question << " (y/N): ";
+		std::string answer;
+		getline(std::cin, answer);
+		
+		if (answer == "n" || answer == "N" || answer == "")
+			return false;
+		else 
+			return true;
+	}
 }
