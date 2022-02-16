@@ -26,6 +26,11 @@ public:
 	bool						parsePackageList();
 
 	/**
+	 * @brief	Parses all the installed packages into the leaf database
+	 */
+	bool						parseInstalled();
+
+	/**
 	 * @brief	Updates the local package list
 	 */
 	bool						a_update();

@@ -15,11 +15,7 @@ LeafDB::LeafDB(){
 LeafDB::~LeafDB(){
 	FUN();
 
-	for (auto entry : _packages){
-		delete entry.second;
-	}
-
-	_packages.clear();
+	this->clear();
 }
 
 bool LeafDB::addPackage(Package* newPackage){
@@ -115,4 +111,14 @@ std::vector<Package*> LeafDB::resolveDependencies(Package* package){
 	}
 
 	return dependencies;
+}
+
+void LeafDB::clear(){
+	FUN();
+
+	for (auto entry : _packages){
+		delete entry.second;
+	}
+
+	_packages.clear();
 }

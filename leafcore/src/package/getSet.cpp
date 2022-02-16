@@ -60,3 +60,7 @@ std::string Package::toString(){
 
 	return buf;
 }
+
+std::string Package::getError(){
+	return _error;
+}

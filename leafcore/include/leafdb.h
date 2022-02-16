@@ -55,6 +55,11 @@ public:
 	bool							resolveDependencies(std::vector<Package*>* dependencies, Package* package);
 
 	/**
+	 * @brief	Removes all the packages from the database and the memory
+	 */
+	void							clear();
+
+	/**
 	 * @brief	Returns the last error in a string
 	 */
 	std::string						getError();

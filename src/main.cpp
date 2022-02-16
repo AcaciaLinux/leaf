@@ -36,7 +36,14 @@ int main(int argc, char** argv){
 		return 0;
 	} else if (arguments.getAction() == ACTION_INSTALL) {
 		Leafcore leaf(arguments.getRootPath());
-		leaf.parsePackageList();
+		
+		if (!leaf.parsePackageList()){
+			LOGUE("Failed to install: " + leaf.getError());
+		}
+
+		if (!leaf.parseInstalled()){
+			LOGUE("Failed to install: " + leaf.getError());
+		}
 
 		if (!leaf.a_install(arguments.getPackages())){
 			LOGUE("Failed to install: " + leaf.getError());

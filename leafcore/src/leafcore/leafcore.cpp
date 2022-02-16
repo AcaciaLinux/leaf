@@ -34,6 +34,8 @@ bool Leafcore::parsePackageList(std::string path){
 	FUN();
 	_error = "";
 
+	_packageListDB.clear();
+
 	_pkglistURL = path;
 
 	LOGI("Parsing package list " + path);
@@ -70,6 +72,67 @@ bool Leafcore::parsePackageList(std::string path){
 
 	LOGI("Done parsing package list");
 	_loadedPkgList = true;
+
+	return true;
+}
+
+bool Leafcore::parseInstalled(){
+	FUN();
+
+	_installedDB.clear();
+
+	std::vector<std::string> installedFiles;
+
+	{	//Read the directory
+		LeafFS installedDir("/etc/leaf/installed/");
+
+		if (!installedDir.check()){
+			_error = "Failed to parse installed packages: " + installedDir.getError();
+			LOGE(_error);
+			return false;
+		}
+
+		if (!installedDir.readFiles(true, false)){
+			_error = "Failed to parse installed packages: " + installedDir.getError();
+			LOGE(_error);
+			return false;
+		}
+
+		installedFiles = installedDir.getFiles();
+	}
+
+	if (installedFiles.size() == 0){
+		LOGW("It seems that no packages are installed on the system");
+		return true;
+	}
+
+	LOGI("Installed packages: ");
+	for (std::string file : installedFiles){
+		file.erase(0, 1);
+		LOGI(" -> " + file);
+
+		Package* newPack = _installedDB.newPackage("", "");
+
+		std::ifstream inFile;
+		inFile.open("/etc/leaf/installed/" + file + ".leafinstalled", std::ios::in);
+
+		if (!inFile.is_open()){
+			_error = "Failed to parse installed package " + file + ", failed to open file";
+			LOGE(_error);
+			return false;
+		}
+
+		if (!newPack->parseInstalledFile(inFile)){
+			_error = "Failed to parse installed package " + file + ": " + newPack->getError();
+			LOGE(_error);
+			inFile.close();
+			return false;
+		}
+
+		inFile.close();
+	}
+
+
 
 	return true;
 }
