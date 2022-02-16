@@ -16,7 +16,7 @@ public:
 	/**
 	 * @brief	Creates a new package within this db
 	 * @arg		name				The name of the new package
-	 * @a		version				Tha package version
+	 * @a		version				The package version
 	 * @return	A pointer to the newly created package
 	 */
 	Package*						newPackage(std::string name, std::string version);

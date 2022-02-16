@@ -91,8 +91,11 @@ private:
 	//The URL where to fetch the package list from
 	std::string					_pkglistURL = "http://84.252.121.236/packages/leaf.pkglist";
 
-	//The main database leaf works with
-	LeafDB						_db;
+	//The database of the available packages in the package list
+	LeafDB						_packageListDB;
+
+	//The database of the installed packages
+	LeafDB						_installedDB;
 
 	//Holds the last error in clear readable form
 	std::string					_error;

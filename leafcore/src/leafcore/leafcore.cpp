@@ -62,7 +62,7 @@ bool Leafcore::parsePackageList(std::string path){
 	file.close();
 
 	//Try to apply the file to the database
-	if (!parser.applyToDB(_db)){
+	if (!parser.applyToDB(_packageListDB)){
 		_error = "Parser apply error: " + parser.getError();
 		LOGE("Failed to apply package list with " + _error);
 		return false;
@@ -137,7 +137,7 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 	std::vector<Package*> install_packages;
 	LOGU("Resolving dependencies...");
 	for (std::string packageName : packages){
-		Package* package = _db.getPackage(packageName);
+		Package* package = _packageListDB.getPackage(packageName);
 
 		if (package == nullptr){
 			_error = "Could not find package " + packageName + " in database";
@@ -155,9 +155,12 @@ bool Leafcore::a_install(std::vector<std::string> packages){
 				LOGE("Failed to perform install action: " + _error);
 				return false;
 			}
-			
 
-		_db.resolveDependencies(&install_packages, package);
+		if (!_packageListDB.resolveDependencies(&install_packages, package)){
+			_error = "Could not resolve dependencies for package " + packageName + ": " + _packageListDB.getError();
+			LOGE(_error);
+			return false;
+		}
 	}
 	LOGU("Done");
 
