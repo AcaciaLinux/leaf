@@ -42,8 +42,6 @@ Package* LeafDB::getPackage(std::string name){
 }
 
 Package* LeafDB::newPackage(std::string name, std::string version){
-	LOGD("Adding new package " + name);
-
 	Package* pkg = new Package(name, version);
 	_packages[name] = pkg;
 	return pkg;

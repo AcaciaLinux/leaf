@@ -43,12 +43,15 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	this->verbose = args::get(f_verbose);
-	if (this->verbose)
+	if (this->verbose){
 		hlog->setLevel(Log::I);
+	}
 
 	this->superverbose = args::get(f_sVerbode);
-	if (this->superverbose)
+	if (this->superverbose){
+		hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, true);
 		hlog->setLevel(Log::D);
+	}
 
 	if (!this->setAction(args::get(a_action)))
 		return false;

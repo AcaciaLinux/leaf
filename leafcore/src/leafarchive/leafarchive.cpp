@@ -98,30 +98,43 @@ bool LeafArchive::extract(std::string destination){
 		return false;
 	}
 
+	bool res = true;
 	int r;
 	struct archive_entry *entry;
 	struct archive* ext = (struct archive*)_ext;
 	struct archive* arch = (struct archive*)_archive;
 
-	for (;;) {
-		r = archive_read_next_header(arch, &entry);
-		if (r == ARCHIVE_EOF)
-			break;
-		if (r < ARCHIVE_OK){
-			_error = std::string(archive_error_string(arch));
-			LOGE("Exctraction error: " + _error);
-		}if (r < ARCHIVE_WARN){
-			std::filesystem::current_path(prevDir);
-			return false;
-		}
-		r = archive_write_header(ext, entry);
-		if (r < ARCHIVE_OK){
-			if (!_error.empty())
-				_error += "\n";
-			_error = std::string(archive_error_string(ext));
-			LOGE("Exctraction error: " + _error);
-		}else if (archive_entry_size(entry) > 0) {
-			r = copy_data(arch, ext);
+	try {
+		for (;;) {
+			r = archive_read_next_header(arch, &entry);
+			if (r == ARCHIVE_EOF)
+				break;
+			if (r < ARCHIVE_OK){
+				_error = std::string(archive_error_string(arch));
+				LOGE("Exctraction error: " + _error);
+			}if (r < ARCHIVE_WARN){
+				std::filesystem::current_path(prevDir);
+				return false;
+			}
+			r = archive_write_header(ext, entry);
+			if (r < ARCHIVE_OK){
+				if (!_error.empty())
+					_error += "\n";
+				_error = std::string(archive_error_string(ext));
+				LOGE("Exctraction error: " + _error);
+			}else if (archive_entry_size(entry) > 0) {
+				r = copy_data(arch, ext);
+				if (r < ARCHIVE_OK){
+					if (!_error.empty())
+						_error += "\n";
+					_error = std::string(archive_error_string(ext));
+					LOGE("Exctraction error: " + _error);
+				}if (r < ARCHIVE_WARN){
+					std::filesystem::current_path(prevDir);
+					return false;
+				}
+			}
+			r = archive_write_finish_entry(ext);
 			if (r < ARCHIVE_OK){
 				if (!_error.empty())
 					_error += "\n";
@@ -132,16 +145,10 @@ bool LeafArchive::extract(std::string destination){
 				return false;
 			}
 		}
-		r = archive_write_finish_entry(ext);
-		if (r < ARCHIVE_OK){
-			if (!_error.empty())
-				_error += "\n";
-			_error = std::string(archive_error_string(ext));
-			LOGE("Exctraction error: " + _error);
-		}if (r < ARCHIVE_WARN){
-			std::filesystem::current_path(prevDir);
-			return false;
-		}
+	} catch (...){
+		_error = "libcurl encountered a fatal error";
+		LOGE("Failed to extract archive: " + _error);
+		res = false;
 	}
 
 	archive_read_close(arch);
@@ -151,5 +158,5 @@ bool LeafArchive::extract(std::string destination){
 
 	std::filesystem::current_path(prevDir);
 
-	return true;
+	return res;
 }

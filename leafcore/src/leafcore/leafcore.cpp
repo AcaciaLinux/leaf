@@ -233,20 +233,20 @@ bool Leafcore::extractPackage(Package* package){
 	if (!std::filesystem::exists(extractedPath)){
 		if (!std::filesystem::create_directories(extractedPath)){
 			_error = "Could not create extracted directory " + extractedPath;
-			LOGE("Failed to extract package: " + _error);
+			LOGE("Failed to extract package " + package->getFullName() + ": " + _error);
 			return false;
 		}
 	}
 	
 	LeafArchive archive;
 	if (!archive.load(packagePath)){
-		_error = "Failed to load package into LeafArchive: " + archive.getError();
+		_error = "Failed to load package " + package->getFullName() + " into LeafArchive: " + archive.getError();
 		LOGE("Failed to extract package: " + _error);
 		return false;
 	}
 	
 	if (!archive.extract(extractedPath)){
-		_error = "Failed extract package using LeafArchive: " + archive.getError();
+		_error = "Failed extract package " + package->getFullName() + " using LeafArchive: " + archive.getError();
 		LOGE("Failed to extract package: " + _error);
 		return false;
 	}
@@ -265,7 +265,7 @@ bool Leafcore::deployPackage(Package* package){
 
 	if (!std::filesystem::exists(_rootPath)){
 		_error = "Root filesystem " + _rootPath + " does not exist";
-		LOGE("Failed to deploy package: " + _error);
+		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
@@ -273,7 +273,7 @@ bool Leafcore::deployPackage(Package* package){
 
 	if (!std::filesystem::exists(extractedPath)){
 		_error = "Package directory " + extractedPath + " does not exist, package may not be extracted";
-		LOGE("Failed to deploy package: " + _error);
+		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
@@ -291,7 +291,7 @@ bool Leafcore::deployPackage(Package* package){
 
 	if (!fs.readFiles(true, true)){
 		_error = "Could not index data directory: " + fs.getError();
-		LOGE("Failed to deploy package: " + _error);
+		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
