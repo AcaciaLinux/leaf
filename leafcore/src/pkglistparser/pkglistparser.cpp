@@ -27,7 +27,7 @@ bool PackageListParser::parse(std::istream& in){
 	}
 
 	std::string line;
-	std::vector<std::string> blocks;
+	std::deque<std::string> blocks;
 	std::string buf;
 
 	while(getline(in, line)){
@@ -101,11 +101,11 @@ bool PackageListParser::applyToDB(LeafDB& db){
 	return ret;
 }
 
-std::vector<std::string> PackageListParser::parseDependenciesString(std::string deps){
+std::deque<std::string> PackageListParser::parseDependenciesString(std::string deps){
 	FUN();
 
 	std::string buf = "";
-	std::vector<std::string> list;
+	std::deque<std::string> list;
 
 	for (char c : deps){
 		switch (c){

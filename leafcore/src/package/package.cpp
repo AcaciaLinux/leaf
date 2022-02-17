@@ -44,7 +44,7 @@ bool Package::checkFileProvided(std::string filepath){
 		LOGF(msg + filepath + "\"");
 	}
 
-	std::vector<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
+	std::deque<std::string>::iterator results = std::find(_provided_files.begin(), _provided_files.end(), filepath);
 	return _provided_files.end() != results;
 }
 
@@ -137,8 +137,6 @@ bool Package::parseInstalledFile(std::istream& in){
 	}
 
 	{	//Parse dependencies
-		_dependencies.reserve(countDependencies);
-
 		for (int i = 0; i < countDependencies; i++){
 			if (!getline(in, line)){
 				_error = "Uexpected EOF for dependency " + std::to_string(i+1) + "/" + std::to_string(countDependencies);
@@ -152,7 +150,6 @@ bool Package::parseInstalledFile(std::istream& in){
 	}
 
 	{	//Parse files
-		_provided_files.reserve(countFiles);
 
 		for (int i = 0; i < countFiles; i++){
 			if (!getline(in, line)){

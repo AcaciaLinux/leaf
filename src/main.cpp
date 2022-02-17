@@ -16,6 +16,8 @@ Arguments arguments;
 
 Log::Log* hlog;
 
+#include <deque>
+
 int main(int argc, char** argv){
 	hlog = new Log::Log(Log::U);
 	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);

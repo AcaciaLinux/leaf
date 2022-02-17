@@ -2,7 +2,7 @@
 #define __LEAFDB_H__
 
 #include <unordered_map>
-#include <vector>
+#include <deque>
 
 #include "file.h"
 #include "package.h"
@@ -38,21 +38,21 @@ public:
 	 * @brief	Returns a vector of all packages providing a file
 	 * @param	filepath			The file path to search for
 	 */
-	std::vector<Package*>			findFileProviders(std::string filepath);
+	std::deque<Package*>			findFileProviders(std::string filepath);
 
 	/**
 	 * @brief	Resolves the dependencies of the provided package
 	 * @param	package				The package to find the dependencies of
 	 * @return	Empty vector if there was an error
 	 */
-	std::vector<Package*>			resolveDependencies(Package* package);
+	std::deque<Package*>			resolveDependencies(Package* package);
 	
 	/**
 	 * @brief	The recursive version of resolveDependencies(Package*), gets used by it too
 	 * @param	dependencies		A pointer to the dependencies vector to append to
 	 * @param	package				The package to resolve the dependencies for
 	 */
-	bool							resolveDependencies(std::vector<Package*>* dependencies, Package* package);
+	bool							resolveDependencies(std::deque<Package*>* dependencies, Package* package);
 
 	/**
 	 * @brief	Removes all the packages from the database and the memory

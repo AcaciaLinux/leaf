@@ -2,7 +2,7 @@
 #define __LEAF_FS_H__
 
 #include <string>
-#include <vector>
+#include <deque>
 
 /**
  * @brief	Provides a filesystem abstraction useful for leaf to
@@ -35,7 +35,7 @@ public:
 	/**
 	 * @brief	Returns a reference to the previously read files in the directory
 	 */
-	std::vector<std::string>&	getFiles();
+	std::deque<std::string>&	getFiles();
 
 	/**
 	 * @brief	Returns the last error
@@ -51,7 +51,7 @@ private:
 	std::string					_curDir;
 
 	//The files contained in this directory parsed by readFiles() and readFilesRecursive()
-	std::vector<std::string>	_files;
+	std::deque<std::string>		_files;
 
 	bool						getFiles(std::string prefix, std::string directory, bool recursive, bool filesonly);
 };

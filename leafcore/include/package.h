@@ -4,7 +4,7 @@
 #include "file.h"
 
 #include <string>
-#include <vector>
+#include <deque>
 #include <unordered_map>
 #include <ostream>
 #include <istream>
@@ -34,15 +34,13 @@ public:
 
 	/**
 	 * @brief	Returns a reference to the files provided by this package
-	 * @return	std::vector<std::string>&
 	 */
-	std::vector<std::string>&	getProvidedFiles();
+	std::deque<std::string>&	getProvidedFiles();
 
 	/**
 	 * @brief	Returns a reference to the dependencies needed by this package
-	 * @return	std::vector<std::string>& 
 	 */
-	std::vector<std::string>&	getDependencies();
+	std::deque<std::string>&	getDependencies();
 
 	/**
 	 * @brief	The name of the package
@@ -104,10 +102,10 @@ private:
 	std::string					_name;
 	std::string					_versionString;
 	std::string					_description;
-	std::vector<std::string>	_dependencies;
+	std::deque<std::string>		_dependencies;
 	std::string					_fetchURL;
 	
-	std::vector<std::string>	_provided_files;
+	std::deque<std::string>		_provided_files;
 };
 
 #endif

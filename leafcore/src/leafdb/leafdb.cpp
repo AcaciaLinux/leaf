@@ -47,9 +47,9 @@ Package* LeafDB::newPackage(std::string name, std::string version){
 	return pkg;
 }
 
-std::vector<Package*> LeafDB::findFileProviders(std::string filepath){
+std::deque<Package*> LeafDB::findFileProviders(std::string filepath){
 	FUN();
-	std::vector<Package*> providers;
+	std::deque<Package*> providers;
 
 	for(auto package : _packages){
 		if (package.second == nullptr)
@@ -62,7 +62,7 @@ std::vector<Package*> LeafDB::findFileProviders(std::string filepath){
 	return providers;
 }
 
-bool LeafDB::resolveDependencies(std::vector<Package*>* dependencies, Package* package){
+bool LeafDB::resolveDependencies(std::deque<Package*>* dependencies, Package* package){
 	FUN();
 	LOGI("Resolving dependencies for " + package->getName() + "...");
 
@@ -113,10 +113,10 @@ bool LeafDB::resolveDependencies(std::vector<Package*>* dependencies, Package* p
 	return true;
 }
 
-std::vector<Package*> LeafDB::resolveDependencies(Package* package){
+std::deque<Package*> LeafDB::resolveDependencies(Package* package){
 	FUN();
 	_error.clear();
-	std::vector<Package*> dependencies;
+	std::deque<Package*> dependencies;
 
 	if (!resolveDependencies(&dependencies, package)){
 		_error = "Failed to find dependency package " + _error;

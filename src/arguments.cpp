@@ -109,6 +109,6 @@ std::string Arguments::getRootPath(){
 	return this->rootPath;
 }
 
-std::vector<std::string> Arguments::getPackages(){
+std::deque<std::string> Arguments::getPackages(){
 	return this->packages;
 }

@@ -2,6 +2,7 @@
 #define __PACKAGE_LIST_PARSER_H__
 
 #include <istream>
+#include <deque>
 
 #include "leafdb.h"
 
@@ -29,13 +30,13 @@ public:
 
 private:
 	std::string					_error;
-	std::vector<Package*>		_packages;
+	std::deque<Package*>		_packages;
 
 	/**
 	 * @brief	Parses the dependency string of a package list entry
 	 * @return	A vector containing the names
 	 */
-	std::vector<std::string>	parseDependenciesString(std::string);
+	std::deque<std::string>		parseDependenciesString(std::string);
 };
 
 #endif

@@ -2,7 +2,7 @@
 #define __LEAFCORE_H__
 
 #include <string>
-#include <vector>
+#include <list>
 
 #include "leafdb.h"
 
@@ -40,7 +40,7 @@ public:
 	 * @param	packages		The packages to process
 	 * @param	force			Force leaf to fetch the package, even if it is in the cache
 	 */
-	bool						a_install(std::vector<std::string> packages, bool force = false);
+	bool						a_install(std::deque<std::string> packages, bool force = false);
 
 	/**
 	 * @brief	Fetches the supplied package tarball into the working directory (wd/downloads)

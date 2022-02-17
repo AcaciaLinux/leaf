@@ -7,11 +7,11 @@
 
 #include "package.h"
 
-std::vector<std::string>& Package::getProvidedFiles(){
+std::deque<std::string>& Package::getProvidedFiles(){
 	return _provided_files;
 }
 
-std::vector<std::string>& Package::getDependencies(){
+std::deque<std::string>& Package::getDependencies(){
 	return _dependencies;
 }
 

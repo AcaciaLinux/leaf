@@ -86,7 +86,7 @@ bool Leafcore::parseInstalled(){
 
 	_installedDB.clear();
 
-	std::vector<std::string> installedFiles;
+	std::deque<std::string> installedFiles;
 
 	{	//Read the directory
 		LeafFS installedDir("/etc/leaf/installed/");

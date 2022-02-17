@@ -1,7 +1,7 @@
 #ifndef __Arguments_H__
 #define __Arguments_H__
 
-#include <vector>
+#include <deque>
 #include <string>
 
 enum e_action{
@@ -41,7 +41,7 @@ public:
 	/**
 	 * @brief	Returns the packages that should be operated on
 	 */
-	std::vector<std::string>	getPackages();
+	std::deque<std::string>		getPackages();
 
 private:
 	//If the program should be verbose
@@ -60,7 +60,7 @@ private:
 	std::string					rootPath = "/";
 
 	//The packages to perform the action on
-	std::vector<std::string>	packages;
+	std::deque<std::string>		packages;
 
 	/**
 	 * @brief	Uses the supplied string to determine the action to be performed

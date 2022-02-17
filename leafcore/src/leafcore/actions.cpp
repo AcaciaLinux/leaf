@@ -10,7 +10,6 @@
 
 #include "downloader.h"
 
-#include <list>
 #include <fstream>
 #include <iostream>
 #include <filesystem>
@@ -52,7 +51,7 @@ bool Leafcore::a_update(){
 	return true;
 }
 
-bool Leafcore::a_install(std::vector<std::string> packages, bool forceDownload){
+bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	FUN();
 	_error.clear();
 	if (!checkDirectories())
@@ -79,7 +78,7 @@ bool Leafcore::a_install(std::vector<std::string> packages, bool forceDownload){
 		LOGU(msg);
 	}
 
-	std::vector<Package*> install_packages;
+	std::deque<Package*> install_packages;
 	LOGU("Resolving dependencies...");
 	for (std::string packageName : packages){
 		Package* package = _packageListDB.getPackage(packageName);
