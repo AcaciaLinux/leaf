@@ -180,7 +180,11 @@ bool Leafcore::deployPackage(Package* package){
 
 		const auto copyOptions = 	std::filesystem::copy_options::update_existing
 								|	std::filesystem::copy_options::recursive
+<<<<<<< HEAD
 								|	std::filesystem::copy_symlink;
+=======
+								|	std::filesystem::copy_options::copy_symlinks;
+>>>>>>> 4445d20 (Added symlink copying)
 
 		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
