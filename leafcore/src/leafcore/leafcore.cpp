@@ -30,118 +30,6 @@ bool Leafcore::parsePackageList(){
 	return parsePackageList(_pkglistFile);
 }
 
-bool Leafcore::parsePackageList(std::string path){
-	FUN();
-	_error.clear();
-	if (!checkDirectories())
-		return false;
-
-	_packageListDB.clear();
-
-	_pkglistURL = path;
-
-	LOGI("Parsing package list " + path);
-
-	std::ifstream file;
-	file.open(path, std::ios::in);
-
-	//Try opening package list file
-	if (!file.is_open()){
-		_error = "File " + path + " could not be opened";
-		LOGE("Could not open package list " + path);
-		file.close();
-		return false;
-	}
-
-	PackageListParser parser;
-
-	//Try parsing the file
-	if (!parser.parse(file)){
-		_error = "Parser error: " + parser.getError();
-		LOGE("Failed to parse package list with " + _error);
-		file.close();
-		return false;
-	}
-
-	file.close();
-
-	//Try to apply the file to the database
-	if (!parser.applyToDB(_packageListDB)){
-		_error = "Parser apply error: " + parser.getError();
-		LOGE("Failed to apply package list with " + _error);
-		return false;
-	}
-
-	LOGI("Done parsing package list");
-	_loadedPkgList = true;
-
-	return true;
-}
-
-bool Leafcore::parseInstalled(){
-	FUN();
-	_error.clear();
-	if (!checkDirectories())
-		return false;
-
-	_installedDB.clear();
-
-	std::deque<std::string> installedFiles;
-
-	{	//Read the directory
-		LeafFS installedDir("/etc/leaf/installed/");
-
-		if (!installedDir.check()){
-			_error = "Failed to parse installed packages: " + installedDir.getError();
-			LOGE(_error);
-			return false;
-		}
-
-		if (!installedDir.readFiles(true, false)){
-			_error = "Failed to parse installed packages: " + installedDir.getError();
-			LOGE(_error);
-			return false;
-		}
-
-		installedFiles = installedDir.getFiles();
-	}
-
-	if (installedFiles.size() == 0){
-		LOGW("It seems that no packages are installed on the system");
-		return true;
-	}
-
-	LOGD("Installed packages: ");
-	for (std::string file : installedFiles){
-		file.erase(0, 1);
-		LOGD(" -> " + file);
-
-		Package* newPack = _installedDB.newPackage("", "");
-
-		std::ifstream inFile;
-		inFile.open("/etc/leaf/installed/" + file + ".leafinstalled", std::ios::in);
-
-		if (!inFile.is_open()){
-			_error = "Failed to parse installed package " + file + ", failed to open file";
-			LOGE(_error);
-			return false;
-		}
-
-		if (!newPack->parseInstalledFile(inFile)){
-			_error = "Failed to parse installed package " + file + ": " + newPack->getError();
-			LOGE(_error);
-			inFile.close();
-			return false;
-		}
-
-		inFile.close();
-	}
-
-
-
-	return true;
-}
-
 bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 	FUN();
 	_error.clear();
@@ -269,32 +157,40 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
+	if (!runPostInstall(package)){
+		_error = "Failed preinstallation of " + package->getFullName() + ": " + _error;
+		LOGE(_error);
+		return false;
+	}
+
 	std::string dataPath = getExtractedDirectory(package) + "/data/";
 
 	if (!std::filesystem::exists(dataPath)){
-		_error = "Data directory " + dataPath + " does not exist, package may be corrupted";
-		LOGE("Failed to deploy package: " + _error);
-		return false;
+		LOGE("Could not find data directory " + dataPath);
+	} else {
+		LeafFS fs(dataPath);
+
+		LOGI("Indexing package " + package->getFullName() + "...");
+
+		if (!fs.readFiles(true, true)){
+			LOGW("Could not index data directory: " + fs.getError());
+		}
+
+		package->_provided_files = fs.getFiles();
+
+		const auto copyOptions = 	std::filesystem::copy_options::update_existing
+								|	std::filesystem::copy_options::recursive;
+
+		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
+
+		std::filesystem::copy(dataPath, getRootDir(), copyOptions);
 	}
 
-	LeafFS fs(dataPath);
-
-	LOGI("Indexing package " + package->getFullName() + "...");
-
-	if (!fs.readFiles(true, true)){
-		_error = "Could not index data directory: " + fs.getError();
-		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
+	if (!runPostInstall(package)){
+		_error = "Failed postinstallation of " + package->getFullName() + ": " + _error;
+		LOGE(_error);
 		return false;
 	}
-
-	package->_provided_files = fs.getFiles();
-
-	const auto copyOptions = 	std::filesystem::copy_options::update_existing
-							|	std::filesystem::copy_options::recursive;
-
-	LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
-
-	std::filesystem::copy(dataPath, getRootDir(), copyOptions);
 
 	LOGI("Creating .leafinstalled file...");
 
@@ -330,6 +226,72 @@ bool Leafcore::deployPackage(Package* package){
 		file.close();
 	}
 	
+	return true;
+}
+
+bool Leafcore::runPreInstall(Package* package){
+	FUN();
+	_error.clear();
+
+	if (!std::filesystem::exists(getExtractedDirectory(package))){
+		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
+		LOGE("Failed to run preinstall of " + package->getFullName() + ": " + _error);
+		return false;
+	}
+
+	if (!std::filesystem::exists(getExtractedDirectory(package) + "preinstall.sh")){
+		LOGI("Preinstall script does not exist, skipping");
+		return true;
+	}
+
+	std::string oldWorkDir = std::filesystem::current_path();
+
+	std::filesystem::current_path(getExtractedDirectory(package));
+
+	int res = 0;
+
+	if (hlog->getLevel() < Log::I)
+		res = system("bash ./preinstall.sh >> /dev/null");
+	else
+		res = system("bash ./preinstall.sh");
+
+	if (res != 0){
+		_error = "Preinstallation script failed to execute";
+		LOGE(_error);
+		return false;
+	}
+
+	std::filesystem::current_path(oldWorkDir);
+
+	return true;
+}
+
+bool Leafcore::runPostInstall(Package* package){
+	FUN();
+	_error.clear();
+
+	if (!std::filesystem::exists(getExtractedDirectory(package))){
+		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
+		LOGE("Failed to run postinstall of " + package->getFullName() + ": " + _error);
+		return false;
+	}
+
+	if (!std::filesystem::exists(getExtractedDirectory(package) + "postinstall.sh")){
+		LOGI("Postinstall script does not exist, skipping");
+		return true;
+	}
+
+	std::string oldWorkDir = std::filesystem::current_path();
+
+	std::filesystem::current_path(getExtractedDirectory(package));
+
+	if (hlog->getLevel() < Log::I)
+		system("bash ./postinstall.sh >> /dev/null");
+	else
+		system("bash ./postinstall.sh");
+
+	std::filesystem::current_path(oldWorkDir);
+
 	return true;
 }
 

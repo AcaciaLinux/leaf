@@ -62,6 +62,18 @@ public:
 	bool						deployPackage(Package* package);
 
 	/**
+	 * @brief	Executes the preinstall script of a package if it exists
+	 * @param	package			The package to run the script of
+	 */
+	bool						runPreInstall(Package* package);
+
+	/**
+	 * @brief	Executes the postinstall script of a package if it exists
+	 * @param	package			The package to run the script of
+	 */
+	bool						runPostInstall(Package* package);
+
+	/**
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
 	bool						checkDirectories();
