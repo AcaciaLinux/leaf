@@ -178,13 +178,21 @@ bool Leafcore::deployPackage(Package* package){
 
 		package->_provided_files = fs.getFiles();
 
-		const auto copyOptions = 	std::filesystem::copy_options::update_existing
+		const auto copyOptions = 	std::filesystem::copy_options::overwrite_existing
 								|	std::filesystem::copy_options::recursive
 								|	std::filesystem::copy_options::copy_symlinks;
 
 		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
-		std::filesystem::copy(dataPath, getRootDir(), copyOptions);
+
+		std::error_code error;
+		std::filesystem::copy(dataPath, getRootDir(), copyOptions, error);
+
+		if (error){
+			_error = "Failed to copy: " + error.message();
+			LOGE(_error);
+			return false;
+		}
 	}
 
 	if (!runPostInstall(package)){
