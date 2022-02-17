@@ -179,7 +179,8 @@ bool Leafcore::deployPackage(Package* package){
 		package->_provided_files = fs.getFiles();
 
 		const auto copyOptions = 	std::filesystem::copy_options::update_existing
-								|	std::filesystem::copy_options::recursive;
+								|	std::filesystem::copy_options::recursive
+								|	std::filesystem::copy_symlink;
 
 		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
