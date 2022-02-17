@@ -2,7 +2,7 @@
 
 This is the package manager made for AcaciaLinux, written in C++ and supporting a really simple packaging format
 
-# For guides, you may refer to the [WIKI]([Home · AcaciaLinux/leaf Wiki · GitHub](https://github.com/AcaciaLinux/leaf/wiki))
+# For guides, you may refer to the [WIKI](https://github.com/AcaciaLinux/leaf/wiki)
 
 # WARNING
 
