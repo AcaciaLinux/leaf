@@ -72,6 +72,8 @@ private:
 	std::unordered_map<std::string, File*>		_files;
 
 	std::string									_error;
+
+	bool										fail(std::string message);
 };
 
 #endif

@@ -89,22 +89,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 			return false;
 		}
 
-		//Add only packages that have no empty URL
-		if (!package->getFetchURL().empty())
-			install_packages.push_back(package);
-		else
-			//If the URL is empty, but there are dependencies, treat the package as collection
-			if (!package->getDependencies().empty())
-				LOGU("Package " + package->getName() + " will be treated as collection");
-
-			//Else error out
-			else {
-				_error = "Package " + package->getName() + " has no fetch URL and is no collection";
-				LOGE("Failed to perform install action: " + _error);
-				return false;
-			}
-
-		//Now resolve the dependencies of the package recursively
+		//Resolve the dependencies of the package recursively
 		if (!_packageListDB.resolveDependencies(&install_packages, package)){
 			_error = "Could not resolve dependencies for package " + packageName + ": " + _packageListDB.getError();
 			LOGE(_error);

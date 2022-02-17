@@ -24,7 +24,7 @@ bool LeafDB::addPackage(Package* newPackage){
 	//Check for existing package
 	for (auto pkg : _packages){
 		if (pkg.second->getName() == newPackage->getName())
-			return false;
+			return fail("Package " + pkg.second->getName() + " already in database");
 	}
 
 	_packages[newPackage->getName()] = newPackage;
@@ -62,70 +62,6 @@ std::deque<Package*> LeafDB::findFileProviders(std::string filepath){
 	return providers;
 }
 
-bool LeafDB::resolveDependencies(std::deque<Package*>* dependencies, Package* package){
-	FUN();
-	LOGI("Resolving dependencies for " + package->getName() + "...");
-
-	for (std::string depString : package->getDependencies()){
-		//Resolve the dependency string
-		Package* dep = getPackage(depString);
-
-		//Check if the dependency was not found
-		if (dep == nullptr){
-			_error = depString;
-			LOGE("Failed to resolve dependency package " + _error);
-			return false;
-		}
-
-		bool circular_dependency = false;
-		//Check if the package has not been added already (circular dependency)
-		for (Package* pkg : *dependencies){
-			if (pkg == dep){
-				LOGI("Circular dependency: " + dep->getName());
-				circular_dependency = true;
-			}
-		}
-
-		if (circular_dependency)
-			continue;
-
-		//Add the dependency and scan it for its dependencies
-
-		//If the package has a download URL, add it
-		if (!dep->getFetchURL().empty())
-			dependencies->push_back(dep);
-		
-		else
-			//If there are dependenceis, treat the package as collection
-			if (!dep->getDependencies().empty())
-				LOGI("Treating package " + dep->getName() + " as collection");
-			//Else error out
-			else{
-				_error = "Package " + package->getName() + " has no fetch URL and is no collection";
-				LOGE("Failed resolve dependencies: " + _error);
-				return false;
-			}
-
-		if (!resolveDependencies(dependencies, dep))
-			return false;
-	}
-
-	return true;
-}
-
-std::deque<Package*> LeafDB::resolveDependencies(Package* package){
-	FUN();
-	_error.clear();
-	std::deque<Package*> dependencies;
-
-	if (!resolveDependencies(&dependencies, package)){
-		_error = "Failed to find dependency package " + _error;
-		dependencies.clear();
-	}
-
-	return dependencies;
-}
-
 void LeafDB::clear(){
 	FUN();
 
@@ -134,4 +70,10 @@ void LeafDB::clear(){
 	}
 
 	_packages.clear();
+}
+
+bool LeafDB::fail(std::string message){
+	_error = message;
+	LOGE("LeafDB: " + _error);
+	return false;
 }

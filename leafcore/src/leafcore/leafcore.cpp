@@ -180,7 +180,7 @@ bool Leafcore::deployPackage(Package* package){
 
 		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
-		const auto copyOptions = 	std::filesystem::copy_options::overwrite_existing;
+		const auto copyOptions = std::filesystem::copy_options::none;
 
 		std::error_code error;
 		for(std::string file : package->getProvidedFiles()){
@@ -192,14 +192,14 @@ bool Leafcore::deployPackage(Package* package){
 				return false;
 			}
 
-			if (std::filesystem::is_regular_file(dataPath + file))
-			{
-				std::filesystem::copy_file(dataPath + file, getRootDir() + file, copyOptions, error);
-			} 
-			else if (std::filesystem::is_symlink(dataPath + file))
+			if (std::filesystem::is_symlink(dataPath + file))
 			{
 				std::filesystem::copy_symlink(dataPath + file, getRootDir() + file);
-			} 
+			}
+			else if (std::filesystem::is_regular_file(dataPath + file))
+			{
+				std::filesystem::copy_file(dataPath + file, getRootDir() + file, copyOptions, error);
+			}
 			else if (std::filesystem::is_other(dataPath + file))
 			{
 				LOGD("Is something other");
