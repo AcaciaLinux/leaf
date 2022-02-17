@@ -25,7 +25,7 @@ bool Leafcore::a_update(){
 
 	//Create the output file stream and check it
 	std::ofstream file;
-	file.open(_pkglistFile, std::ios::out);
+	file.open(_pkglistFile, std::ios::trunc);
 
 	if (!file.is_open()){
 		_error = "Failed to open " + _pkglistFile + " for writing";

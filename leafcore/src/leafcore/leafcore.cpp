@@ -312,7 +312,7 @@ bool Leafcore::deployPackage(Package* package){
 		std::string installedPath = installedDir + package->getName() + ".leafinstalled";
 
 		std::ofstream file;
-		file.open(installedPath, std::ios::out);
+		file.open(installedPath, std::ios::trunc);
 
 		if (!file.is_open()){
 			_error = "Could not open installed file " + installedPath;
