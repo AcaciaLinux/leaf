@@ -178,21 +178,41 @@ bool Leafcore::deployPackage(Package* package){
 
 		package->_provided_files = fs.getFiles();
 
-		const auto copyOptions = 	std::filesystem::copy_options::overwrite_existing
-								|	std::filesystem::copy_options::recursive
-								|	std::filesystem::copy_options::copy_symlinks;
-
 		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
 
+		const auto copyOptions = 	std::filesystem::copy_options::overwrite_existing;
 
 		std::error_code error;
-		std::filesystem::copy(dataPath, getRootDir(), copyOptions, error);
+		for(std::string file : package->getProvidedFiles()){
+			error.clear();
 
-		if (error){
-			_error = "Failed to copy: " + error.message();
-			LOGE(_error);
-			return false;
-		}
+			if (!std::filesystem::exists(dataPath + file)){
+				_error = "File " + dataPath + file + " does not exist anymore";
+				LOGE(_error);
+				return false;
+			}
+
+			if (std::filesystem::is_regular_file(dataPath + file))
+			{
+				std::filesystem::copy_file(dataPath + file, getRootDir() + file, copyOptions, error);
+			} 
+			else if (std::filesystem::is_symlink(dataPath + file))
+			{
+				std::filesystem::copy_symlink(dataPath + file, getRootDir() + file);
+			} 
+			else if (std::filesystem::is_other(dataPath + file))
+			{
+				LOGD("Is something other");
+				std::filesystem::copy(dataPath + file, getRootDir() + file, copyOptions, error);
+			}
+
+			if (error){
+				_error = "Failed to copy file " + dataPath + file + ": " + error.message();
+				LOGE(_error);
+				return false;
+			}
+
+		}		
 	}
 
 	if (!runPostInstall(package)){
