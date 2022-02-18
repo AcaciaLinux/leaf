@@ -51,6 +51,24 @@ std::string Package::getFetchURL(){
 	return _fetchURL;
 }
 
+void Package::setDB(LeafDB* db){
+	_db = db;
+}
+
+LeafDB* Package::getDB(){
+	return _db;
+}
+
+std::string Package::getDownloadPath(){
+	//Check if the database is ok
+	if (_db == nullptr){
+		_error = "Database is not accessible (nullptr)";
+		return "";
+	}
+
+	return _db->getCore()->getDownloadDir() + getFullName() + ".leafpkg";
+}
+
 std::string Package::toString(){
 	std::string buf = "Package ";
 	buf += _name + " (" + _description + ")";

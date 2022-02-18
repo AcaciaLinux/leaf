@@ -8,8 +8,10 @@
 #include "log.h"
 #include "leafdb.h"
 
-LeafDB::LeafDB(){
+LeafDB::LeafDB(Leafcore* core){
 	FUN();
+
+	_core = core;
 }
 
 LeafDB::~LeafDB(){
@@ -21,11 +23,16 @@ LeafDB::~LeafDB(){
 bool LeafDB::addPackage(Package* newPackage){
 	FUN();
 
+	//TODO check newPackage for nullptr
+
 	//Check for existing package
 	for (auto pkg : _packages){
 		if (pkg.second->getName() == newPackage->getName())
 			return fail("Package " + pkg.second->getName() + " already in database");
 	}
+
+	//Set the database
+	newPackage->setDB(this);
 
 	_packages[newPackage->getName()] = newPackage;
 	
@@ -43,6 +50,7 @@ Package* LeafDB::getPackage(std::string name){
 
 Package* LeafDB::newPackage(std::string name, std::string version){
 	Package* pkg = new Package(name, version);
+	pkg->setDB(this);
 	_packages[name] = pkg;
 	return pkg;
 }

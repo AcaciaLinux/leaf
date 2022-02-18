@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "fail.h"
 #include "leafcore.h"
 
 #include "downloader.h"
@@ -81,7 +82,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	std::deque<Package*> install_packages;
 	LOGU("Resolving dependencies...");
 	for (std::string packageName : packages){
-		Package* package = _packageListDB.getPackage(packageName);
+		Package* package = _packageListDB->getPackage(packageName);
 
 		if (package == nullptr){
 			_error = "Could not find package " + packageName + " in database";
@@ -90,8 +91,8 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 		}
 
 		//Resolve the dependencies of the package recursively
-		if (!_packageListDB.resolveDependencies(&install_packages, package)){
-			_error = "Could not resolve dependencies for package " + packageName + ": " + _packageListDB.getError();
+		if (!_packageListDB->resolveDependencies(&install_packages, package)){
+			_error = "Could not resolve dependencies for package " + packageName + ": " + _packageListDB->getError();
 			LOGE(_error);
 			return false;
 		}
@@ -119,21 +120,9 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	for (Package* package : install_packages){
 		LOGU("Downloading package " + package->getFullName() + "...");
 
-		bool force = false;
-
-		//If the package is in the packages vector and it is desired, force the download
-		if (forceDownload){
-			for (std::string ask : packages){
-				if (package->getName() == ask){
-					LOGI("Forcing download of package " + package->getName());
-					force = true;
-					break;
-				}
-			}
-		}
-
-		if (!fetchPackage(package, force)){
-			return false;
+		if (!package->fetch()){
+			_error = package->getError();
+			return FAIL(_error);
 		}
 	}
 

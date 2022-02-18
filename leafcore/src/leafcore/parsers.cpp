@@ -20,7 +20,7 @@ bool Leafcore::parsePackageList(std::string path){
 	if (!checkDirectories())
 		return false;
 
-	_packageListDB.clear();
+	_packageListDB->clear();
 
 	_pkglistURL = path;
 
@@ -50,7 +50,7 @@ bool Leafcore::parsePackageList(std::string path){
 	file.close();
 
 	//Try to apply the file to the database
-	if (!parser.applyToDB(_packageListDB)){
+	if (!parser.applyToDB(*_packageListDB)){
 		_error = "Parser apply error: " + parser.getError();
 		LOGE("Failed to apply package list with " + _error);
 		return false;
@@ -68,7 +68,7 @@ bool Leafcore::parseInstalled(){
 	if (!checkDirectories())
 		return false;
 
-	_installedDB.clear();
+	_installedDB->clear();
 
 	std::deque<std::string> installedFiles;
 
@@ -100,7 +100,7 @@ bool Leafcore::parseInstalled(){
 		file.erase(0, 1);
 		LOGD(" -> " + file);
 
-		Package* newPack = _installedDB.newPackage("", "");
+		Package* newPack = _installedDB->newPackage("", "");
 
 		std::ifstream inFile;
 		inFile.open("/etc/leaf/installed/" + file + ".leafinstalled", std::ios::in);

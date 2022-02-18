@@ -1,16 +1,19 @@
 #ifndef __LEAFDB_H__
 #define __LEAFDB_H__
 
+class LeafDB;
+
 #include <unordered_map>
 #include <deque>
 
 #include "file.h"
 #include "package.h"
+#include "leafcore.h"
 
 class LeafDB{
 
 public:
-	LeafDB();
+	LeafDB(Leafcore* core);
 	~LeafDB();
 
 	/**
@@ -55,6 +58,11 @@ public:
 	bool							resolveDependencies(std::deque<Package*>* dependencies, Package* package);
 
 	/**
+	 * @brief	Returns the leaf core this database belongs to
+	 */
+	Leafcore*						getCore();
+
+	/**
 	 * @brief	Removes all the packages from the database and the memory
 	 */
 	void							clear();
@@ -64,9 +72,11 @@ public:
 	 */
 	std::string						getError();
 
-#ifdef FRIEND_LEAFDB
+#ifndef FRIEND_LEAFDB
 private:
 #endif
+
+	Leafcore*									_core;
 
 	std::unordered_map<std::string, Package*>	_packages;
 	std::unordered_map<std::string, File*>		_files;

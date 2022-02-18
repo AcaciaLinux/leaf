@@ -28,7 +28,6 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 		//Get the package with the name of the dependency
 		Package* dependency = getPackage(dependencyName);
 
-		dependency = nullptr;
 		//If the dependency was not found, error
 		if (dependency == nullptr)
 			return fail("Could not find dependency " + dependencyName + " for package " + package->getFullName());

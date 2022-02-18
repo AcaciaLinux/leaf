@@ -8,6 +8,7 @@
 #define FRIEND_PACKAGE
 
 #include "log.h"
+#include "fail.h"
 #include "leafcore.h"
 
 #include "pkglistparser.h"
@@ -23,6 +24,9 @@ Leafcore::Leafcore(std::string rootDir){
 	FUN();
 
 	setRootDir(rootDir);
+
+	_packageListDB = new LeafDB(this);
+	_installedDB = new LeafDB(this);
 }
 
 bool Leafcore::parsePackageList(){
@@ -163,6 +167,11 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
+	if (!copyDataToRoot(package)){
+		return FAIL(_error);
+	}
+
+	/**
 	std::string dataPath = getExtractedDirectory(package) + "/data/";
 
 	if (!std::filesystem::exists(dataPath)){
@@ -214,6 +223,7 @@ bool Leafcore::deployPackage(Package* package){
 
 		}		
 	}
+	*/
 
 	if (!runPostInstall(package)){
 		_error = "Failed postinstallation of " + package->getFullName() + ": " + _error;
@@ -376,6 +386,42 @@ bool Leafcore::checkDirectories(){
 			_error = "Cache directory " + _cacheDir + " is not a directory";
 			LOGE(_error);
 			return false;
+		}
+	}
+
+	return true;
+}
+
+bool Leafcore::createCacheDirs(){
+	FUN();
+	if (!checkDirectories())
+		return false;
+
+	{//Check the download directory
+		if (!std::filesystem::exists(getDownloadDir())){
+			if (!std::filesystem::create_directories(getDownloadDir())){
+				_error = "Failed to create download directory " + getDownloadDir();
+				return FAIL(_error);
+			}
+		} else {
+			if (!std::filesystem::is_directory(getDownloadDir())){
+				_error = "Download directory " + getDownloadDir() + " is not a directory";
+				return FAIL(_error);
+			}
+		}
+	}
+	
+	{//Check the packages directory
+		if (!std::filesystem::exists(getPackagesDir())){
+			if (!std::filesystem::create_directories(getPackagesDir())){
+				_error = "Failed to create packages directory " + getPackagesDir();
+				return FAIL(_error);
+			}
+		} else {
+			if (!std::filesystem::is_directory(getPackagesDir())){
+				_error = "Packages directory " + getPackagesDir() + " is not a directory";
+				return FAIL(_error);
+			}
 		}
 	}
 

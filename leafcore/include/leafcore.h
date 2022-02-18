@@ -1,6 +1,8 @@
 #ifndef __LEAFCORE_H__
 #define __LEAFCORE_H__
 
+class Leafcore;
+
 #include <string>
 #include <list>
 
@@ -62,6 +64,12 @@ public:
 	bool						deployPackage(Package* package);
 
 	/**
+	 * @brief	Copies all the data of the package to the root
+	 * @param	package			The package to copy the data of
+	 */
+	bool						copyDataToRoot(Package* package);
+
+	/**
 	 * @brief	Executes the preinstall script of a package if it exists
 	 * @param	package			The package to run the script of
 	 */
@@ -77,6 +85,11 @@ public:
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
 	bool						checkDirectories();
+
+	/**
+	 * @brief	Creates all the cache directories
+	 */
+	bool						createCacheDirs();
 
 	/**
 	 * @brief	Asks the user for permission to do something in the format "question (y/n)"
@@ -147,10 +160,10 @@ private:
 	std::string					_pkglistURL = "http://84.252.121.236/packages/leaf.pkglist";
 
 	//The database of the available packages in the package list
-	LeafDB						_packageListDB;
+	LeafDB*						_packageListDB;
 
 	//The database of the installed packages
-	LeafDB						_installedDB;
+	LeafDB*						_installedDB;
 
 	//Holds the last error in clear readable form
 	std::string					_error;

@@ -7,6 +7,10 @@
 
 #include "leafdb.h"
 
+Leafcore* LeafDB::getCore(){
+	return _core;
+}
+
 std::string LeafDB::getError(){
 	return _error;
 }

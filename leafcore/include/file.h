@@ -1,10 +1,11 @@
 #ifndef __BINARY_H__
 #define __BINARY_H__
 
+class File;
+
 #include "package.h"
 
 #include <string>
-
 
 /**
  * @brief	This describes a file of a package using its name and path

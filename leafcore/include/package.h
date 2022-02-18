@@ -1,7 +1,10 @@
 #ifndef __PACKAGE_H__
 #define __PACKAGE_H__
 
+class Package;
+
 #include "file.h"
+#include "leafdb.h"
 
 #include <string>
 #include <deque>
@@ -73,6 +76,22 @@ public:
 	std::string					getFetchURL();
 
 	/**
+	 * @brief	The database the package belongs to
+	 */
+	void						setDB(LeafDB* db);
+	LeafDB*						getDB();
+
+	/**
+	 * @brief	Returns the destination for the package download
+	 */
+	std::string					getDownloadPath();
+
+	/**
+	 * @brief	Fetches the package .leafpkg from the server
+	 */
+	bool						fetch();
+
+	/**
 	 * @brief	Checks if the provided file is provided by the package
 	 * @param	filePath		The filepath to the file being checked relative to root (/)
 	 */
@@ -96,6 +115,8 @@ public:
 #ifndef FRIEND_PACKAGE
 private:
 #endif
+
+	LeafDB*						_db;
 
 	std::string					_error;
 

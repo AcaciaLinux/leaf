@@ -5,8 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 
-//TODO: INLINE THESE FUNCTIONS
-
 #include "leafcore.h"
 
 void Leafcore::setRootDir(std::string dir){
