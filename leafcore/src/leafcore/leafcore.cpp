@@ -29,11 +29,6 @@ Leafcore::Leafcore(std::string rootDir){
 	_installedDB = new LeafDB(this);
 }
 
-bool Leafcore::parsePackageList(){
-	FUN();
-	return parsePackageList(_pkglistFile);
-}
-
 bool Leafcore::fetchPackage(Package* package, bool forceDownload){
 	FUN();
 	_error.clear();
@@ -170,60 +165,6 @@ bool Leafcore::deployPackage(Package* package){
 	if (!copyDataToRoot(package)){
 		return FAIL(_error);
 	}
-
-	/**
-	std::string dataPath = getExtractedDirectory(package) + "/data/";
-
-	if (!std::filesystem::exists(dataPath)){
-		LOGE("Could not find data directory " + dataPath);
-	} else {
-		LeafFS fs(dataPath);
-
-		LOGI("Indexing package " + package->getFullName() + "...");
-
-		if (!fs.readFiles(true, true)){
-			LOGW("Could not index data directory: " + fs.getError());
-		}
-
-		package->_provided_files = fs.getFiles();
-
-		LOGI("Deploying package " + package->getFullName() + " to " + getRootDir());
-
-		const auto copyOptions = std::filesystem::copy_options::none;
-
-		std::error_code error;
-		for(std::string file : package->getProvidedFiles()){
-			error.clear();
-
-			if (!std::filesystem::exists(dataPath + file)){
-				_error = "File " + dataPath + file + " does not exist anymore";
-				LOGE(_error);
-				return false;
-			}
-
-			if (std::filesystem::is_symlink(dataPath + file))
-			{
-				std::filesystem::copy_symlink(dataPath + file, getRootDir() + file);
-			}
-			else if (std::filesystem::is_regular_file(dataPath + file))
-			{
-				std::filesystem::copy_file(dataPath + file, getRootDir() + file, copyOptions, error);
-			}
-			else if (std::filesystem::is_other(dataPath + file))
-			{
-				LOGD("Is something other");
-				std::filesystem::copy(dataPath + file, getRootDir() + file, copyOptions, error);
-			}
-
-			if (error){
-				_error = "Failed to copy file " + dataPath + file + ": " + error.message();
-				LOGE(_error);
-				return false;
-			}
-
-		}		
-	}
-	*/
 
 	if (!runPostInstall(package)){
 		_error = "Failed postinstallation of " + package->getFullName() + ": " + _error;

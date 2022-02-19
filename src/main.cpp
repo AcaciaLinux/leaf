@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "log.h"
+#include "leafconfig.h"
 #include "leafdb.h"
 #include "arguments.h"
 
@@ -15,6 +16,8 @@
 Arguments arguments;
 
 Log::Log* hlog;
+
+leaf_config_t lConfig;
 
 #include <deque>
 
@@ -27,8 +30,8 @@ int main(int argc, char** argv){
 		return -1;
 	}
 
-	if (arguments.getAction() == ACTION_UPDATE){
-		Leafcore leaf(arguments.getRootPath());
+	if (lConfig.action == ACTION_UPDATE){
+		Leafcore leaf(lConfig.rootDir);
 
 		if (!leaf.a_update()){
 			LOGUE("Failed to update package list: " + leaf.getError());
@@ -36,19 +39,22 @@ int main(int argc, char** argv){
 		}
 
 		return 0;
-	} else if (arguments.getAction() == ACTION_INSTALL) {
-		Leafcore leaf(arguments.getRootPath());
+	} else if (lConfig.action == ACTION_INSTALL) {
+		Leafcore leaf(lConfig.rootDir);
 		
 		if (!leaf.parsePackageList()){
 			LOGUE("Failed to install: " + leaf.getError());
+			return -1;
 		}
 
 		if (!leaf.parseInstalled()){
 			LOGUE("Failed to install: " + leaf.getError());
+			return -1;
 		}
 
-		if (!leaf.a_install(arguments.getPackages(), arguments.getRedownload())){
+		if (!leaf.a_install(lConfig.packages, lConfig.redownload == CONFIG_REDOWNLOAD_SPECIFIED)){
 			LOGUE("Failed to install: " + leaf.getError());
+			return -1;
 		}
 	}
 }

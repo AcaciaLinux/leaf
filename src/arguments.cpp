@@ -1,4 +1,5 @@
 #include "log.h"
+#include "leafconfig.h"
 #include "arguments.h"
 
 #include "args.hxx"
@@ -10,9 +11,10 @@ bool Arguments::parse(int argc, char** argv){
 
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
-	args::Flag f_sVerbode(parser, "super verbose", "Display eben more verbose output", {'V'});
+	args::Flag f_sVerbose(parser, "super verbose", "Display eben more verbose output", {'V'});
 	args::Flag f_redownload(parser, "redownload", "Redownload the specified package even if it is in the cache", {"redownload"});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
+	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
 	args::Positional<std::string> a_action(parser, "Action", "The action that should be performed by leaf");
 	args::PositionalList<std::string> a_packages(parser, "packages", "The packages to operate on");
 
@@ -39,21 +41,29 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (f_rootPath){
-		this->rootPath = args::get(f_rootPath);
-		LOGD("Using root path " + this->rootPath);
+		LOGUE("Option --rootPath is now --root");
+		LOGUE("Use --root!");
+		return false;
 	}
 
-	this->verbose = args::get(f_verbose);
-	if (this->verbose){
+	if (f_root){
+		lConfig.rootDir = args::get(f_root);
+		LOGD("Using root path " + lConfig.rootDir);
+	}
+
+	if (args::get(f_verbose)){
+		lConfig.verbosity = CONFIG_V_VERBOSE;
 		hlog->setLevel(Log::I);
 	}
 
-	this->superverbose = args::get(f_sVerbode);
-	if (this->superverbose){
+	if (args::get(f_sVerbose)){
+		lConfig.verbosity = CONFIG_V_SUPERVERBOSE;
 		hlog->setLevel(Log::D);
 	}
 
-	this->redownload = args::get(f_redownload);
+	if (args::get(f_redownload)){
+		lConfig.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
+	}
 
 	if (!this->setAction(args::get(a_action)))
 		return false;
@@ -64,7 +74,7 @@ bool Arguments::parse(int argc, char** argv){
 	auto packages_res = args::get(a_packages);
 	for (auto i : packages_res){
 		LOGD(" -> " + i);
-		this->packages.push_back(i);
+		lConfig.packages.push_back(i);
 	}
 
 	return true;
@@ -74,11 +84,9 @@ bool Arguments::setAction(std::string a){
 	FUN();
 
 	if (a == "update")
-		this->action = ACTION_UPDATE;
+		lConfig.action = ACTION_UPDATE;
 	else if (a == "install")
-		this->action = ACTION_INSTALL;
-	else if (a == "remove")
-		this->action = ACTION_REMOVE;
+		lConfig.action = ACTION_INSTALL;
 
 	else{
 		std::cout << parser;
@@ -86,28 +94,4 @@ bool Arguments::setAction(std::string a){
 	}
 
 	return true;
-}
-
-bool Arguments::getVerbose(){
-	return this->verbose;
-}
-
-bool Arguments::getSuperVerbose(){
-	return this->superverbose;
-}
-
-bool Arguments::getRedownload(){
-	return this->redownload;
-}
-
-e_action Arguments::getAction(){
-	return this->action;
-}
-
-std::string Arguments::getRootPath(){
-	return this->rootPath;
-}
-
-std::deque<std::string> Arguments::getPackages(){
-	return this->packages;
 }

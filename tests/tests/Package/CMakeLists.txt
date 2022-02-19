@@ -11,6 +11,8 @@ target_link_libraries(${TEST_NAME} PUBLIC
     leafcore
 )
 
+target_compile_features(${TEST_NAME} PRIVATE cxx_std_17)
+
 add_test(
     NAME ${TEST_NAME}
     COMMAND ${TEST_NAME}

@@ -9,3 +9,4 @@ file (GLOB_RECURSE HEADERS "include/**.h")
 
 add_library(leafcore ${HEADERS} ${CXXSOURCES})
 target_link_libraries(leafcore curl archive)
+target_compile_features(leafcore PRIVATE cxx_std_17)

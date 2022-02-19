@@ -4,12 +4,6 @@
 #include <deque>
 #include <string>
 
-enum e_action{
-	ACTION_UPDATE,
-	ACTION_INSTALL,
-	ACTION_REMOVE
-};
-
 class Arguments{
 
 public:
@@ -22,45 +16,7 @@ public:
 	 */
 	bool						parse(int argc, char** argv);
 
-	bool						getVerbose();
-
-	bool						getSuperVerbose();
-
-	bool						getRedownload();
-
-	/**
-	 * @brief	Returns the action to perform
-	 */
-	e_action					getAction();
-
-	/**
-	 * @brief	Returns the root path leaf should use
-	 */
-	std::string					getRootPath();
-
-	/**
-	 * @brief	Returns the packages that should be operated on
-	 */
-	std::deque<std::string>		getPackages();
-
 private:
-	//If the program should be verbose
-	bool						verbose = false;
-
-	//If the program should be super verbose
-	bool						superverbose = false;
-
-	//Forces leaf to redownload the specified package
-	bool						redownload = false;
-
-	//The action to perform
-	e_action					action;
-
-	//The root path leaf should use (for development is ./root)
-	std::string					rootPath = "/";
-
-	//The packages to perform the action on
-	std::deque<std::string>		packages;
 
 	/**
 	 * @brief	Uses the supplied string to determine the action to be performed

@@ -14,6 +14,11 @@
 #include <fstream>
 #include <string>
 
+bool Leafcore::parsePackageList(){
+	FUN();
+	return parsePackageList(_pkglistFile);
+}
+
 bool Leafcore::parsePackageList(std::string path){
 	FUN();
 	_error.clear();
@@ -31,7 +36,7 @@ bool Leafcore::parsePackageList(std::string path){
 
 	//Try opening package list file
 	if (!file.is_open()){
-		_error = "File " + path + " could not be opened";
+		_error = "Failed to read package list, try \"leaf update\" to fix this";
 		LOGE("Could not open package list " + path);
 		file.close();
 		return false;

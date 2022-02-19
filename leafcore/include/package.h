@@ -102,6 +102,11 @@ public:
 	bool						extract();
 
 	/**
+	 * @brief	Deploys the package into the root specified by leaf config
+	 */
+	bool						deploy();
+
+	/**
 	 * @brief	Checks if the provided file is provided by the package
 	 * @param	filePath		The filepath to the file being checked relative to root (/)
 	 */
