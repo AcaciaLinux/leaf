@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "fail.h"
 #include "leafdb.h"
 
 LeafDB::LeafDB(Leafcore* core){
@@ -27,8 +28,10 @@ bool LeafDB::addPackage(Package* newPackage){
 
 	//Check for existing package
 	for (auto pkg : _packages){
-		if (pkg.second->getName() == newPackage->getName())
-			return fail("Package " + pkg.second->getName() + " already in database");
+		if (pkg.second->getName() == newPackage->getName()){
+			_error = "LeafDB: Package " + pkg.second->getName() + " already in database";
+			return FAIL(_error);
+		}
 	}
 
 	//Set the database
@@ -78,10 +81,4 @@ void LeafDB::clear(){
 	}
 
 	_packages.clear();
-}
-
-bool LeafDB::fail(std::string message){
-	_error = message;
-	LOGE("LeafDB: " + _error);
-	return false;
 }

@@ -87,9 +87,19 @@ public:
 	std::string					getDownloadPath();
 
 	/**
+	 * @brief	Get the directory the extracted package contents should be in
+	 */
+	std::string					getExtractedDir();
+
+	/**
 	 * @brief	Fetches the package .leafpkg from the server
 	 */
 	bool						fetch();
+
+	/**
+	 * @brief	Extracts the package into the package cache for deployment
+	 */
+	bool						extract();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package
@@ -116,7 +126,7 @@ public:
 private:
 #endif
 
-	LeafDB*						_db;
+	LeafDB*						_db = nullptr;
 
 	std::string					_error;
 

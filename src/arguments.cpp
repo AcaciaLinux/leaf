@@ -50,7 +50,6 @@ bool Arguments::parse(int argc, char** argv){
 
 	this->superverbose = args::get(f_sVerbode);
 	if (this->superverbose){
-		hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, true);
 		hlog->setLevel(Log::D);
 	}
 

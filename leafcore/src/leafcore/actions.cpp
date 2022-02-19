@@ -128,8 +128,10 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 
 	for (Package* package : install_packages){
 		LOGU("Extracting package " + package->getFullName() + "...");
-		if (!extractPackage(package)){
-			return false;
+		
+		if (!package->extract()){
+			_error = package->getError();
+			return FAIL(_error);
 		}
 	}
 

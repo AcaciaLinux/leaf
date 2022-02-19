@@ -5,6 +5,8 @@
  * @copyright 	Copyright (c) 2022
  */
 
+//TODO implement stach tracing if configured
+
 #include "log.h"
 #include "fail.h"
 

@@ -69,6 +69,16 @@ std::string Package::getDownloadPath(){
 	return _db->getCore()->getDownloadDir() + getFullName() + ".leafpkg";
 }
 
+std::string Package::getExtractedDir(){
+	//Check if the database is ok
+	if (_db == nullptr){
+		_error = "Database is not accessible (nullptr)";
+		return "";
+	}
+
+	return _db->getCore()->getPackagesDir() + getFullName() + "/";
+}
+
 std::string Package::toString(){
 	std::string buf = "Package ";
 	buf += _name + " (" + _description + ")";

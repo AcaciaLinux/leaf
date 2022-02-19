@@ -46,10 +46,13 @@ bool Package::fetch(){
 		return FAIL(_error);
 	}
 
+
+	LOGD("Opening destinatoin file " + destination + "...");
 	//Create and open the destination file
 	std::ofstream outFile;
 	outFile.open(destination, std::ios::trunc | std::ios::binary);
 
+	//Check if the destination file is open
 	if (!outFile.is_open()){
 		_error = _ep + "Could not open destination file " + destination + " for writing";
 		outFile.close();
@@ -58,6 +61,7 @@ bool Package::fetch(){
 
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
+	//Download the package file
 	if (!dl.download(getFetchURL(), outFile)){
 		_error = _ep + "Download from " + getFetchURL() + " failed: " + dl.getError();
 		outFile.close();

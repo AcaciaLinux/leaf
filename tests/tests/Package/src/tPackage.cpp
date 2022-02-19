@@ -1,11 +1,5 @@
-#include <gtest/gtest.h>
-#include <stdlib.h>
-
-#define FRIEND_PACKAGE
-#include "package.h"
-
+#include "../t_package.h"
 #include "random.h" 
-#include "log.h"
 
 TEST(Package, Constructor){
 	FUN();

@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "fail.h"
 #include "leafdb.h"
 
 bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package* package){
@@ -29,8 +30,10 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 		Package* dependency = getPackage(dependencyName);
 
 		//If the dependency was not found, error
-		if (dependency == nullptr)
-			return fail("Could not find dependency " + dependencyName + " for package " + package->getFullName());
+		if (dependency == nullptr){
+			_error = "LeafDB: Could not find dependency " + dependencyName + " for package " + package->getFullName();
+			return FAIL(_error);
+		}
 
 		bool alreadyAdded = false;
 
