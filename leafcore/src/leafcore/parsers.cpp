@@ -6,6 +6,8 @@
  */
 
 #include "log.h"
+#include "fail.h"
+#include "leafconfig.h"
 #include "leafcore.h"
 
 #include "pkglistparser.h"
@@ -13,6 +15,7 @@
 
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 bool Leafcore::parsePackageList(){
 	FUN();
@@ -76,23 +79,32 @@ bool Leafcore::parseInstalled(){
 	_installedDB->clear();
 
 	std::deque<std::string> installedFiles;
+	std::string installedDir = lConfig.configDir() + "/installed/";
+
+	if (!std::filesystem::exists(installedDir)){
+		std::error_code ec;
+		std::filesystem::create_directories(installedDir, ec);
+
+		if (ec){
+			_error = "Failed to create installed directory " + installedDir + ": " + ec.message();
+			return FAIL(_error);
+		}
+	}
 
 	{	//Read the directory
-		LeafFS installedDir("/etc/leaf/installed/");
+		LeafFS installedDirFS(installedDir);
 
-		if (!installedDir.check()){
-			_error = "Failed to parse installed packages: " + installedDir.getError();
-			LOGE(_error);
-			return false;
+		if (!installedDirFS.check()){
+			_error = "Failed to parse installed packages: " + installedDirFS.getError();
+			return FAIL(_error);
 		}
 
-		if (!installedDir.readFiles(true, false)){
-			_error = "Failed to parse installed packages: " + installedDir.getError();
-			LOGE(_error);
-			return false;
+		if (!installedDirFS.readFiles(true, false)){
+			_error = "Failed to parse installed packages: " + installedDirFS.getError();
+			return FAIL(_error);
 		}
 
-		installedFiles = installedDir.getFiles();
+		installedFiles = installedDirFS.getFiles();
 	}
 
 	if (installedFiles.size() == 0){
@@ -108,19 +120,17 @@ bool Leafcore::parseInstalled(){
 		Package* newPack = _installedDB->newPackage("", "");
 
 		std::ifstream inFile;
-		inFile.open("/etc/leaf/installed/" + file + ".leafinstalled", std::ios::in);
+		inFile.open(installedDir + file + ".leafinstalled", std::ios::in);
 
 		if (!inFile.is_open()){
 			_error = "Failed to parse installed package " + file + ", failed to open file";
-			LOGE(_error);
-			return false;
+			return FAIL(_error);
 		}
 
 		if (!newPack->parseInstalledFile(inFile)){
 			_error = "Failed to parse installed package " + file + ": " + newPack->getError();
-			LOGE(_error);
 			inFile.close();
-			return false;
+			return FAIL(_error);
 		}
 
 		inFile.close();
