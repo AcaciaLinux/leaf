@@ -272,6 +272,9 @@ bool Leafcore::createCacheDirs(){
 bool Leafcore::askUserOK(std::string question, bool defaultOption){
 	FUN();
 
+	if (lConfig.noAsk)
+		return true;
+
 	if (defaultOption){
 		std::cout << question << " (Y/n): ";
 		std::string answer;

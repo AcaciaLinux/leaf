@@ -6,6 +6,7 @@
 
 #define FRIEND_PACKAGE
 #include "package.h"
+#include "leafconfig.h"
 #include "log.h"
 
 #endif

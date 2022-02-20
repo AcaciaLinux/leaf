@@ -2,19 +2,12 @@
 
 #include <filesystem>
 
-TEST(Package, noDB){
-	FUN();
-
-	Package p("Test", "1.0");
-
-	if (p.fetch())
-		FAIL();
-}
+#include "leafconfig.h"
 
 TEST(Package, noURL){
+	lConfig.rootDir = "./root/";
+	lConfig.noAsk = true;
 
-	std::filesystem::create_directories("./root/etc/leaf");
-	std::filesystem::create_directories("./root/var/cache/leaf");
 	LeafDB db(new Leafcore("./root"));
 
 	Package* newP = db.newPackage("Test", "1.0");

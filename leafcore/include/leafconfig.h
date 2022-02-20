@@ -41,6 +41,9 @@ typedef struct {
 	//If leaf should redownload packages
 	config_redownload			redownload = CONFIG_REDOWNLOAD_NONE;
 
+	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
+	bool						noAsk = false;
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";
