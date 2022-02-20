@@ -68,6 +68,10 @@ std::string Package::getExtractedDir(){
 	return lConfig.packagesDir() + getFullName() + "/";
 }
 
+std::string Package::getInstalledFilePath(){
+	return lConfig.installedDir() + getFullName() + ".leafinstalled";
+}
+
 std::string Package::toString(){
 	std::string buf = "Package ";
 	buf += _name + " (" + _description + ")";

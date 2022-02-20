@@ -67,6 +67,11 @@ typedef struct {
 		return rootDir + "etc/leaf/";
 	}
 
+	//The directory leaf stores the installed packages information
+	std::string					installedDir(){
+		return configDir() + "installed/";
+	}
+
 	//The path to the package list
 	std::string					pkgListPath(){
 		return configDir() + "leaf.pkglist";

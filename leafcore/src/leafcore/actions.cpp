@@ -108,13 +108,9 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	}
 
 	{//Ask the user for permission
-		std::cout << "Do you want to continue? (Y/n): ";
-		std::string answer;
-		getline(std::cin, answer);
-		
-		if (!(answer == "y" || answer == "Y" || answer == "")){
-			_error = "User aborted";
-			return false;
+		if (!askUserOK("Do you want to continue?", true)){
+			_error = "Aborted by user";
+			return FAIL(_error);
 		}
 	}
 
@@ -138,8 +134,10 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 
 	for (Package* package : install_packages){
 		LOGU("Deploying package " + package->getFullName() + "...");
-		if (!deployPackage(package)){
-			return false;
+		
+		if (!package->deploy()){
+			_error = package->getError();
+			return FAIL(_error);
 		}
 	}
 

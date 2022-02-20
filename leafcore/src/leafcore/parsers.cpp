@@ -79,20 +79,19 @@ bool Leafcore::parseInstalled(){
 	_installedDB->clear();
 
 	std::deque<std::string> installedFiles;
-	std::string installedDir = lConfig.configDir() + "/installed/";
 
-	if (!std::filesystem::exists(installedDir)){
+	if (!std::filesystem::exists(lConfig.installedDir())){
 		std::error_code ec;
-		std::filesystem::create_directories(installedDir, ec);
+		std::filesystem::create_directories(lConfig.installedDir(), ec);
 
 		if (ec){
-			_error = "Failed to create installed directory " + installedDir + ": " + ec.message();
+			_error = "Failed to create installed directory " + lConfig.installedDir() + ": " + ec.message();
 			return FAIL(_error);
 		}
 	}
 
 	{	//Read the directory
-		LeafFS installedDirFS(installedDir);
+		LeafFS installedDirFS(lConfig.installedDir());
 
 		if (!installedDirFS.check()){
 			_error = "Failed to parse installed packages: " + installedDirFS.getError();
@@ -120,10 +119,10 @@ bool Leafcore::parseInstalled(){
 		Package* newPack = _installedDB->newPackage("", "");
 
 		std::ifstream inFile;
-		inFile.open(installedDir + file + ".leafinstalled", std::ios::in);
+		inFile.open(lConfig.installedDir() + file, std::ios::in);
 
 		if (!inFile.is_open()){
-			_error = "Failed to parse installed package " + file + ", failed to open file";
+			_error = "Failed to parse installed package " + file + ", failed to open file " + lConfig.installedDir() + file;
 			return FAIL(_error);
 		}
 

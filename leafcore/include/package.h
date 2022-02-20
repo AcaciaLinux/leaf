@@ -56,6 +56,13 @@ public:
 	bool						copyToRoot();
 
 	/**
+	 * @brief	Deploys the package to the root, uses the following steps:
+	 * 				copyToRoot()
+	 * 				createInstalledFile()
+	 */
+	bool						deploy();
+
+	/**
 	 * @brief	Returns a reference to the files provided by this package
 	 */
 	std::deque<std::string>&	getProvidedFiles();
@@ -110,6 +117,11 @@ public:
 	 * @brief	Get the directory the extracted package contents should be in
 	 */
 	std::string					getExtractedDir();
+
+	/**
+	 * @brief	Get the path to the .leafinstalled file
+	 */
+	std::string					getInstalledFilePath();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package

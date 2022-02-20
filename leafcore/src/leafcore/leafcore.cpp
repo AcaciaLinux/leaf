@@ -268,6 +268,29 @@ bool Leafcore::createCacheDirs(){
 	return true;
 }
 
+bool Leafcore::createConfigDirs(){
+	FUN();
+
+	if (!checkDirectories())
+		return false;
+
+	{//Check the installed directory
+		if (!std::filesystem::exists(lConfig.installedDir())){
+			if (!std::filesystem::create_directories(lConfig.installedDir())){
+				_error = "Failed to create installed directory " + lConfig.installedDir();
+				return FAIL(_error);
+			}
+		} else {
+			if (!std::filesystem::is_directory(lConfig.installedDir())){
+				_error = "Installed directory " + lConfig.installedDir() + " is not a directory";
+				return FAIL(_error);
+			}
+		}
+	}
+
+	return true;
+}
+
 bool Leafcore::askUserOK(std::string question, bool defaultOption){
 	FUN();
 

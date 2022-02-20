@@ -75,8 +75,5 @@ bool Package::copyToRoot(){
 		}
 	}
 
-	_error = _ep + "Feature not implemented";
-	return FAIL(_error);
-
 	return true;
 }

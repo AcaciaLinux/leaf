@@ -78,6 +78,11 @@ public:
 	bool						createCacheDirs();
 
 	/**
+	 * @brief	Creates all the configuration directories
+	 */
+	bool						createConfigDirs();
+
+	/**
 	 * @brief	Asks the user for permission to do something in the format "question (y/n)"
 	 * @param	question		The question to ask
 	 * @param	defaultOption	If agreeing option should be checked or the negating option
