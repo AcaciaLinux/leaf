@@ -8,6 +8,7 @@
 #include "log.h"
 #include "fail.h"
 #include "leafcore.h"
+#include "leafconfig.h"
 
 #include "downloader.h"
 
@@ -21,14 +22,14 @@ bool Leafcore::a_update(){
 	if (!checkDirectories())
 		return false;
 
-	LOGI("Fetching package list from " + _pkglistURL + " to " + _pkglistFile);
-
+	std::string pkgListFilePath = lConfig.pkgListPath();
+	LOGI("Fetching package list from " + _pkglistURL + " to " + pkgListFilePath);
 	//Create the output file stream and check it
 	std::ofstream file;
-	file.open(_pkglistFile, std::ios::trunc);
+	file.open(pkgListFilePath, std::ios::trunc);
 
 	if (!file.is_open()){
-		_error = "Failed to open " + _pkglistFile + " for writing";
+		_error = "Failed to open " + pkgListFilePath + " for writing";
 		LOGE("Package list update: " + _error);
 		file.close();
 		return false;

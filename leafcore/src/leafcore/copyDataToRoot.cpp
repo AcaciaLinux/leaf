@@ -8,6 +8,7 @@
 #include "log.h"
 #include "fail.h"
 #include "leafcore.h"
+#include "leafconfig.h"
 #include "leaffs.h"
 
 #include <filesystem>
@@ -24,7 +25,7 @@ bool Leafcore::copyDataToRoot(Package* package){
 	}
 
 	//The error prefix
-	std::string _ep = "Failed to copy data of " + package->getFullName() + " to root " + getRootDir() + ": ";
+	std::string _ep = "Failed to copy data of " + package->getFullName() + " to root " + lConfig.rootDir + ": ";
 
 	//The dataDir to copy to the root
 	std::string dataDir = package->getExtractedDir() + "/data/";
@@ -36,8 +37,8 @@ bool Leafcore::copyDataToRoot(Package* package){
 	}
 
 	//Check if the root directory exists
-	if (!fs::exists(getRootDir())){
-		_error = _ep + "Root directory " + getRootDir() + " does not exist";
+	if (!fs::exists(lConfig.rootDir)){
+		_error = _ep + "Root directory " + lConfig.rootDir + " does not exist";
 		return FAIL(_error);
 	}
 

@@ -7,30 +7,6 @@
 
 #include "leafcore.h"
 
-void Leafcore::setRootDir(std::string dir){
-
-	if (dir[dir.length()-1] != '/')
-		dir += '/';
-
-	this->_rootDir = dir;
-
-	this->_cacheDir = _rootDir + "var/cache/leaf/";
-	this->_leafDir = _rootDir + "etc/leaf/";
-	this->_pkglistFile = _leafDir + "leaf.pkglist";
-}
-
-std::string Leafcore::getRootDir(){
-	return _rootDir;
-}
-
-void Leafcore::setPkgListFile(std::string path){
-	_pkglistFile = path;
-}
-
-std::string Leafcore::getPkgListFile(){
-	return _pkglistFile;
-}
-
 void Leafcore::setPkgListURL(std::string url){
 	_pkglistURL = url;
 }

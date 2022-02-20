@@ -16,9 +16,8 @@ class Leafcore{
 public:
 	/**
 	 * @brief	Create the leaf core context and set the root path
-	 * @param	rootPath		The root leaf should deploy packages to (normally "/")
 	 */
-	Leafcore(std::string rootPath);
+	Leafcore();
 
 	/**
 	 * @brief	Reads the package list at the supplied path
@@ -86,18 +85,6 @@ public:
 	bool						askUserOK(std::string question, bool defaultOption = true);
 
 	/**
-	 * @brief	The root leaf should deploy packages to (normally "/")
-	 */
-	void						setRootDir(std::string);
-	std::string					getRootDir();
-	
-	/**
-	 * @brief	The path to the package list file (has default)
-	 */
-	void						setPkgListFile(std::string);
-	std::string					getPkgListFile();
-
-	/**
 	 * @brief	The URL to fetch the package list from (has default)
 	 */
 	void						setPkgListURL(std::string);
@@ -109,17 +96,8 @@ public:
 	std::string					getError();
 
 private:
-	//The path to apply leaf packages to (should be "/")
-	std::string					_rootDir;
-
-	//The directory leaf can work in
-	std::string					_cacheDir;
-
-	//The leaf configuration path
-	std::string					_leafDir;
 
 	//Where the currently loaded package list file is
-	std::string					_pkglistFile;
 	bool						_loadedPkgList = false;
 
 	//The URL where to fetch the package list from

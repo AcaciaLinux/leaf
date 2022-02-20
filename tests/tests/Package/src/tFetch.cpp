@@ -8,7 +8,7 @@ TEST(Package, noURL){
 	lConfig.rootDir = "./root/";
 	lConfig.noAsk = true;
 
-	LeafDB db(new Leafcore("./root"));
+	LeafDB db(new Leafcore);
 
 	Package* newP = db.newPackage("Test", "1.0");
 	

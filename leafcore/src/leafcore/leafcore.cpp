@@ -23,10 +23,8 @@
 
 leaf_config_t lConfig;
 
-Leafcore::Leafcore(std::string rootDir){
+Leafcore::Leafcore(){
 	FUN();
-
-	setRootDir(rootDir);
 
 	_packageListDB = new LeafDB(this);
 	_installedDB = new LeafDB(this);
@@ -44,8 +42,8 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
-	if (!std::filesystem::exists(getRootDir())){
-		_error = "Root filesystem " + getRootDir() + " does not exist";
+	if (!std::filesystem::exists(lConfig.rootDir)){
+		_error = "Root filesystem " + lConfig.rootDir + " does not exist";
 		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
@@ -182,24 +180,24 @@ bool Leafcore::checkDirectories(){
 
 	{//Check the leaf directory
 		LOGD("Checking configuration directory...");
-		if (!std::filesystem::exists(_leafDir)){
-			if (askUserOK("Configuration directory " + _leafDir + " does not exist, create it?"), true){
-				if (!std::filesystem::create_directories(_leafDir)){
-					_error = "Could not create configuration directory " + _leafDir;
+		if (!std::filesystem::exists(lConfig.configDir())){
+			if (askUserOK("Configuration directory " + lConfig.configDir() + " does not exist, create it?"), true){
+				if (!std::filesystem::create_directories(lConfig.configDir())){
+					_error = "Could not create configuration directory " + lConfig.configDir();
 					LOGE(_error);
 					return false;
 				}
 			}
 			else
 			{
-				_error = "User disagreed to create configuration directory " + _leafDir;
+				_error = "User disagreed to create configuration directory " + lConfig.configDir();
 				LOGE(_error);
 				return false;
 			}
 		}
 
-		if (!std::filesystem::is_directory(_leafDir)){
-			_error = "Configuration directory " + _leafDir + " is not a directory";
+		if (!std::filesystem::is_directory(lConfig.configDir())){
+			_error = "Configuration directory " + lConfig.configDir() + " is not a directory";
 			LOGE(_error);
 			return false;
 		}
@@ -207,24 +205,24 @@ bool Leafcore::checkDirectories(){
 
 	{//Check the cache directory
 		LOGD("Checking cache directory...");
-		if (!std::filesystem::exists(_cacheDir)){
-			if (askUserOK("Cache directory " + _cacheDir + " does not exist, create it?"), true){
-				if (!std::filesystem::create_directories(_cacheDir)){
-					_error = "Could not create cache directory " + _cacheDir;
+		if (!std::filesystem::exists(lConfig.cacheDir())){
+			if (askUserOK("Cache directory " + lConfig.cacheDir() + " does not exist, create it?"), true){
+				if (!std::filesystem::create_directories(lConfig.cacheDir())){
+					_error = "Could not create cache directory " + lConfig.cacheDir();
 					LOGE(_error);
 					return false;
 				}
 			}
 			else
 			{
-				_error = "User disagreed to create cache directory " + _cacheDir;
+				_error = "User disagreed to create cache directory " + lConfig.cacheDir();
 				LOGE(_error);
 				return false;
 			}
 		}
 
-		if (!std::filesystem::is_directory(_cacheDir)){
-			_error = "Cache directory " + _cacheDir + " is not a directory";
+		if (!std::filesystem::is_directory(lConfig.cacheDir())){
+			_error = "Cache directory " + lConfig.cacheDir() + " is not a directory";
 			LOGE(_error);
 			return false;
 		}

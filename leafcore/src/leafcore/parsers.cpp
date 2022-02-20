@@ -19,7 +19,7 @@
 
 bool Leafcore::parsePackageList(){
 	FUN();
-	return parsePackageList(_pkglistFile);
+	return parsePackageList(lConfig.pkgListPath());
 }
 
 bool Leafcore::parsePackageList(std::string path){

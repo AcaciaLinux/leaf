@@ -29,7 +29,7 @@ int main(int argc, char** argv){
 	}
 
 	if (lConfig.action == ACTION_UPDATE){
-		Leafcore leaf(lConfig.rootDir);
+		Leafcore leaf;
 
 		if (!leaf.a_update()){
 			LOGUE("Failed to update package list: " + leaf.getError());
@@ -38,7 +38,7 @@ int main(int argc, char** argv){
 
 		return 0;
 	} else if (lConfig.action == ACTION_INSTALL) {
-		Leafcore leaf(lConfig.rootDir);
+		Leafcore leaf;
 		
 		if (!leaf.parsePackageList()){
 			LOGUE("Failed to install: " + leaf.getError());

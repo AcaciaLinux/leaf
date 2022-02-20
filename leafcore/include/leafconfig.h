@@ -64,6 +64,11 @@ typedef struct {
 		return rootDir + "etc/leaf/";
 	}
 
+	//The path to the package list
+	std::string					pkgListPath(){
+		return configDir() + "leaf.pkglist";
+	}
+
 } leaf_config_t;
 
 extern leaf_config_t lConfig;
