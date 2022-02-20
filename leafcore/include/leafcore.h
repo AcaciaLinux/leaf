@@ -44,30 +44,6 @@ public:
 	bool						a_install(std::deque<std::string> packages, bool force = false);
 
 	/**
-	 * @brief	Deploys the supplied package to the specified _rootPath ("/")
-	 * @param	package			The package to deploy
-	 */
-	bool						deployPackage(Package* package);
-
-	/**
-	 * @brief	Copies all the data of the package to the root
-	 * @param	package			The package to copy the data of
-	 */
-	bool						copyDataToRoot(Package* package);
-
-	/**
-	 * @brief	Executes the preinstall script of a package if it exists
-	 * @param	package			The package to run the script of
-	 */
-	bool						runPreInstall(Package* package);
-
-	/**
-	 * @brief	Executes the postinstall script of a package if it exists
-	 * @param	package			The package to run the script of
-	 */
-	bool						runPostInstall(Package* package);
-
-	/**
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
 	bool						checkDirectories();

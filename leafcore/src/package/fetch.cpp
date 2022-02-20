@@ -11,6 +11,7 @@
 #include "downloader.h"
 
 #include <fstream>
+#include <filesystem>
 
 bool Package::fetch(){
 	FUN();

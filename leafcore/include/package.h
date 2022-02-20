@@ -57,10 +57,28 @@ public:
 
 	/**
 	 * @brief	Deploys the package to the root, uses the following steps:
+	 * 				runPreinstall()
 	 * 				copyToRoot()
 	 * 				createInstalledFile()
+	 * 				runPostinstall()
 	 */
 	bool						deploy();
+
+	/**
+	 * @brief	Runs the preinstall.sh script if it exists
+	 */
+	bool						runPreinstall();
+
+	/**
+	 * @brief	Runs the postinstall.sh script if it exists
+	 */
+	bool						runPostinstall();
+
+	/**
+	 * @brief	Runs the specified script if it is availabl
+	 * @param	path			The path to the script relative to the package extracted directory
+	 */
+	bool						runScript(std::string path);
 
 	/**
 	 * @brief	Returns a reference to the files provided by this package

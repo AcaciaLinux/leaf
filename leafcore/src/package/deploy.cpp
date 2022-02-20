@@ -45,8 +45,18 @@ bool Package::deploy(){
 		return FAIL(_error);
 	}
 
+	if (!runPreinstall()){
+		_error = _ep + "Running preinstall.sh: " + _error;
+		return FAIL(_error);
+	}
+
 	if (!copyToRoot()){
 		_error = _ep + _error;
+		return FAIL(_error);
+	}
+
+	if (!runPostinstall()){
+		_error = _ep + "Running postinstall.sh: " + _error;
 		return FAIL(_error);
 	}
 
