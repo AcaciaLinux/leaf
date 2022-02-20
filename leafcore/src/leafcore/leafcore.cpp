@@ -60,7 +60,8 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
-	if (!copyDataToRoot(package)){
+	if (!package->copyToRoot()){
+		_error = "Failed to deploy package " + package->getFullName() + ": " + package->getError();
 		return FAIL(_error);
 	}
 

@@ -33,9 +33,9 @@ public:
 	bool						readFiles(bool onlyfiles, bool recursive);
 
 	/**
-	 * @brief	Returns a reference to the previously read files in the directory
+	 * @brief	Returns the previously read files in the directory
 	 */
-	std::deque<std::string>&	getFiles();
+	std::deque<std::string>		getFiles();
 
 	/**
 	 * @brief	Returns the last error

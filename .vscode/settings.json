@@ -70,6 +70,7 @@
 		"regex": "cpp",
 		"future": "cpp",
 		"codecvt": "cpp",
-		"valarray": "cpp"
+		"valarray": "cpp",
+		"filesystem": "cpp"
 	}
 }

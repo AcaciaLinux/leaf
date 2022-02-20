@@ -11,6 +11,6 @@ std::string LeafFS::getError(){
 	return _error;
 }
 
-std::deque<std::string>& LeafFS::getFiles(){
+std::deque<std::string> LeafFS::getFiles(){
 	return _files;
 }

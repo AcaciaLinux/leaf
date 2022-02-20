@@ -44,6 +44,9 @@ typedef struct {
 	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
 	bool						noAsk = false;
 
+	//If leaf should overwrite existing files at the root
+	bool						forceOverwrite = false;
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";

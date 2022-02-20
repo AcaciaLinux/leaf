@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 
 LeafFS::LeafFS(std::string dir){
 	FUN();
-
+	
 	_curDir = dir;
 }
 
@@ -50,7 +50,10 @@ bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive,
 
 	std::string filePath;
 	for (fs::directory_entry entry : dirIt){
-		filePath = prefix + "/" + entry.path().stem().string() + entry.path().extension().string();
+		if (prefix[prefix.size()-1] != '/')
+			prefix += '/';
+
+		filePath = prefix + entry.path().stem().string() + entry.path().extension().string();
 
 		if (entry.is_directory()){
 			

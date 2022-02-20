@@ -36,6 +36,26 @@ public:
 	bool						parseInstalledFile(std::istream& in);
 
 	/**
+	 * @brief	Fetches the package .leafpkg from the server
+	 */
+	bool						fetch();
+
+	/**
+	 * @brief	Extracts the package into the package cache for deployment
+	 */
+	bool						extract();
+
+	/**
+	 * @brief	Indexes the files that should be copied to the root
+	 */
+	bool						indexExtracted();
+
+	/**
+	 * @brief	Copies all the files of the package to the root
+	 */
+	bool						copyToRoot();
+
+	/**
 	 * @brief	Returns a reference to the files provided by this package
 	 */
 	std::deque<std::string>&	getProvidedFiles();
@@ -90,21 +110,6 @@ public:
 	 * @brief	Get the directory the extracted package contents should be in
 	 */
 	std::string					getExtractedDir();
-
-	/**
-	 * @brief	Fetches the package .leafpkg from the server
-	 */
-	bool						fetch();
-
-	/**
-	 * @brief	Extracts the package into the package cache for deployment
-	 */
-	bool						extract();
-
-	/**
-	 * @brief	Deploys the package into the root specified by leaf config
-	 */
-	bool						deploy();
 
 	/**
 	 * @brief	Checks if the provided file is provided by the package

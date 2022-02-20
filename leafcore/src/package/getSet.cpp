@@ -61,7 +61,7 @@ LeafDB* Package::getDB(){
 }
 
 std::string Package::getDownloadPath(){
-	return lConfig.cacheDir() + getFullName() + ".leafpkg";
+	return lConfig.cacheDir() + "downloads/" + getFullName() + ".leafpkg";
 }
 
 std::string Package::getExtractedDir(){
