@@ -24,8 +24,12 @@ private:
 	 */
 	bool						setAction(std::string);
 
-};
+	/**
+	 * @brief	Sets the verbosity to the supplied level
+	 * @return	Success, false should terminate the program
+	 */
+	bool						switchVerbosity(uint8_t);
 
-extern Arguments arguments;
+};
 
 #endif

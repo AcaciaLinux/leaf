@@ -8,7 +8,8 @@
 enum config_verbosity{
 	CONFIG_V_DEFAULT = 0,
 	CONFIG_V_VERBOSE = 1,
-	CONFIG_V_SUPERVERBOSE = 2
+	CONFIG_V_SUPERVERBOSE = 2,
+	CONFIG_V_ULTRAVERBOSE = 3
 };
 
 enum config_redownload{
@@ -40,9 +41,19 @@ typedef struct {
 	//If leaf should redownload packages
 	config_redownload			redownload = CONFIG_REDOWNLOAD_NONE;
 
-	//The path leaf can do its temporary work in
+	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";
+	}
+
+	//The directory packages get downloaded to
+	std::string					downloadDir(){
+		return cacheDir() + "downloads/";
+	}
+
+	//The directory extracted packages live in
+	std::string					packagesDir(){
+		return cacheDir() + "packages/";
 	}
 
 	//Where the leaf configuration lives

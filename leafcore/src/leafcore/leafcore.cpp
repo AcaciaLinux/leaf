@@ -10,6 +10,7 @@
 #include "log.h"
 #include "fail.h"
 #include "leafcore.h"
+#include "leafconfig.h"
 
 #include "pkglistparser.h"
 #include "downloader.h"
@@ -20,6 +21,8 @@
 #include <filesystem>
 #include <iostream>
 
+leaf_config_t lConfig;
+
 Leafcore::Leafcore(std::string rootDir){
 	FUN();
 
@@ -27,109 +30,6 @@ Leafcore::Leafcore(std::string rootDir){
 
 	_packageListDB = new LeafDB(this);
 	_installedDB = new LeafDB(this);
-}
-
-bool Leafcore::fetchPackage(Package* package, bool forceDownload){
-	FUN();
-	_error.clear();
-	if (!checkDirectories())
-		return false;
-
-	if (package == nullptr){
-		_error = "Invalid package (nullptr)";
-		LOGE("Failed to fetch package: " + _error);
-		return false;
-	}
-
-	if (package->getFetchURL().empty()){
-		_error = "Empty package URL for package " + package->getFullName();
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-		return false;
-	}
-
-	if (!std::filesystem::exists(getDownloadDir())){
-		LOGI("Download path " + getDownloadDir() + " does not exist, creating");
-		if (!std::filesystem::create_directories(getDownloadDir())){
-			_error = "Download path " + getDownloadDir() + " could not be created";
-			LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-			return false;
-		}
-	}
-
-	if (std::filesystem::exists(getDownloadPath(package)) && !forceDownload){
-		LOGI("Skipping fetching of package " + package->getFullName() + ", already fetched");
-		return true;
-	}
-
-	std::ofstream outFile;
-	outFile.open(getDownloadPath(package), std::ios::out);
-
-	if (!outFile.is_open()){
-		_error = "Failed to open " + getDownloadPath(package) + " for writing";
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-		return false;
-	}
-
-	Downloader dl;
-	if (!dl.init()){
-		_error = "Failed to initialize Downloader: " + dl.getError();
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-		outFile.close();
-		return false;
-	}
-
-	if (!dl.download(package->getFetchURL(), outFile)){
-		_error = "Failed download from " + package->getFetchURL() + ": " + dl.getError();
-		LOGE("Failed to fetch package " + package->getFullName() + ": " + _error);
-		outFile.close();
-		return false;
-	}
-
-	outFile.close();
-
-	return true;
-}
-
-bool Leafcore::extractPackage(Package* package){
-	FUN();
-	_error.clear();
-	if (!checkDirectories())
-		return false;
-
-	if (package == nullptr){
-		_error = "Invalid package (nullptr)";
-		LOGE("Failed to extract package: " + _error);
-		return false;
-	}
-
-	if (!std::filesystem::exists(getDownloadDir())){
-		_error = "Package does not seem to be fetched";
-		LOGE("Failed to extract package: " + _error);
-		return false;
-	}
-
-	if (!std::filesystem::exists(getExtractedDirectory(package))){
-		if (!std::filesystem::create_directories(getExtractedDirectory(package))){
-			_error = "Could not create extracted directory " + getExtractedDirectory(package);
-			LOGE("Failed to extract package " + package->getFullName() + ": " + _error);
-			return false;
-		}
-	}
-	
-	LeafArchive archive;
-	if (!archive.load(getDownloadPath(package))){
-		_error = "Failed to load package " + package->getFullName() + " into LeafArchive: " + archive.getError();
-		LOGE("Failed to extract package: " + _error);
-		return false;
-	}
-	
-	if (!archive.extract(getPackagesDir())){
-		_error = "Failed extract package " + package->getFullName() + " using LeafArchive: " + archive.getError();
-		LOGE("Failed to extract package: " + _error);
-		return false;
-	}
-
-	return true;
 }
 
 bool Leafcore::deployPackage(Package* package){
@@ -150,8 +50,8 @@ bool Leafcore::deployPackage(Package* package){
 		return false;
 	}
 
-	if (!std::filesystem::exists(getExtractedDirectory(package))){
-		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
+	if (!std::filesystem::exists(package->getExtractedDir())){
+		_error = "Package directory " + package->getExtractedDir() + " does not exist, package may not be extracted";
 		LOGE("Failed to deploy package " + package->getFullName() + ": " + _error);
 		return false;
 	}
@@ -179,7 +79,7 @@ bool Leafcore::deployPackage(Package* package){
 
 		if (!std::filesystem::exists(installedDir)){
 			if (!std::filesystem::create_directories(installedDir)){
-				_error = "Could not create installed directory " + getExtractedDirectory(package);
+				_error = "Could not create installed directory " + package->getExtractedDir();
 				LOGE("Failed to deploy package: " + _error);
 				return false;
 			}
@@ -213,20 +113,20 @@ bool Leafcore::runPreInstall(Package* package){
 	FUN();
 	_error.clear();
 
-	if (!std::filesystem::exists(getExtractedDirectory(package))){
-		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
+	if (!std::filesystem::exists(package->getExtractedDir())){
+		_error = "Package directory " + package->getExtractedDir() + " does not exist, package may not be extracted";
 		LOGE("Failed to run preinstall of " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
-	if (!std::filesystem::exists(getExtractedDirectory(package) + "preinstall.sh")){
+	if (!std::filesystem::exists(package->getExtractedDir() + "preinstall.sh")){
 		LOGI("Preinstall script does not exist, skipping");
 		return true;
 	}
 
 	std::string oldWorkDir = std::filesystem::current_path();
 
-	std::filesystem::current_path(getExtractedDirectory(package));
+	std::filesystem::current_path(package->getExtractedDir());
 
 	int res = 0;
 
@@ -250,20 +150,20 @@ bool Leafcore::runPostInstall(Package* package){
 	FUN();
 	_error.clear();
 
-	if (!std::filesystem::exists(getExtractedDirectory(package))){
-		_error = "Package directory " + getExtractedDirectory(package) + " does not exist, package may not be extracted";
+	if (!std::filesystem::exists(package->getExtractedDir())){
+		_error = "Package directory " + package->getExtractedDir() + " does not exist, package may not be extracted";
 		LOGE("Failed to run postinstall of " + package->getFullName() + ": " + _error);
 		return false;
 	}
 
-	if (!std::filesystem::exists(getExtractedDirectory(package) + "postinstall.sh")){
+	if (!std::filesystem::exists(package->getExtractedDir() + "postinstall.sh")){
 		LOGI("Postinstall script does not exist, skipping");
 		return true;
 	}
 
 	std::string oldWorkDir = std::filesystem::current_path();
 
-	std::filesystem::current_path(getExtractedDirectory(package));
+	std::filesystem::current_path(package->getExtractedDir());
 
 	if (hlog->getLevel() < Log::I)
 		system("bash ./postinstall.sh >> /dev/null");
@@ -339,28 +239,28 @@ bool Leafcore::createCacheDirs(){
 		return false;
 
 	{//Check the download directory
-		if (!std::filesystem::exists(getDownloadDir())){
-			if (!std::filesystem::create_directories(getDownloadDir())){
-				_error = "Failed to create download directory " + getDownloadDir();
+		if (!std::filesystem::exists(lConfig.downloadDir())){
+			if (!std::filesystem::create_directories(lConfig.downloadDir())){
+				_error = "Failed to create download directory " + lConfig.downloadDir();
 				return FAIL(_error);
 			}
 		} else {
-			if (!std::filesystem::is_directory(getDownloadDir())){
-				_error = "Download directory " + getDownloadDir() + " is not a directory";
+			if (!std::filesystem::is_directory(lConfig.downloadDir())){
+				_error = "Download directory " + lConfig.downloadDir() + " is not a directory";
 				return FAIL(_error);
 			}
 		}
 	}
 	
 	{//Check the packages directory
-		if (!std::filesystem::exists(getPackagesDir())){
-			if (!std::filesystem::create_directories(getPackagesDir())){
-				_error = "Failed to create packages directory " + getPackagesDir();
+		if (!std::filesystem::exists(lConfig.packagesDir())){
+			if (!std::filesystem::create_directories(lConfig.packagesDir())){
+				_error = "Failed to create packages directory " + lConfig.packagesDir();
 				return FAIL(_error);
 			}
 		} else {
-			if (!std::filesystem::is_directory(getPackagesDir())){
-				_error = "Packages directory " + getPackagesDir() + " is not a directory";
+			if (!std::filesystem::is_directory(lConfig.packagesDir())){
+				_error = "Packages directory " + lConfig.packagesDir() + " is not a directory";
 				return FAIL(_error);
 			}
 		}

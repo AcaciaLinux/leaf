@@ -45,19 +45,6 @@ public:
 	bool						a_install(std::deque<std::string> packages, bool force = false);
 
 	/**
-	 * @brief	Fetches the supplied package tarball into the working directory (wd/downloads)
-	 * @param	package			The package to fetch
-	 * @param	force			Force leaf to fetch the package, even if it is in the cache
-	 */
-	bool						fetchPackage(Package* package, bool force = false);
-
-	/**
-	 * @brief	Extracts the supplied package
-	 * @param	package			The package to process
-	 */
-	bool						extractPackage(Package* package);
-
-	/**
 	 * @brief	Deploys the supplied package to the specified _rootPath ("/")
 	 * @param	package			The package to deploy
 	 */
@@ -115,27 +102,6 @@ public:
 	 */
 	void						setPkgListURL(std::string);
 	std::string					getPkgListURL();
-
-	/**
-	 * @brief	Returns the directory leaf is storing downloads
-	 */
-	std::string					getDownloadDir();
-
-	/**
-	 * @brief	Returns the directory leaf is extracting and caching its packages
-	 */
-	std::string					getPackagesDir();
-
-	/**
-	 * @brief	Get the path to the package download destination
-	 * @param	package			The package to process
-	 */
-	std::string					getDownloadPath(Package* package);
-
-	/**
-	 * @brief	Get the path to the extracted package destination
-	 */
-	std::string					getExtractedDirectory(Package* package);
 
 	/**
 	 * @brief	Returns the last error

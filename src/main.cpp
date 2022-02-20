@@ -13,11 +13,7 @@
 #include "pkglistparser.h"
 #include "leafcore.h"
 
-Arguments arguments;
-
 Log::Log* hlog;
-
-leaf_config_t lConfig;
 
 #include <deque>
 
@@ -25,6 +21,8 @@ int main(int argc, char** argv){
 	hlog = new Log::Log(Log::U);
 	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
 	FUN();
+
+	Arguments arguments;
 
 	if (!arguments.parse(argc, argv)){
 		return -1;

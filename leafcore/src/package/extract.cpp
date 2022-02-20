@@ -9,6 +9,7 @@
 #include "fail.h"
 #include "package.h"
 #include "leafarchive.h"
+#include "leafconfig.h"
 
 #include <filesystem>
 
@@ -61,7 +62,7 @@ bool Package::extract(){
 
 	//Extract the archive
 	LOGD("Extracting archive " + downloadPath + " into " + extractedDir + "...");
-	if (!archive.extract(_db->getCore()->getPackagesDir())){
+	if (!archive.extract(lConfig.packagesDir())){
 		_error = _ep + "LeafArchive: " + archive.getError();
 		return FAIL(_error);
 	}

@@ -11,8 +11,8 @@ bool Arguments::parse(int argc, char** argv){
 
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
-	args::Flag f_sVerbose(parser, "super verbose", "Display eben more verbose output", {'V'});
 	args::Flag f_redownload(parser, "redownload", "Redownload the specified package even if it is in the cache", {"redownload"});
+	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
 	args::Positional<std::string> a_action(parser, "Action", "The action that should be performed by leaf");
@@ -52,13 +52,13 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (args::get(f_verbose)){
-		lConfig.verbosity = CONFIG_V_VERBOSE;
-		hlog->setLevel(Log::I);
+		if (!switchVerbosity(1))
+			return false;
 	}
 
-	if (args::get(f_sVerbose)){
-		lConfig.verbosity = CONFIG_V_SUPERVERBOSE;
-		hlog->setLevel(Log::D);
+	if (f_verbosity){
+		if (!switchVerbosity(args::get(f_verbosity)))
+			return false;
 	}
 
 	if (args::get(f_redownload)){
@@ -90,6 +90,41 @@ bool Arguments::setAction(std::string a){
 
 	else{
 		std::cout << parser;
+		return false;
+	}
+
+	return true;
+}
+
+bool Arguments::switchVerbosity(uint8_t v){
+	FUN();
+
+	switch(v){
+	case 0:
+		lConfig.verbosity = CONFIG_V_DEFAULT;
+		hlog->setLevel(Log::U);
+		break;
+
+	case 1:
+		lConfig.verbosity = CONFIG_V_VERBOSE;
+		LOGU("Using verbose logging");
+		hlog->setLevel(Log::I);
+		break;
+
+	case 2:
+		lConfig.verbosity = CONFIG_V_SUPERVERBOSE;
+		LOGU("Using superverbose logging");
+		hlog->setLevel(Log::D);
+		break;
+
+	case 3:
+		lConfig.verbosity = CONFIG_V_ULTRAVERBOSE;
+		LOGU("Using ultraverbose logging");
+		hlog->setLevel(Log::MEM);
+		break;
+
+	default:
+		LOGUE("Invalid verbosity " + std::to_string(v) + "/{0, 1, 2, 3}");
 		return false;
 	}
 

@@ -6,6 +6,7 @@
  */
 
 #include "package.h"
+#include "leafconfig.h"
 
 std::deque<std::string>& Package::getProvidedFiles(){
 	return _provided_files;
@@ -60,23 +61,11 @@ LeafDB* Package::getDB(){
 }
 
 std::string Package::getDownloadPath(){
-	//Check if the database is ok
-	if (_db == nullptr){
-		_error = "Database is not accessible (nullptr)";
-		return "";
-	}
-
-	return _db->getCore()->getDownloadDir() + getFullName() + ".leafpkg";
+	return lConfig.cacheDir() + getFullName() + ".leafpkg";
 }
 
 std::string Package::getExtractedDir(){
-	//Check if the database is ok
-	if (_db == nullptr){
-		_error = "Database is not accessible (nullptr)";
-		return "";
-	}
-
-	return _db->getCore()->getPackagesDir() + getFullName() + "/";
+	return lConfig.packagesDir() + getFullName() + "/";
 }
 
 std::string Package::toString(){

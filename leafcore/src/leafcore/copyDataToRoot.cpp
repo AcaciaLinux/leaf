@@ -27,7 +27,7 @@ bool Leafcore::copyDataToRoot(Package* package){
 	std::string _ep = "Failed to copy data of " + package->getFullName() + " to root " + getRootDir() + ": ";
 
 	//The dataDir to copy to the root
-	std::string dataDir = getExtractedDirectory(package) + "/data/";
+	std::string dataDir = package->getExtractedDir() + "/data/";
 
 	//Check if the data directory exists
 	if (!fs::exists(dataDir)){

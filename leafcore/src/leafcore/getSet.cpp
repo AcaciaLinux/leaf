@@ -39,22 +39,6 @@ std::string Leafcore::getPkgListURL(){
 	return _pkglistURL;
 }
 
-std::string Leafcore::getDownloadDir(){
-	return _cacheDir + "downloads/";
-}
-
-std::string Leafcore::getPackagesDir(){
-	return _cacheDir + "packages/";
-}
-
-std::string Leafcore::getDownloadPath(Package* package){
-	return getDownloadDir() + package->getFullName() + ".tar.xz";
-}
-
-std::string Leafcore::getExtractedDirectory(Package* package){
-	return getPackagesDir() + package->getFullName() + "/";
-}
-
 std::string Leafcore::getError(){
 	return _error;
 }
