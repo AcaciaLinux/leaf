@@ -81,6 +81,11 @@ public:
 	bool						runScript(std::string path);
 
 	/**
+	 * @brief	Resolves a deque of packages that depend on this package
+	 */
+	bool						resolveDependentPackages();
+
+	/**
 	 * @brief	Returns a reference to the files provided by this package
 	 */
 	std::deque<std::string>&	getProvidedFiles();
@@ -142,6 +147,11 @@ public:
 	std::string					getInstalledFilePath();
 
 	/**
+	 * @brief	Returns a deque to the packages that depend on this package
+	 */
+	std::deque<Package*>		getDependentPackages();
+
+	/**
 	 * @brief	Checks if the provided file is provided by the package
 	 * @param	filePath		The filepath to the file being checked relative to root (/)
 	 */
@@ -177,6 +187,8 @@ private:
 	std::string					_fetchURL;
 	
 	std::deque<std::string>		_provided_files;
+
+	std::deque<Package*>		_dependent_package;
 };
 
 #endif

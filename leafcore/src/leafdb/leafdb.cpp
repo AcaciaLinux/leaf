@@ -45,6 +45,8 @@ bool LeafDB::addPackage(Package* newPackage){
 Package* LeafDB::getPackage(std::string name){
 	FUN();
 
+	LOGD("Searching for package with name " + name);
+
 	if (_packages.count(name) == 0)
 		return nullptr;
 
@@ -56,6 +58,21 @@ Package* LeafDB::newPackage(std::string name, std::string version){
 	pkg->setDB(this);
 	_packages[name] = pkg;
 	return pkg;
+}
+
+bool LeafDB::renamePackage(std::string oldName, std::string newName){
+	FUN();
+
+	LOGD("Renaming package " + oldName + " to " + newName);
+
+	if (_packages.count(oldName) == 0)
+		return false;
+
+	Package* buf = _packages[oldName];
+	_packages.erase(oldName);
+	_packages[newName] = buf;
+
+	return true;
 }
 
 std::deque<Package*> LeafDB::findFileProviders(std::string filepath){

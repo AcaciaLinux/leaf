@@ -114,9 +114,8 @@ bool Leafcore::parseInstalled(){
 	LOGD("Installed packages: ");
 	for (std::string file : installedFiles){
 		file.erase(0, 1);
-		LOGD(" -> " + file);
 
-		Package* newPack = _installedDB->newPackage("", "");
+		Package* newPack = _installedDB->newPackage(file, "");
 
 		std::ifstream inFile;
 		inFile.open(lConfig.installedDir() + file, std::ios::in);
@@ -131,6 +130,10 @@ bool Leafcore::parseInstalled(){
 			inFile.close();
 			return FAIL(_error);
 		}
+
+		_installedDB->renamePackage(file, newPack->getName());
+
+		LOGD(" -> " + newPack->getName());
 
 		inFile.close();
 	}

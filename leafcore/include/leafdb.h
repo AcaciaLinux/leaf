@@ -32,6 +32,13 @@ public:
 	bool							addPackage(Package* package);
 
 	/**
+	 * @brief	Updates the package name map entry for the specified oldName
+	 * @param	oldName				The current name of the package
+	 * @param	newName				The new name of the package
+	 */
+	bool							renamePackage(std::string oldName, std::string newName);
+
+	/**
 	 * @brief	Returns the package with the specified name, nullptr if no package was found
 	 * @param	name				The name of the package to get
 	 */

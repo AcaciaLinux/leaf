@@ -21,7 +21,8 @@ enum config_redownload{
 enum leaf_action{
 	ACTION_NONE = 0,
 	ACTION_UPDATE = 1,
-	ACTION_INSTALL = 2
+	ACTION_INSTALL = 2,
+	ACTION_REMOVE = 3
 };
 
 typedef struct {

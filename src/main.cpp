@@ -54,5 +54,12 @@ int main(int argc, char** argv){
 			LOGUE("Failed to install: " + leaf.getError());
 			return -1;
 		}
+	} else if (lConfig.action == ACTION_REMOVE){
+		Leafcore leaf;
+
+		if (!leaf.a_remove(lConfig.packages)){
+			LOGUE("Failed to remove: " + leaf.getError());
+			return -1;
+		}
 	}
 }

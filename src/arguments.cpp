@@ -93,6 +93,8 @@ bool Arguments::setAction(std::string a){
 		lConfig.action = ACTION_UPDATE;
 	else if (a == "install")
 		lConfig.action = ACTION_INSTALL;
+	else if (a == "remove")
+		lConfig.action = ACTION_REMOVE;
 
 	else{
 		std::cout << parser;

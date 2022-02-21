@@ -44,6 +44,12 @@ public:
 	bool						a_install(std::deque<std::string> packages, bool force = false);
 
 	/**
+	 * @brief	Removes the specified packages from the system
+	 * @param	packages		The packages to remove 
+	 */
+	bool						a_remove(std::deque<std::string> packages);
+
+	/**
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
 	bool						checkDirectories();
