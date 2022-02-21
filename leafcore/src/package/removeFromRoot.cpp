@@ -27,11 +27,16 @@ bool Package::removeFromRoot(){
 	std::error_code ec;
 	for (std::string file : _provided_files){
 		if (std::filesystem::is_directory(lConfig.rootDir + file)){
-			LOGD("Skipping " + lConfig.rootDir + file);
-			continue;
+			if (std::filesystem::is_empty(lConfig.rootDir + file)){
+				LOGF("Removing empty directory " + lConfig.rootDir + file);
+			} else {
+				LOGF("Skipping non empty directory " + lConfig.rootDir + file);
+				continue;
+			}
 		}
 
-		std::filesystem::remove(lConfig.rootDir + file, ec);
+		LOGF("Removing file " + lConfig.rootDir + file);
+		std::filesystem::remove_all(lConfig.rootDir + file, ec);
 
 		if (ec){
 			_error = _ep + "Filesystem error: " + ec.message() + " when processing " + lConfig.rootDir + file;
@@ -39,8 +44,13 @@ bool Package::removeFromRoot(){
 		}
 	}
 
-	_error = _ep + "Feature not implemented";
-	return FAIL(_error);
+	//Finally remove the leafinstalled file
+	std::filesystem::remove(getInstalledFilePath(), ec);
+
+	if (ec){
+		_error = _ep + "Failed to remove leafinstalled file " + getInstalledFilePath() + ": " + ec.message();
+		return FAIL(_error);
+	}
 
 	return true;
 }

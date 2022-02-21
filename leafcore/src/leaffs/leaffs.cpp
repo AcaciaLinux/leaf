@@ -43,27 +43,26 @@ bool LeafFS::check(){
 	return true;
 }
 
-bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive, bool filesonly){
+bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive){
 	FUN();
 
 	fs::directory_iterator dirIt(directory);
 
 	std::string filePath;
 	for (fs::directory_entry entry : dirIt){
-		//if (prefix[prefix.size()-1] != '/')
-		//	prefix += '/';
 
 		filePath = prefix + "/" + entry.path().stem().string() + entry.path().extension().string();
 
+		LOGF("Indexing " + filePath);
+
 		if (entry.is_directory()){
 			
-			//If we are allowed to add directories, add it
-			if (!filesonly)
-				_files.push_back(filePath);
+			//Add the directory
+			_directories.push_back(filePath);
 
 			//If recursive operation is nedded, do it
 			if (recursive)
-				if (!getFiles(filePath, entry.path(), recursive, filesonly))
+				if (!getFiles(filePath, entry.path(), recursive))
 					return false;
 		} else 
 			_files.push_back(filePath);
@@ -72,7 +71,7 @@ bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive,
 	return true;
 }
 
-bool LeafFS::readFiles(bool onlyFiles, bool recursive){
+bool LeafFS::read(bool recursive){
 	FUN();
 	_error.clear();
 
@@ -82,11 +81,43 @@ bool LeafFS::readFiles(bool onlyFiles, bool recursive){
 		return false;
 	}
 
-	if (!getFiles("", _curDir, recursive, onlyFiles)){
+	if (!getFiles("", _curDir, recursive)){
 		_error = "Failed to get files from " + _curDir + ": " + _error;
 		LOGE(_error);
 		return false;
 	}
 
 	return true;
+}
+
+std::string removeFile(std::string path, bool errorOnNotExisting){
+	FUN();
+
+	std::error_code ec;
+
+	if (fs::exists(path) || fs::is_symlink(path)){
+		
+		if (fs::is_directory(path)){
+			if (fs::is_empty(path)){
+				LOGF("Removing empty directory " + path);
+				fs::remove_all(path, ec);
+			} else {
+				LOGF("Skipping non-empty directory " + path);
+			}
+		} else {
+			LOGF("Removing file " + path);
+			fs::remove_all(path, ec);
+		}
+	} else {
+		LOGF("File " + path + " does not exist");
+		if (errorOnNotExisting)
+			return "File " + path + "does not exist";
+	}
+
+	if (ec){
+		LOGE("Filesystem error when removing file " + path + ": " + ec.message());
+		return "Filesystem error: " + ec.message();
+	}
+
+	return "";
 }

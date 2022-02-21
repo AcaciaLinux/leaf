@@ -14,3 +14,7 @@ std::string LeafFS::getError(){
 std::deque<std::string> LeafFS::getFiles(){
 	return _files;
 }
+
+std::deque<std::string> LeafFS::getDirectories(){
+	return _directories;
+}

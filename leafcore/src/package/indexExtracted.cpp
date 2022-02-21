@@ -27,12 +27,13 @@ bool Package::indexExtracted(){
 
 	LeafFS fs(getExtractedDir() + "data/");
 
-	if (!fs.readFiles(false, true)){
+	if (!fs.read(true)){
 		_error = _ep + "Failed to read files: " + fs.getError();
 		return FAIL(_error);
 	}
 
 	_provided_files = fs.getFiles();
+	_provided_directories = fs.getDirectories();
 
 	return true;
 }

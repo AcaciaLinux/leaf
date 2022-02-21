@@ -98,7 +98,7 @@ bool Leafcore::parseInstalled(){
 			return FAIL(_error);
 		}
 
-		if (!installedDirFS.readFiles(true, false)){
+		if (!installedDirFS.read(true)){
 			_error = "Failed to parse installed packages: " + installedDirFS.getError();
 			return FAIL(_error);
 		}

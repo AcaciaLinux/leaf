@@ -10,6 +10,8 @@
 #include "package.h"
 #include "leafconfig.h"
 
+#include "leaffs.h"
+
 #include <filesystem>
 
 bool Package::copyToRoot(){
@@ -58,22 +60,40 @@ bool Package::copyToRoot(){
 
 	fs::copy_options options = fs::copy_options::copy_symlinks;
 
-	if (lConfig.forceOverwrite)
-		options |= fs::copy_options::update_existing;
-
 	std::string dataDir = getExtractedDir() + "data/";
 	std::string destDir = lConfig.rootDir;
 
+	LOGI("Creating destination directories...");
+
+	//First, create the directories for the files
+	for (std::string dir : _provided_directories){
+		LOGF("Creating directory " + destDir + dir);
+
+		std::filesystem::create_directories(destDir + dir, ec);
+
+		if (ec){
+			_error = _ep + "Failed to create directory " + destDir + dir;
+			return FAIL(_error);
+		}
+	}
+
+	LOGI("Copying files...");
+
+	//Now copy all the files
 	for (std::string file : _provided_files){
 
-		if (fs::is_directory(dataDir + file)){
-			LOGF("Creating directory " + destDir + file);
-			fs::create_directories(destDir + file, ec);
-		} else {
-			LOGF("Copying " + dataDir + file + " -> " + destDir + file);
-			fs::copy(dataDir + file, destDir + file, options, ec);
+		//If leaf should overwrite the files, delete the old files
+		if (lConfig.forceOverwrite){
+			std::string err = removeFile(destDir + file, false);
+			if (!err.empty()){
+				_error = _ep + err;
+				return FAIL(_error);
+			}
 		}
 
+		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
+		fs::copy(dataDir + file, destDir + file, options, ec);
+		
 		if (ec){
 			_error = _ep + "Copy " + destDir + file + " failed: " + ec.message() + " code: " + std::to_string(ec.value());
 			return FAIL(_error);

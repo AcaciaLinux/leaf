@@ -192,6 +192,7 @@ private:
 	std::string					_fetchURL;
 	
 	std::deque<std::string>		_provided_files;
+	std::deque<std::string>		_provided_directories;
 
 	std::deque<Package*>		_dependent_package;
 };

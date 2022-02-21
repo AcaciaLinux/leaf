@@ -26,16 +26,20 @@ public:
 	bool						check();
 
 	/**
-	 * @brief	Reads all the files in the directory, get them using getFiles()
-	 * @param	onlyfiles		Only include files excluding directories
+	 * @brief	Reads all the entries in the directory, get them using getFiles()
 	 * @param	recursive		Read recursively
 	 */
-	bool						readFiles(bool onlyfiles, bool recursive);
+	bool						read(bool recursive);
 
 	/**
 	 * @brief	Returns the previously read files in the directory
 	 */
 	std::deque<std::string>		getFiles();
+
+	/**
+	 * @brief	Returns all the directories in the filesystem
+	 */
+	std::deque<std::string>		getDirectories();
 
 	/**
 	 * @brief	Returns the last error
@@ -50,10 +54,15 @@ private:
 	//The currently selected directory
 	std::string					_curDir;
 
+	//The directories in the filesystem parsed by readFiles()
+	std::deque<std::string>		_directories;
+
 	//The files contained in this directory parsed by readFiles() and readFilesRecursive()
 	std::deque<std::string>		_files;
 
-	bool						getFiles(std::string prefix, std::string directory, bool recursive, bool filesonly);
+	bool						getFiles(std::string prefix, std::string directory, bool recursive);
 };
+
+std::string					removeFile(std::string path, bool errorOnNotExisting);
 
 #endif
