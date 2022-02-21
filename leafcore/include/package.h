@@ -81,6 +81,11 @@ public:
 	bool						runScript(std::string path);
 
 	/**
+	 * @brief	Removes this package from the root
+	 */
+	bool						removeFromRoot();
+
+	/**
 	 * @brief	Resolves a deque of packages that depend on this package
 	 */
 	bool						resolveDependentPackages();

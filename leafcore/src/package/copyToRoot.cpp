@@ -55,22 +55,27 @@ bool Package::copyToRoot(){
 
 	//Finally, copy the package
 	std::error_code ec;
-	fs::copy_options options = fs::copy_options::update_existing;
+
+	fs::copy_options options = fs::copy_options::copy_symlinks;
+
+	if (lConfig.forceOverwrite)
+		options |= fs::copy_options::update_existing;
 
 	std::string dataDir = getExtractedDir() + "data/";
 	std::string destDir = lConfig.rootDir;
 
 	for (std::string file : _provided_files){
-		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
 
-		if (fs::is_directory(file)){
+		if (fs::is_directory(dataDir + file)){
+			LOGF("Creating directory " + destDir + file);
 			fs::create_directories(destDir + file, ec);
 		} else {
+			LOGF("Copying " + dataDir + file + " -> " + destDir + file);
 			fs::copy(dataDir + file, destDir + file, options, ec);
 		}
-		
+
 		if (ec){
-			_error = _ep + "Copy " + destDir + file + " failed: " + ec.message();
+			_error = _ep + "Copy " + destDir + file + " failed: " + ec.message() + " code: " + std::to_string(ec.value());
 			return FAIL(_error);
 		}
 	}

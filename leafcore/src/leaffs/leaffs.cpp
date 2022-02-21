@@ -50,10 +50,10 @@ bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive,
 
 	std::string filePath;
 	for (fs::directory_entry entry : dirIt){
-		if (prefix[prefix.size()-1] != '/')
-			prefix += '/';
+		//if (prefix[prefix.size()-1] != '/')
+		//	prefix += '/';
 
-		filePath = prefix + entry.path().stem().string() + entry.path().extension().string();
+		filePath = prefix + "/" + entry.path().stem().string() + entry.path().extension().string();
 
 		if (entry.is_directory()){
 			
