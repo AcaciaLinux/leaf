@@ -48,7 +48,7 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (f_root){
-		lConfig.rootDir = args::get(f_root);
+		lConfig.setRootDir(args::get(f_root));
 		LOGD("Using root path " + lConfig.rootDir);
 	}
 

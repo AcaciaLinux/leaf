@@ -78,6 +78,13 @@ typedef struct leafconfig_struct{
 		return configDir() + "leaf.pkglist";
 	}
 
+	//Set the root directory and append a '/' if needed
+	void setRootDir(std::string dir){
+		if (dir[dir.length()-1] != '/')
+			dir += '/';
+		rootDir = dir;
+	}
+
 } leaf_config_t;
 
 extern leaf_config_t lConfig;

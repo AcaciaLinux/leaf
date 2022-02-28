@@ -42,7 +42,7 @@ bool Package::runScript(std::string path){
 	}
 
 	if (!std::filesystem::exists(getExtractedDir() + path)){
-		LOGI("Script " + getExtractedDir() + path + " does not exist");
+		LOGI("Script " + getExtractedDir() + path + " does not exist, skipping");
 		return true;
 	}
 
