@@ -1,3 +1,4 @@
+set (CMAKE_PREFIX_PATH "/opt/homebrew")
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
@@ -5,12 +6,19 @@ include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
 
+set(CMAKE_CXX_STANDARD 17)
+
 if (CMAKE_BUILD_TYPE)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		enable_testing(true)
 		add_subdirectory(googletest)
 		add_subdirectory(tests)
 	endif()
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
+	include_directories(/opt/homebrew/opt/libarchive/include)
 endif()
 
 add_subdirectory(leafcore)

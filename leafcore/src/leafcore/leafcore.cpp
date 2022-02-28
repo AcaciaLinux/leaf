@@ -38,7 +38,8 @@ bool Leafcore::checkDirectories(){
 	{//Check the leaf directory
 		LOGD("Checking configuration directory...");
 		if (!std::filesystem::exists(lConfig.configDir())){
-			if (askUserOK("Configuration directory " + lConfig.configDir() + " does not exist, create it?"), true){
+			if (askUserOK("Configuration directory " + lConfig.configDir() + " does not exist, create it?", true)){
+				LOGU("Creating /etc/leaf directory");
 				if (!std::filesystem::create_directories(lConfig.configDir())){
 					_error = "Could not create configuration directory " + lConfig.configDir();
 					LOGE(_error);
@@ -154,14 +155,21 @@ bool Leafcore::askUserOK(std::string question, bool defaultOption){
 		return true;
 
 	if (defaultOption){
+		LOGD("User question: Default action: true");
+
 		std::cout << question << " (Y/n): ";
 		std::string answer;
 		getline(std::cin, answer);
+
+		LOGD("User question: Answer: \"" + answer + "\"");
 		
-		if (answer == "y" || answer == "Y" || answer == "")
+		if (answer == "y" || answer == "Y" || answer == ""){
+			LOGD("User question: User agreed");
 			return true;
-		else 
+		} else {
+			LOGD("User question: User disagreed");
 			return false;
+		}
 	} 
 	else
 	{

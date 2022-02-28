@@ -25,7 +25,7 @@ enum leaf_action{
 	ACTION_REMOVE = 3
 };
 
-typedef struct {
+typedef struct leafconfig_struct{
 
 	//The root directory leaf should work on (normally "/")
 	std::string					rootDir = "/";
