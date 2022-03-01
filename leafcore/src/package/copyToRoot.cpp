@@ -14,10 +14,13 @@
 
 #include <filesystem>
 
-bool Package::copyToRoot(){
+bool Package::copyToRoot(bool forceOverwrite){
 	FUN();
 	_error.clear();
 	std::string _ep = "Failed to copy package " + getFullName() + " to root " + lConfig.rootDir + ": ";
+
+	if (lConfig.forceOverwrite)
+		forceOverwrite = true;
 
 	LOGI("Copying package " + getFullName() + " to root " + lConfig.rootDir);
 
@@ -39,7 +42,7 @@ bool Package::copyToRoot(){
 	}
 
 	//If leaf should not overwrite existing files, check for them
-	if (!lConfig.forceOverwrite){
+	if (!forceOverwrite){
 		//Got through every entry
 		for (std::string file : _provided_files){
 			
@@ -83,7 +86,7 @@ bool Package::copyToRoot(){
 	for (std::string file : _provided_files){
 
 		//If leaf should overwrite the files, delete the old files
-		if (lConfig.forceOverwrite){
+		if (forceOverwrite){
 			std::string err = removeFile(destDir + file, false);
 			if (!err.empty()){
 				_error = _ep + err;

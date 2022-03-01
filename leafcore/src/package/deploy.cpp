@@ -29,11 +29,10 @@ bool Package::deploy(){
 		return FAIL(_error);
 	}
 
-	if (!lConfig.forceOverwrite){
-		if (std::filesystem::exists(getInstalledFilePath())){
-			_error = _ep + "Leafinstalled file exists, package seems to already be installed";
-			return FAIL(_error);
-		}
+	bool overwrite = false;
+	if (std::filesystem::exists(getInstalledFilePath())){
+		LOGI("Leafinstalled file for package " + getName() + " exists, reinstalling...");
+		overwrite = true;
 	}
 	
 	std::ofstream installedFile;
@@ -50,19 +49,34 @@ bool Package::deploy(){
 		return FAIL(_error);
 	}
 
-	if (!copyToRoot()){
+	if (!copyToRoot(overwrite)){
 		_error = _ep + _error;
+		std::error_code ec;
+		std::filesystem::remove(getInstalledFilePath(), ec);
+		if (ec){
+			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
+		}
 		return FAIL(_error);
 	}
 
 	if (!runPostinstall()){
 		_error = _ep + "Running postinstall.sh: " + _error;
+		std::error_code ec;
+		std::filesystem::remove(getInstalledFilePath(), ec);
+		if (ec){
+			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
+		}
 		return FAIL(_error);
 	}
 
 	if (!createInstalledFile(installedFile)){
 		_error = _ep + _error;
 		installedFile.close();
+		std::error_code ec;
+		std::filesystem::remove(getInstalledFilePath(), ec);
+		if (ec){
+			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
+		}
 		return FAIL(_error);
 	}
 
