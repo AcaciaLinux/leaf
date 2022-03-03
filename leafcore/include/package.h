@@ -12,6 +12,33 @@ class Package;
 #include <ostream>
 #include <istream>
 
+namespace EC{
+	namespace Package{
+		enum ec{
+			//general
+			NODB,
+			NOROOT,
+			NOCONFDIR,
+			CREATEFILE,
+			CREATEDIR,
+			REMOVEFILE,
+			REMOVEDIR,
+			FS_ERROR,
+
+			//deploy()
+			DEPLOY_OPENINSTALLEDFILE,
+			DEPLOY_RUNPREINSTALL,
+			DEPLOY_RUNPOSTINSTALL,
+
+			//copyToRoot()
+			COPYTOROOT_NOPACKAGE,
+			COPYTOROOT_EXISTING_FILE,
+
+			NONE
+		};
+	}
+}
+
 class Package{
 
 public:
@@ -178,12 +205,18 @@ public:
 	 */
 	std::string					getError();
 
+	/**
+	 * @brief	Returns the last error code
+	 */
+	EC::Package::ec				getErrorCode();
+
 #ifndef FRIEND_PACKAGE
 private:
 #endif
 
 	LeafDB*						_db = nullptr;
 
+	EC::Package::ec				_errorCode = EC::Package::NONE;
 	std::string					_error;
 
 	std::string					_name;

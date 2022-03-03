@@ -27,11 +27,13 @@ bool Package::copyToRoot(bool forceOverwrite){
 	namespace fs = std::filesystem;
 
 	if (!fs::exists(lConfig.rootDir)){
+		_errorCode = EC::Package::NOROOT;
 		_error = _ep + "Root directory " + lConfig.rootDir + " does not exist";
 		return FAIL(_error);
 	}
 
 	if (!fs::exists(getExtractedDir())){
+		_errorCode = EC::Package::COPYTOROOT_NOPACKAGE;
 		_error = _ep + "Package directory " + getExtractedDir() + "does not exist, is the package extracted?";
 		return FAIL(_error);
 	}
@@ -51,6 +53,7 @@ bool Package::copyToRoot(bool forceOverwrite){
 
 				//If the file exists, error out
 				if (std::filesystem::exists(lConfig.rootDir + file)){
+					_errorCode = EC::Package::COPYTOROOT_EXISTING_FILE;
 					_error = _ep + "File does already exist: " + lConfig.rootDir + file;
 					return FAIL(_error);
 				}
@@ -75,6 +78,7 @@ bool Package::copyToRoot(bool forceOverwrite){
 		std::filesystem::create_directories(destDir + dir, ec);
 
 		if (ec){
+			_errorCode = EC::Package::CREATEDIR;
 			_error = _ep + "Failed to create directory " + destDir + dir;
 			return FAIL(_error);
 		}
@@ -89,6 +93,7 @@ bool Package::copyToRoot(bool forceOverwrite){
 		if (forceOverwrite){
 			std::string err = removeFile(destDir + file, false);
 			if (!err.empty()){
+				_errorCode = EC::Package::REMOVEFILE;
 				_error = _ep + err;
 				return FAIL(_error);
 			}
@@ -98,6 +103,7 @@ bool Package::copyToRoot(bool forceOverwrite){
 		fs::copy(dataDir + file, destDir + file, options, ec);
 		
 		if (ec){
+			_errorCode = EC::Package::FS_ERROR;
 			_error = _ep + "Copy " + destDir + file + " failed: " + ec.message() + " code: " + std::to_string(ec.value());
 			return FAIL(_error);
 		}

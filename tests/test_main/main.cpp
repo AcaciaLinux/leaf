@@ -2,6 +2,7 @@
 
 #include "random.h"
 #include "log.h"
+#include "error.h"
 Log::Log* hlog;
 
 int glob_argc;
@@ -21,9 +22,17 @@ GTEST_API_ int main(int argc, char **argv) {
 
   LOGU("Starting tests...");
 
-  int ret = RUN_ALL_TESTS();
+  int res = 0;
+  try {
+    res = RUN_ALL_TESTS();
+  } catch (LeafError& e){
+    LOGUE("Test suite failed with leaf error: " + e.what());
+  } catch (...) {
+    LOGUE("Other error");
+  }
+  
 
   delete hlog;
 
-  return ret;
+  return res;
 }

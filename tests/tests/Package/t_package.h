@@ -8,5 +8,6 @@
 #include "package.h"
 #include "leafconfig.h"
 #include "log.h"
+#include "error.h"
 
 #endif
