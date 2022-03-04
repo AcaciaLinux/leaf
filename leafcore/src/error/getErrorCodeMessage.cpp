@@ -5,11 +5,14 @@ std::string errorCodes[] = {
 	"Leaf root is not accessible",
 	"Leaf configuration could not be accessed",
 	"Leaf cache could not be accessed",
+
+	"User disagreed",
 	
 	"Could not create file",
 	"Could not create directory",
 	"Could not remove file",
 	"Could not remove directory",
+	"Path is not a directory",
 	"General filesystem error",
 
 	"No error"

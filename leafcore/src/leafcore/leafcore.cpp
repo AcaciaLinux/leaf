@@ -9,6 +9,7 @@
 
 #include "log.h"
 #include "fail.h"
+#include "error.h"
 #include "leafcore.h"
 #include "leafconfig.h"
 
@@ -36,53 +37,54 @@ bool Leafcore::checkDirectories(){
 	LOGD("Checking leaf directories...");
 
 	{//Check the leaf directory
+		std::error_code ec;
 		LOGD("Checking configuration directory...");
-		if (!std::filesystem::exists(lConfig.configDir())){
+		if (!std::filesystem::exists(lConfig.configDir(), ec)){
+			if (ec){
+				throw new LeafError(Error::FS_ERROR, "Configuration directory " + lConfig.configDir(), ec);
+			}
+
 			if (askUserOK("Configuration directory " + lConfig.configDir() + " does not exist, create it?", true)){
-				LOGU("Creating /etc/leaf directory");
-				if (!std::filesystem::create_directories(lConfig.configDir())){
-					_error = "Could not create configuration directory " + lConfig.configDir();
-					LOGE(_error);
-					return false;
+				LOGU("Creating leaf config directory");
+				std::filesystem::create_directories(lConfig.configDir(), ec);
+				if (ec){
+					throw new LeafError(Error::CREATEDIR, "Configuration directory " + lConfig.configDir(), ec);
 				}
 			}
 			else
 			{
-				_error = "User disagreed to create configuration directory " + lConfig.configDir();
-				LOGE(_error);
-				return false;
+				throw new LeafError(Error::USER_DISAGREE, "Creating config directory " + lConfig.configDir());
 			}
 		}
 
 		if (!std::filesystem::is_directory(lConfig.configDir())){
-			_error = "Configuration directory " + lConfig.configDir() + " is not a directory";
-			LOGE(_error);
-			return false;
+			throw new LeafError(Error::NOTDIR, "Configuration directory " + lConfig.configDir());
 		}
 	}
 
 	{//Check the cache directory
+		std::error_code ec;
 		LOGD("Checking cache directory...");
-		if (!std::filesystem::exists(lConfig.cacheDir())){
-			if (askUserOK("Cache directory " + lConfig.cacheDir() + " does not exist, create it?"), true){
-				if (!std::filesystem::create_directories(lConfig.cacheDir())){
-					_error = "Could not create cache directory " + lConfig.cacheDir();
-					LOGE(_error);
-					return false;
+		if (!std::filesystem::exists(lConfig.cacheDir(), ec)){
+			if (ec){
+				throw new LeafError(Error::FS_ERROR, "Cache directory " + lConfig.cacheDir(), ec);
+			}
+
+			if (askUserOK("Cache directory " + lConfig.cacheDir() + " does not exist, create it?", true)){
+				LOGU("Creating leaf cache directory");
+				std::filesystem::create_directories(lConfig.cacheDir(), ec);
+				if (ec){
+					throw new LeafError(Error::CREATEDIR, "Cache directory " + lConfig.cacheDir(), ec);
 				}
 			}
 			else
 			{
-				_error = "User disagreed to create cache directory " + lConfig.cacheDir();
-				LOGE(_error);
-				return false;
+				throw new LeafError(Error::USER_DISAGREE, "Creating cache directory " + lConfig.cacheDir());
 			}
 		}
 
 		if (!std::filesystem::is_directory(lConfig.cacheDir())){
-			_error = "Cache directory " + lConfig.cacheDir() + " is not a directory";
-			LOGE(_error);
-			return false;
+			throw new LeafError(Error::NOTDIR, "Cache directory " + lConfig.cacheDir());
 		}
 	}
 

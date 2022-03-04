@@ -2,6 +2,7 @@
 #define __ERROR_H__
 
 #include <string>
+#include <system_error>
 
 namespace Error{
 	
@@ -12,11 +13,15 @@ namespace Error{
 		NOROOT,
 		NOCONFIG,
 		NOCACHE,
+
+		//User answer
+		USER_DISAGREE,
 		
 		CREATEFILE,
 		CREATEDIR,
 		REMOVEFILE,
 		REMOVEDIR,
+		NOTDIR,
 		FS_ERROR,
 
 		NONE		
@@ -36,13 +41,29 @@ public:
 		_additional = additional;
 	}
 
+	LeafError(Error::ec errorCode, std::error_code stdErrorCode){
+		_errorCode = errorCode;
+		_stdErrorCode = stdErrorCode;
+	}
+
+	LeafError(Error::ec errorCode, std::string additional, std::error_code stdErrorCode){
+		_errorCode = errorCode;
+		_additional = additional;
+		_stdErrorCode = stdErrorCode;
+	}
+
 	std::string getErrorCodeMessage();
 
 	std::string what(){
-		if (_additional.empty())
-			return getErrorCodeMessage();
-		else
-			return getErrorCodeMessage() + _additional;
+		std::string ret = getErrorCodeMessage();
+
+		if (!_additional.empty())
+			ret += ": " + _additional;
+
+		if (_stdErrorCode)
+			ret += ": " + _stdErrorCode.message();
+
+		return ret;
 	}
 
 	Error::ec getErrorCode(){
@@ -52,6 +73,7 @@ public:
 private:
 	Error::ec			_errorCode;
 	std::string			_additional;
+	std::error_code		_stdErrorCode;
 };
 
 #endif
