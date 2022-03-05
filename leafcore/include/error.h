@@ -14,15 +14,25 @@ namespace Error{
 		NOCONFIG,
 		NOCACHE,
 
-		//User answer
+		//User answers
 		USER_DISAGREE,
 		
+		//File system
 		CREATEFILE,
 		CREATEDIR,
 		REMOVEFILE,
 		REMOVEDIR,
 		NOTDIR,
 		FS_ERROR,
+
+		//Package management
+		PARSE_INSTALLEDFILE,
+
+		//Actions
+		PKG_INSTALLED,
+		PKG_NOTINSTALLED,
+		PKG_NOTDOWNLOADED,
+		PKG_NOTEXTRACTED,
 
 		NONE		
 	};

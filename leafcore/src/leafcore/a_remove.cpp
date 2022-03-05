@@ -15,6 +15,11 @@
 
 bool Leafcore::a_remove(std::deque<std::string> packages){
 	FUN();
+
+	LEAF_DEBUG("Leafcore::a_remove()");
+
+	//TODO: exceptions
+
 	_error.clear();
 	std::string _ep = "Could not remove packages: ";
 	if (!checkDirectories())
@@ -31,10 +36,8 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 		for (std::string packageName : packages){
 			Package* package = _installedDB->getPackage(packageName);
 
-			if (package == nullptr){
-				_error = _ep + "Package " + packageName + " does not seem to be installed";
-				return FAIL(_error);
-			}
+			if (package == nullptr)
+				throw new LeafError(Error::PKG_NOTINSTALLED, packageName);
 
 			remove_packages.push_back(package);
 		}
@@ -51,10 +54,7 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 		LOGU(outString);
 	}
 
-	if (!askUserOK("Do you want to continue?", true)){
-		_error = "Aborted by user";
-		return FAIL(_error);
-	}
+	askUserOK("Do you want to continue?", true);
 
 	for (Package* p : remove_packages){
 		LOGU("Removing package " + p->getFullName() + "...");
