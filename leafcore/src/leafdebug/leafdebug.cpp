@@ -23,11 +23,15 @@ void leaf_debug_set_function_fail(std::string funName, bool state){
 	function_fail[funName] = state;
 }
 
-LeafDebugGuard::LeafDebugGuard(std::string name){
-	_funName = name;
-	leaf_debug_set_function_fail(_funName, true);
-}
+#ifdef DEBUG
 
-LeafDebugGuard::~LeafDebugGuard(){
-	leaf_debug_set_function_fail(_funName, false);
-}
+	LeafDebugGuard::LeafDebugGuard(std::string name){
+		_funName = name;
+		leaf_debug_set_function_fail(_funName, true);
+	}
+
+	LeafDebugGuard::~LeafDebugGuard(){
+		leaf_debug_set_function_fail(_funName, false);
+	}
+
+#endif
