@@ -1,4 +1,5 @@
 *.out
 *build*/
+Testing/
 CMakeLists.txt.user
 packages.list
