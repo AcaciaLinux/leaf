@@ -12,6 +12,7 @@ if (CMAKE_BUILD_TYPE)
 		enable_testing(true)
 		add_subdirectory(googletest)
 		add_subdirectory(tests)
+		add_definitions(-DDEBUG)
 	endif()
 endif()
 

@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(libleafcore)
 
+if (CMAKE_BUILD_TYPE)
+	if (CMAKE_BUILD_TYPE MATCHES Debug)
+		message("Building in debug mode, performance will be much lower!")
+		add_definitions(-DDEBUG)
+	endif()
+endif()
+
 include_directories(include)
 include_directories(../Log/include)
 

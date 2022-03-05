@@ -9,6 +9,7 @@
 #include "error.h"
 #include "leafcore.h"
 #include "leafconfig.h"
+#include "leafdebug.h"
 
 #include <filesystem>
 #include <iostream>
@@ -24,6 +25,7 @@ Leafcore::Leafcore(){
 
 bool Leafcore::checkDirectories(){
 	FUN();
+	LEAF_DEBUG("Leafcore::checkDirectories()");
 
 	LOGD("Checking leaf directories...");
 
