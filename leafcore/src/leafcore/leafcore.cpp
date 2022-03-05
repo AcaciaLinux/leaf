@@ -86,6 +86,7 @@ bool Leafcore::checkDirectories(){
 
 bool Leafcore::createCacheDirs(){
 	FUN();
+	LEAF_DEBUG("Leafcore::createCacheDirs()");
 	if (!checkDirectories())
 		return false;
 
@@ -152,6 +153,7 @@ bool Leafcore::createCacheDirs(){
 
 bool Leafcore::createConfigDirs(){
 	FUN();
+	LEAF_DEBUG("Leafcore::createConfigDirs()");
 
 	if (!checkDirectories())
 		return false;
@@ -190,9 +192,12 @@ bool Leafcore::createConfigDirs(){
 
 bool Leafcore::askUserOK(std::string question, bool defaultOption){
 	FUN();
+	LEAF_DEBUG("Leafcore::askUserOK()");
 
 	if (lConfig.noAsk)
 		return true;
+
+	LEAF_DEBUG("Leafcore::askUserOK()-noAsk");
 
 	if (defaultOption){
 		LOGD("User question: Default action: true");
