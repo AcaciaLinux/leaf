@@ -16,6 +16,9 @@ std::string errorCodes[] = {
 	"Could not create directory",
 	"Could not remove file",
 	"Could not remove directory",
+	"Could not open file for reading",
+	"Could not open file for writing",
+	"Could not open directory",
 	"Path is not a directory",
 	"General filesystem error",
 

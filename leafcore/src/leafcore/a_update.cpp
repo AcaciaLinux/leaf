@@ -16,6 +16,11 @@
 
 bool Leafcore::a_update(){
 	FUN();
+
+	LEAF_DEBUG("Leafcore::a_update()");
+
+	//TODO: exceptions
+
 	_error.clear();
 	if (!checkDirectories())
 		return false;
@@ -27,10 +32,8 @@ bool Leafcore::a_update(){
 	file.open(pkgListFilePath, std::ios::trunc);
 
 	if (!file.is_open()){
-		_error = "Failed to open " + pkgListFilePath + " for writing";
-		LOGE("Package list update: " + _error);
 		file.close();
-		return false;
+		throw new LeafError(Error::OPENFILEW, pkgListFilePath);
 	}
 
 	//Create the downloader instance and download the file
