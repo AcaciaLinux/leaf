@@ -5,20 +5,11 @@
  * @copyright 	Copyright (c) 2022
  */
 
-#define FRIEND_PACKAGE
-
 #include "log.h"
-#include "fail.h"
 #include "error.h"
 #include "leafcore.h"
 #include "leafconfig.h"
 
-#include "pkglistparser.h"
-#include "downloader.h"
-#include "leafarchive.h"
-#include "leaffs.h"
-
-#include <fstream>
 #include <filesystem>
 #include <iostream>
 
@@ -97,30 +88,60 @@ bool Leafcore::createCacheDirs(){
 		return false;
 
 	{//Check the download directory
-		if (!std::filesystem::exists(lConfig.downloadDir())){
-			if (!std::filesystem::create_directories(lConfig.downloadDir())){
-				_error = "Failed to create download directory " + lConfig.downloadDir();
-				return FAIL(_error);
-			}
-		} else {
-			if (!std::filesystem::is_directory(lConfig.downloadDir())){
-				_error = "Download directory " + lConfig.downloadDir() + " is not a directory";
-				return FAIL(_error);
-			}
+		std::error_code ec;
+		std::string eMsg = "Download directory " + lConfig.downloadDir();
+		
+		//Check if the download directory exists
+		bool exists = std::filesystem::exists(lConfig.downloadDir(), ec);
+
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+		//If the directory does not exists, create it
+		if (!exists){
+			std::filesystem::create_directories(lConfig.downloadDir(), ec);
+			
+			if (ec)
+				throw new LeafError(Error::CREATEDIR, eMsg, ec);
+		}
+		else	//Else check if the existing entry is a directory
+		{
+			bool isDirectory = std::filesystem::is_directory(lConfig.downloadDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+			if (!isDirectory)
+				throw new LeafError(Error::NOTDIR, eMsg, ec);
 		}
 	}
 	
 	{//Check the packages directory
-		if (!std::filesystem::exists(lConfig.packagesDir())){
-			if (!std::filesystem::create_directories(lConfig.packagesDir())){
-				_error = "Failed to create packages directory " + lConfig.packagesDir();
-				return FAIL(_error);
-			}
-		} else {
-			if (!std::filesystem::is_directory(lConfig.packagesDir())){
-				_error = "Packages directory " + lConfig.packagesDir() + " is not a directory";
-				return FAIL(_error);
-			}
+		std::error_code ec;
+		std::string eMsg = "Packages directory " + lConfig.packagesDir();
+
+		//Check if the packages directory exists
+		bool exists = std::filesystem::exists(lConfig.packagesDir(), ec);
+
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+		//If the directory does not exists, create it
+		if (!exists){
+			std::filesystem::create_directories(lConfig.packagesDir(), ec);
+			
+			if (ec)
+				throw new LeafError(Error::CREATEDIR, eMsg, ec);
+		}
+		else	//Else check if the existing entry is a directory
+		{
+			bool isDirectory = std::filesystem::is_directory(lConfig.packagesDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+			if (!isDirectory)
+				throw new LeafError(Error::NOTDIR, eMsg);
 		}
 	}
 
@@ -134,16 +155,31 @@ bool Leafcore::createConfigDirs(){
 		return false;
 
 	{//Check the installed directory
-		if (!std::filesystem::exists(lConfig.installedDir())){
-			if (!std::filesystem::create_directories(lConfig.installedDir())){
-				_error = "Failed to create installed directory " + lConfig.installedDir();
-				return FAIL(_error);
-			}
-		} else {
-			if (!std::filesystem::is_directory(lConfig.installedDir())){
-				_error = "Installed directory " + lConfig.installedDir() + " is not a directory";
-				return FAIL(_error);
-			}
+		std::error_code ec;
+		std::string eMsg = "Installed directory " + lConfig.installedDir();
+
+		//Check if the directory exists
+		bool exists = std::filesystem::exists(lConfig.installedDir(), ec);
+
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+		//Check if the filesystem entry exists
+		if (!exists){
+			std::filesystem::create_directories(lConfig.installedDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::CREATEDIR, eMsg, ec);
+		}
+		else	//Else check if the filesystem entry is a directory
+		{
+			bool isDirectory = std::filesystem::is_directory(lConfig.installedDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+			if (!isDirectory)
+				throw new LeafError(Error::NOTDIR, eMsg, ec);
 		}
 	}
 

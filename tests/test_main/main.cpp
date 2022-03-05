@@ -25,8 +25,8 @@ GTEST_API_ int main(int argc, char **argv) {
   int res = 0;
   try {
     res = RUN_ALL_TESTS();
-  } catch (LeafError& e){
-    LOGUE("Test suite failed with leaf error: " + e.what());
+  } catch (LeafError* e){
+    LOGUE("Test suite failed with leaf error: " + e->what());
   } catch (...) {
     LOGUE("Other error");
   }
