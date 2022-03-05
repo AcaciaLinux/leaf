@@ -26,10 +26,13 @@ std::string errorCodes[] = {
 	"Failed to parse leafinstalled file",
 
 	//Actions
+	"Package was not found",
 	"Package is already installed",
 	"Package is not installed",
 	"Package is not downloaded",
 	"Package is not extracted",
+
+	"Package list not loaded",
 
 	"No error"
 };

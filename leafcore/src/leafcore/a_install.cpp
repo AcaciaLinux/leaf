@@ -17,16 +17,18 @@
 
 bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	FUN();
+
+	LEAF_DEBUG("Leafcore::a_install()");
+
+	//TODO: exceptions
+
 	_error.clear();
 	if (!checkDirectories())
 		return false;
 
 	//Check if the package list is loaded
-	if (!_loadedPkgList){
-		_error = "Package list is not loaded";
-		LOGE("Failed to perform install action: " + _error);
-		return false;
-	}
+	if (!_loadedPkgList)
+		throw new LeafError(Error::PKGLIST_NOTLOADED);
 
 	//Check if there even are some packages to process
 	if (packages.size() == 0){
@@ -47,11 +49,8 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	for (std::string packageName : packages){
 		Package* package = _packageListDB->getPackage(packageName);
 
-		if (package == nullptr){
-			_error = "Could not find package " + packageName + " in database";
-			LOGE("Failed to perform install action: " + _error);
-			return false;
-		}
+		if (package == nullptr)
+			throw new LeafError(Error::PKG_NOTFOUND, packageName);
 
 		//Resolve the dependencies of the package recursively
 		if (!_packageListDB->resolveDependencies(&install_packages, package)){
@@ -70,10 +69,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	}
 
 	{//Ask the user for permission
-		if (!askUserOK("Do you want to continue?", true)){
-			_error = "Aborted by user";
-			return FAIL(_error);
-		}
+		askUserOK("Do you want to continue?", true);
 	}
 
 	for (Package* package : install_packages){
