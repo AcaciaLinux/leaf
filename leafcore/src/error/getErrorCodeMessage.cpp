@@ -20,6 +20,7 @@ std::string errorCodes[] = {
 	"Could not open file for writing",
 	"Could not open directory",
 	"Path is not a directory",
+	"Could not change to directory",
 	"General filesystem error",
 
 	//Package management
@@ -31,6 +32,13 @@ std::string errorCodes[] = {
 	"Package is not installed",
 	"Package is not downloaded",
 	"Package is not extracted",
+
+	//Archive
+	"It seems that an archive has already been loaded",
+	"No archive was loaded",
+	"Libarchive has warned",
+	"Libarchive encountered an error",
+	"Libarchive had a fatal failure",
 
 	"Package list not loaded",
 

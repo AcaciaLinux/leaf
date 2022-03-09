@@ -26,6 +26,7 @@ namespace Error{
 		OPENFILEW,
 		OPENDIR,
 		NOTDIR,
+		CHDIR,
 		FS_ERROR,
 
 		//Package management
@@ -37,6 +38,13 @@ namespace Error{
 		PKG_NOTINSTALLED,
 		PKG_NOTDOWNLOADED,
 		PKG_NOTEXTRACTED,
+
+		//Archive
+		ARCH_ALREADYOPEN,
+		ARCH_NOTLOADED,
+		ARCH_WARN,
+		ARCH_ERR,
+		ARCH_FATAL,
 
 		PKGLIST_NOTLOADED,
 

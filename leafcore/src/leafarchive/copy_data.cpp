@@ -1,0 +1,38 @@
+/**
+ * @file		leafarchive/copy_data.cpp
+ * @author		Max Kofler (kofler.max.dev@gmail.com)
+ * @brief		The implementation of LeafArchive::copy_data()
+ * @copyright	Copyright (c) 2022
+ */
+#include "log.h"
+#include "error.h"
+#include "leafdebug.h"
+#include "leafconfig.h"
+
+#include <archive.h>
+#include "leafarchive.h"
+
+int LeafArchive::copy_data(struct archive *ar, struct archive *aw){
+	FUN();
+
+	LEAF_DEBUG("LeafArchive::copy_data()");
+
+	int r;
+	const void *buff;
+	size_t size;
+	la_int64_t offset;
+
+	for (;;) {
+		r = archive_read_data_block(ar, &buff, &size, &offset);
+		if (r == ARCHIVE_EOF)
+			return (ARCHIVE_OK);
+		if (r < ARCHIVE_OK)
+			return (r);
+		r = archive_write_data_block(aw, buff, size, offset);
+		if (r < ARCHIVE_OK) {
+			_error = "Copy data error: " + std::string(archive_error_string(aw));
+			LOGE(_error);
+			return (r);
+		}
+	}
+}
