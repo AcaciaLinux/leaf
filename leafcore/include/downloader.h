@@ -16,7 +16,7 @@ public:
 	 * @brief	Initializes curl and the downloader
 	 * @return	Success
 	 */
-	bool					init();
+	void					init();
 
 	/**
 	 * @brief	Downloads from the supplied url to the supplied stream
@@ -24,19 +24,11 @@ public:
 	 * @param	out			The stream to supply the data to
 	 * @return	Success
 	 */
-	bool					download(std::string url, std::ostream& out);
-
-	/**
-	 * @brief	Returns the last error of the downloader
-	 */
-	std::string				getError();
+	void					download(std::string url, std::ostream& out);
 
 private:
 	//A curl object to operate with
 	CURL*					_curl;
-
-	//The last error in clear text
-	std::string				_error;
 };
 
 #endif

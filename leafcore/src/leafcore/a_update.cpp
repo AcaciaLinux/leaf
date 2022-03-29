@@ -38,16 +38,8 @@ bool Leafcore::a_update(){
 
 	//Create the downloader instance and download the file
 	Downloader dl;
-	if (!dl.init()){
-		_error = "Failed to initialize downloader: " + dl.getError();
-		LOGE("Package list update: " + _error);
-		return false;
-	}
-	if (!dl.download(_pkglistURL, file)){
-		_error = "Failed to download from " + _pkglistURL + ": " + dl.getError();
-		LOGE("Package list update: " + _error);		
-		return false;
-	}
+	dl.init();
+	dl.download(_pkglistURL, file);
 	
 	file.close();
 

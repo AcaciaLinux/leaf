@@ -40,6 +40,10 @@ std::string errorCodes[] = {
 	"Libarchive encountered an error",
 	"Libarchive had a fatal failure",
 
+	//Download
+	"Libcurl failed to initialize",
+
+	//Package list
 	"Package list not loaded",
 
 	"No error"

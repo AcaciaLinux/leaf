@@ -46,6 +46,13 @@ namespace Error{
 		ARCH_ERR,
 		ARCH_FATAL,
 
+		//Downloader
+		DL_INIT,
+		DL_NOT_INIT,
+		DL_BAD_STREAM,
+		DL_CURL_ERR,
+
+		//Package list
 		PKGLIST_NOTLOADED,
 
 		NONE		

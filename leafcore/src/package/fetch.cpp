@@ -41,12 +41,7 @@ bool Package::fetch(){
 
 	//Create the downloader instance
 	Downloader dl;
-
-	if (!dl.init()){
-		_error = _ep + "Failed to initialize downloader: " + dl.getError();
-		return FAIL(_error);
-	}
-
+	dl.init();
 
 	LOGD("Opening destinatoin file " + destination + "...");
 	//Create and open the destination file
@@ -63,11 +58,7 @@ bool Package::fetch(){
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
-	if (!dl.download(getFetchURL(), outFile)){
-		_error = _ep + "Download from " + getFetchURL() + " failed: " + dl.getError();
-		outFile.close();
-		return FAIL(_error);
-	}
+	dl.download(getFetchURL(), outFile);
 
 	outFile.close();
 
