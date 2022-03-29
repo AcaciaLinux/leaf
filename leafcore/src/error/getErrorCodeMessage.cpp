@@ -36,15 +36,22 @@ std::string errorCodes[] = {
 	//Archive
 	"It seems that an archive has already been loaded",
 	"No archive was loaded",
+	"Archive copy failed",
 	"Libarchive has warned",
 	"Libarchive encountered an error",
 	"Libarchive had a fatal failure",
 
 	//Download
 	"Libcurl failed to initialize",
+	"Downloader was not initialized",
+	"Downloader has encountered a bad stream",
+	"Libcurl had an error",
 
 	//Package list
 	"Package list not loaded",
+
+	//Debugging exception
+	"Debugging exception at function",
 
 	"No error"
 };

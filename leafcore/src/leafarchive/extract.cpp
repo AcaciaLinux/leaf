@@ -15,12 +15,10 @@
 #include <archive_entry.h>
 #include <filesystem>
 
-bool LeafArchive::extract(std::string destination){
+void LeafArchive::extract(std::string destination){
 	FUN();
 
-	LEAF_DEBUG("LeafArchive::extract()");
-
-	_error = "";
+	LEAF_DEBUG_EX("LeafArchive::extract()");
 
 	{	//Check if the destination directory exists
 		std::error_code ec;
@@ -99,6 +97,4 @@ bool LeafArchive::extract(std::string destination){
 	archive_write_free(ext);
 
 	std::filesystem::current_path(prevDir);
-
-	return true;
 }

@@ -13,10 +13,10 @@
 
 #include <archive.h>
 
-bool LeafArchive::load(std::string path){
+void LeafArchive::load(std::string path){
 	FUN();
 
-	LEAF_DEBUG("LeafArchive::load()");
+	LEAF_DEBUG_EX("LeafArchive::load()");
 
 	int r;
 	LOGI("Loading archive " + path);
@@ -43,6 +43,4 @@ bool LeafArchive::load(std::string path){
 
 	if ((r = archive_read_open_filename(arch, path.c_str(), 10240)))
 		throw new LeafError(Error::OPENFILER, path);
-		
-	return true;
 }

@@ -6,14 +6,22 @@
 class LeafArchive{
 
 public:
-	bool				load(std::string path);
-	bool				extract(std::string destination);
 
-	std::string			getError();
+	/**
+	 * @brief	Loads the archive at the supplied path
+	 * @param	path	The path to the archive
+	 */
+	void				load(std::string path);
+
+	/**
+	 * @brief	Extracts the archive into the specified destination
+	 * 			Changes the current working path temporarily to the supplied path
+	 * @param	dest	The destination directory to put the resulting files in
+	 */
+	void				extract(std::string dest);
 
 private:
 	int					_flags;
-	std::string			_error;
 
 	void*				_archive = nullptr;
 	void*				_ext = nullptr;

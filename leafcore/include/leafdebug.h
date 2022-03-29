@@ -13,6 +13,8 @@
 #include <vector>
 #include <string>
 
+#include "error.h"
+
 #ifdef DEBUG
 
 	class LeafDebugGuard{
@@ -29,9 +31,11 @@
 	void leaf_debug_set_function_fail(std::string funName, bool state);
 
 	#define LEAF_DEBUG(funName) if(leaf_debug_check_function_fail(funName)) return false
+	#define LEAF_DEBUG_EX(funName) if(leaf_debug_check_function_fail(funName)) throw new LeafError(Error::DEBUG_EXCEPTION, funName)
 	#define LEAF_DEBUG_SET_FAIL(funName) LeafDebugGuard functionDebugGuard(funName)
 #else
 	#define LEAF_DEBUG(funName)
+	#define LEAF_DEBUG_EX(funName)
 	#define LEAF_DEBUG_SET_FAIL(funName)
 #endif
 

@@ -55,17 +55,11 @@ bool Package::extract(){
 
 	//Load the archive
 	LOGD("Loading archive " + downloadPath + "...");
-	if (!archive.load(downloadPath)){
-		_error = _ep + "Failed to load archive " + downloadPath + ": " + archive.getError();
-		return FAIL(_error);
-	}
-
+	archive.load(downloadPath);
+	
 	//Extract the archive
 	LOGD("Extracting archive " + downloadPath + " into " + extractedDir + "...");
-	if (!archive.extract(lConfig.packagesDir())){
-		_error = _ep + "LeafArchive: " + archive.getError();
-		return FAIL(_error);
-	}
+	archive.extract(lConfig.packagesDir());
 
 	return true;
 }

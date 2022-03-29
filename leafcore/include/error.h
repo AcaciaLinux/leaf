@@ -42,6 +42,7 @@ namespace Error{
 		//Archive
 		ARCH_ALREADYOPEN,
 		ARCH_NOTLOADED,
+		ARCH_COPY,
 		ARCH_WARN,
 		ARCH_ERR,
 		ARCH_FATAL,
@@ -54,6 +55,9 @@ namespace Error{
 
 		//Package list
 		PKGLIST_NOTLOADED,
+
+		//Debugging exception
+		DEBUG_EXCEPTION,
 
 		NONE		
 	};

@@ -15,7 +15,7 @@
 int LeafArchive::copy_data(struct archive *ar, struct archive *aw){
 	FUN();
 
-	LEAF_DEBUG("LeafArchive::copy_data()");
+	LEAF_DEBUG_EX("LeafArchive::copy_data()");
 
 	int r;
 	const void *buff;
@@ -30,9 +30,7 @@ int LeafArchive::copy_data(struct archive *ar, struct archive *aw){
 			return (r);
 		r = archive_write_data_block(aw, buff, size, offset);
 		if (r < ARCHIVE_OK) {
-			_error = "Copy data error: " + std::string(archive_error_string(aw));
-			LOGE(_error);
-			return (r);
+			throw new LeafError(Error::ARCH_COPY);
 		}
 	}
 }
