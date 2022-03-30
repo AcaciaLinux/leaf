@@ -13,6 +13,9 @@
 
 void Downloader::init(){
 	FUN();
+
+	LEAF_DEBUG_EX("Downloader::init()");
+
 	_curl = curl_easy_init();
 	
 	if (!_curl){

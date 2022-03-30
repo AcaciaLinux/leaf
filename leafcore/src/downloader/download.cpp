@@ -19,6 +19,9 @@ static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 
 void Downloader::download(std::string url, std::ostream& out){
 	FUN();
+
+	LEAF_DEBUG_EX("Downloader::download()");
+
 	CURLcode res;
 
 	if (!_curl)

@@ -17,7 +17,7 @@ GTEST_API_ int main(int argc, char **argv) {
   srand(time(0));
 
   hlog = new Log::Log(Log::D);
-  hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
+  hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, true);
   FUN();
 
   LOGU("Starting tests...");

@@ -11,7 +11,7 @@ TEST(Package, noURL){
 	LeafDB db(new Leafcore);
 
 	Package* newP = db.newPackage("Test", "1.0");
-	
+
 	if (newP->fetch())
 		FAIL();
 }

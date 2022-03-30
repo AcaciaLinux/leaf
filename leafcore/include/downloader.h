@@ -28,7 +28,7 @@ public:
 
 private:
 	//A curl object to operate with
-	CURL*					_curl;
+	CURL*					_curl = nullptr;
 };
 
 #endif
