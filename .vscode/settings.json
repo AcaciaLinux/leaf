@@ -92,5 +92,6 @@
 		"ios": "cpp",
 		"locale": "cpp",
 		"stack": "cpp"
-	}
+	},
+	"liveServer.settings.port": 5501
 }
