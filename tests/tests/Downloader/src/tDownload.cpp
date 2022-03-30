@@ -64,7 +64,7 @@ TEST(Downloader, download_noURL){
 
 	try{
 		dl.init();
-		dl.download("noURL", outFile);
+		dl.download("", outFile);
 
 		F_NOTHROW(Error::DL_CURL_ERR);
 	} catch (LeafError* e){
