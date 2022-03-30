@@ -7,4 +7,6 @@
 #define F_WRONGTHROW(expected, error) FAIL() << "Expected error code \"" << LeafError::errorCode(expected) << "\", got \"" << error->what() << "\""
 #define F_WRONGEXCEPTION(expected) FAIL() << "Expected exception of type " << expected << ", got wrong type"
 
+#define F_THROW(ex) FAIL() << "Failed with exception: " << ex->what()
+
 #endif

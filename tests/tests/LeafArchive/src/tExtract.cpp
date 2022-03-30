@@ -1,4 +1,5 @@
 #include "../t_leafArchive.h"
+#include "testing_fs.h"
 
 #include <fstream>
 
@@ -65,27 +66,10 @@ TEST(LeafArchive, extract_destNotDir){
 
 	std::string outFileName = "downloadTestFile.file.test";
 
-	{//Create the destination as a file
-		std::error_code ec;
-	
-		bool exists = std::filesystem::exists(outFileName, ec);
-
-		if (ec)
-			FAIL() << "Failed to check if file " << outFileName << " exists";
-		
-		if (exists){
-			std::filesystem::remove_all(outFileName, ec);
-			if (ec)
-				FAIL() << "Failed to delete existing file " << outFileName << " for testing";
-		}
-
-		std::ofstream newFile;
-		newFile.open(outFileName, std::ios::out);
-
-		if (!newFile.is_open())
-			FAIL() << "Failed to create file " << outFileName << " for testing";
-
-		newFile.close();
+	try{
+		createFile(outFileName);
+	} catch (FSError* e){
+		F_THROW(e);
 	}
 
 	try{
@@ -102,20 +86,9 @@ TEST(LeafArchive, extract_destNotDir){
 		F_WRONGEXCEPTION("LeafError*");
 	}
 
-	{	//Clean up the file
-		std::error_code ec;
-	
-		bool exists = std::filesystem::exists(outFileName, ec);
-
-		if (ec)
-			FAIL() << "Failed to check if file " << outFileName << " exists";
-		
-		if (exists){
-			std::filesystem::remove_all(outFileName, ec);
-			if (ec)
-				FAIL() << "Failed to delete existing file " << outFileName << " for testing";
-		} else {
-			FAIL() << "Operation removed file " << outFileName << " not by design";
-		}
+	try{
+		deletePath(outFileName);
+	} catch (FSError* e){
+		F_THROW(e);
 	}
 }
