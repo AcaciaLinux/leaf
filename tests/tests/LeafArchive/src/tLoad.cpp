@@ -73,6 +73,9 @@ TEST(LeafArchive, load_archive_ext_alreadyopen){
 	}
 }
 
+/**
+ * @brief	Tests the handling of loading a non existing file
+ */
 TEST(LeafArchive, load_openPath){
 	FUN();
 
@@ -80,7 +83,7 @@ TEST(LeafArchive, load_openPath){
 		
 		LeafArchive ar;
 		
-		ar.load("ThisPathShouldNeverExistAnyWhereAndIfItExistsThisTestFailsIAmSorry.extension.random");
+		ar.load("ThisPathShouldNeverExistAnyWhere.extension.random");
 
 		F_NOTHROW(Error::OPENFILER);
 	} catch (LeafError* e){

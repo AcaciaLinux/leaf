@@ -20,6 +20,10 @@ void LeafArchive::extract(std::string destination){
 
 	LEAF_DEBUG_EX("LeafArchive::extract()");
 
+	//Check if the archive has been loaded
+	if (_archive == nullptr || _ext == nullptr)
+		throw new LeafError(Error::ARCH_NOTLOADED);
+
 	{	//Check if the destination directory exists
 		std::error_code ec;
 		bool exists = std::filesystem::exists(destination, ec);
@@ -43,10 +47,6 @@ void LeafArchive::extract(std::string destination){
 		if (ec)
 			throw new LeafError(Error::CHDIR, "Destination path " + destination, ec);
 	}
-	
-
-	if (_archive == nullptr || _ext == nullptr)
-		throw new LeafError(Error::ARCH_NOTLOADED);
 
 	int r;
 	struct archive_entry *entry;
