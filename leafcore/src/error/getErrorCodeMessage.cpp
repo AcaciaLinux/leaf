@@ -59,3 +59,7 @@ std::string errorCodes[] = {
 std::string LeafError::getErrorCodeMessage(){
 	return errorCodes[_errorCode];
 }
+
+std::string LeafError::errorCode(Error::ec e){
+	return errorCodes[e];
+}

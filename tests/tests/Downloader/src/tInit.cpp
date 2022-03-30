@@ -16,3 +16,5 @@ TEST(Downloader, init_debug){
 		FAIL() << "Wrong exception was thrown";
 	}
 }
+
+

@@ -26,7 +26,10 @@ public:
 	 */
 	void					download(std::string url, std::ostream& out);
 
+#ifndef FRIEND_DOWNLOADER
 private:
+#endif
+
 	//A curl object to operate with
 	CURL*					_curl = nullptr;
 };

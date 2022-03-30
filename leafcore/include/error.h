@@ -89,6 +89,8 @@ public:
 
 	std::string getErrorCodeMessage();
 
+	static std::string errorCode(Error::ec e);
+
 	std::string what(){
 		std::string ret = getErrorCodeMessage();
 
