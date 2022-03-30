@@ -1,0 +1,15 @@
+#ifndef __T_LEAF_ARCHIVE_H__
+#define __T_LEAF_ARCHIVE_H__
+
+#include <gtest/gtest.h>
+#include <stdlib.h>
+
+#include "log.h"
+#include "error.h"
+#include "leafdebug.h"
+#include "checks.h"
+
+#define FRIEND_LEAFARCHIVE
+#include "leafarchive.h"
+
+#endif

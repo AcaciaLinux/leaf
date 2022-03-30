@@ -15,6 +15,7 @@ add_subdirectory(test_main)
 add_subdirectory(tests/Sanity)
 
 add_subdirectory(tests/Downloader)
+add_subdirectory(tests/LeafArchive)
 
 add_subdirectory(tests/Package)
 add_subdirectory(tests/Leafcore)

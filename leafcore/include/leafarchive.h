@@ -20,7 +20,10 @@ public:
 	 */
 	void				extract(std::string dest);
 
+#ifndef FRIEND_LEAFARCHIVE
 private:
+#endif
+
 	int					_flags;
 
 	void*				_archive = nullptr;
