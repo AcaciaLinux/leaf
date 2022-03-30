@@ -11,15 +11,12 @@ TEST(Downloader, download_debug){
 
 		Downloader dl;
 		dl.download("noURL", std::cout);
-		FAIL() << "Debugging exception was not thrown";
-
+		
+		F_NOTHROW(Error::DEBUG_EXCEPTION);
 	} catch (LeafError* e){
-
-		if (e->getErrorCode() != Error::DEBUG_EXCEPTION)
-			FAIL() << "Debugging exception raised wrong exception";
-
+		CHECK_EC(Error::DEBUG_EXCEPTION, e);
 	} catch (...){
-		FAIL() << "Wrong exception was thrown";
+		F_WRONGEXCEPTION("LeafError*");
 	}
 }
 
