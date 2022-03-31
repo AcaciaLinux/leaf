@@ -10,7 +10,7 @@
 #include "error.h"
 #include "pkglistparser.h"
 
-bool PackageListParser::parse(std::istream& in){
+void PackageListParser::parse(std::istream& in){
 	FUN();
 
 	if (!in.good())
@@ -58,6 +58,4 @@ bool PackageListParser::parse(std::istream& in){
 
 		_packages.push_back(newPackage);
 	}
-
-	return true;
 }

@@ -16,13 +16,13 @@ public:
 	 * @brief	Parses the supplied in stream
 	 * @param	in				The stream to parse
 	 */
-	bool						parse(std::istream& in);
+	void						parse(std::istream& in);
 
 	/**
 	 * @brief	Applies the cached package list to the supplied leafdb
 	 * @param	db				The database to apply the packages to
 	 */
-	bool						applyToDB(LeafDB& db);
+	void						applyToDB(LeafDB& db);
 
 private:
 	std::deque<Package*>		_packages;

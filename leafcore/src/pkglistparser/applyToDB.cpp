@@ -9,17 +9,17 @@
 #include "error.h"
 #include "pkglistparser.h"
 
-bool PackageListParser::applyToDB(LeafDB& db){
+void PackageListParser::applyToDB(LeafDB& db){
 	FUN();
 
-	bool ret = true;
-	std::string err = "";
+	bool error = false;
+	std::string errString = "";
 
 	for (Package* package : _packages){
 		if (!db.addPackage(package)){
 			LOGE("Failed to add package " + package->getName() + ", already existing");
-			ret = false;
-			err += "[" + package->getName() + "] ";
+			error = true;
+			errString += "[" + package->getName() + "] ";
 			
 			//If the apply fails, clean the memory
 			delete package;
@@ -27,11 +27,9 @@ bool PackageListParser::applyToDB(LeafDB& db){
 	}
 
 	//Deploy a readable error message
-	if (!ret)
-		throw new LeafError(Error::PKGPRS_APPLY_DB, err);
+	if (error)
+		throw new LeafError(Error::PKGPRS_APPLY_DB, errString);
 
 	//Clear the packages vector, the DB now owns the packages and manages them
 	_packages.clear();
-
-	return ret;
 }
