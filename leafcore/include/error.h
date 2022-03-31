@@ -53,6 +53,10 @@ namespace Error{
 		DL_BAD_STREAM,
 		DL_CURL_ERR,
 
+		//PackageListParse
+		PKGPRS_BAD_STREAM,
+		PKGPRS_APPLY_DB,
+
 		//Package list
 		PKGLIST_NOTLOADED,
 

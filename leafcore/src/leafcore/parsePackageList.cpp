@@ -51,21 +51,12 @@ bool Leafcore::parsePackageList(std::string path){
 	PackageListParser parser;
 
 	//Try parsing the file
-	if (!parser.parse(file)){
-		_error = "Parser error: " + parser.getError();
-		LOGE("Failed to parse package list with " + _error);
-		file.close();
-		return false;
-	}
+	parser.parse(file);
 
 	file.close();
 
 	//Try to apply the file to the database
-	if (!parser.applyToDB(*_packageListDB)){
-		_error = "Parser apply error: " + parser.getError();
-		LOGE("Failed to apply package list with " + _error);
-		return false;
-	}
+	parser.applyToDB(*_packageListDB);
 
 	LOGI("Done parsing package list");
 	_loadedPkgList = true;

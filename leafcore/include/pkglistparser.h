@@ -2,6 +2,7 @@
 #define __PACKAGE_LIST_PARSER_H__
 
 #include <istream>
+#include <string>
 #include <deque>
 
 #include "leafdb.h"
@@ -23,13 +24,7 @@ public:
 	 */
 	bool						applyToDB(LeafDB& db);
 
-	/**
-	 * @brief	Returns the last error in string form
-	 */
-	std::string					getError();
-
 private:
-	std::string					_error;
 	std::deque<Package*>		_packages;
 
 	/**
