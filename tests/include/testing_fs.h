@@ -29,6 +29,13 @@ bool pathExists(std::string path);
 void createFile(std::string path, bool override = false);
 
 /**
+ * @brief	Creates a new directory
+ * @param	path				The path to the new directory
+ * @param	override			If the file should be overridden if existing (false will throw FSError)
+ */
+void createDir(std::string path, bool override = false);
+
+/**
  * @brief	Deletes the specified filesystem entrys
  * @param	path				The path to delete
  */
