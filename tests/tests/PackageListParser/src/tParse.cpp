@@ -39,3 +39,69 @@ TEST(PackageListParser, parse_bad_istream){
 		F_WRONGEXCEPTION("LeafError*");
 	}
 }
+
+//Tests if the parser reacts correctly for invalid block length
+TEST(PackageListParser, parse_invalid_block_len){
+	FUN();
+
+	{	//Check for too many blocks
+		std::istringstream inString("This;are;not;five;blocks;but;way;more;so;this;should;fail!");
+
+		try{
+			
+			PackageListParser parser;
+			parser.parse(inString);
+
+			if (parser._packages.size() != 0){
+				FAIL() << "Parser accepted too many blocks as valid count";
+			}
+
+		} catch (LeafError* e){
+			CHECK_EC(Error::PKGPRS_BAD_STREAM, e);
+		} catch (...){
+			F_WRONGEXCEPTION("LeafError*");
+		}
+	}
+	
+	{	//Check for too few blocks
+		std::istringstream inString("This;are;few;blocks!");
+
+		try{
+			
+			PackageListParser parser;
+			parser.parse(inString);
+
+			if (parser._packages.size() != 0){
+				FAIL() << "Parser accepted too few blocks as valid count";
+			}
+
+		} catch (LeafError* e){
+			CHECK_EC(Error::PKGPRS_BAD_STREAM, e);
+		} catch (...){
+			F_WRONGEXCEPTION("LeafError*");
+		}
+	}
+}
+
+//Checks if the parser parses the provided string correctly
+TEST(PackageListParser, parse_right_parse){
+	FUN();
+
+	std::istringstream inString("Name;Version;Description;[Dependency];URL");
+
+	try{
+			PackageListParser parser;
+			parser.parse(inString);
+
+			ASSERT_EQ(parser._packages.back()->getName(), "Name");
+			ASSERT_EQ(parser._packages.back()->getVersion(), "Version");
+			ASSERT_EQ(parser._packages.back()->getDescription(), "Description");
+			ASSERT_EQ(parser._packages.back()->getDependencies().back(), "Dependency");
+			ASSERT_EQ(parser._packages.back()->getFetchURL(), "URL");
+
+		} catch (LeafError* e){
+			CHECK_EC(Error::PKGPRS_BAD_STREAM, e);
+		} catch (...){
+			F_WRONGEXCEPTION("LeafError*");
+		}
+}

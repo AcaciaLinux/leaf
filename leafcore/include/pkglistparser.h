@@ -25,7 +25,10 @@ public:
 	 */
 	void						applyToDB(LeafDB& db);
 
+#ifndef FRIEND_PKGLISTPARSER
 private:
+#endif
+
 	std::deque<Package*>		_packages;
 
 	/**
