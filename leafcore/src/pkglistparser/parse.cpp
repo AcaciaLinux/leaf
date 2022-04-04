@@ -8,10 +8,13 @@
 
 #include "log.h"
 #include "error.h"
+#include "leafdebug.h"
 #include "pkglistparser.h"
 
 void PackageListParser::parse(std::istream& in){
 	FUN();
+
+	LEAF_DEBUG_EX("PackageListParser::parse()");
 
 	if (!in.good())
 		throw new LeafError(Error::PKGPRS_BAD_STREAM);

@@ -6,7 +6,14 @@
  */
 
 #include "log.h"
+#include "leafdebug.h"
 #include "pkglistparser.h"
+
+PackageListParser::PackageListParser(){
+	FUN();
+	
+	LEAF_DEBUG_EX("PackageListParser::PackageListParser()");
+}
 
 PackageListParser::~PackageListParser(){
 	FUN();

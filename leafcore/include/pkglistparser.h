@@ -10,6 +10,7 @@
 class PackageListParser{
 
 public:
+	PackageListParser();
 	~PackageListParser();
 	
 	/**
