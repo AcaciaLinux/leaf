@@ -60,7 +60,7 @@ public:
 	 * @brief	Parse a .leafinstalled file to this package, everything will be overwritten
 	 * @param	in				The input stream to parse
 	 */
-	bool						parseInstalledFile(std::istream& in);
+	void						parseInstalledFile(std::istream& in);
 
 	/**
 	 * @brief	Fetches the package .leafpkg from the server

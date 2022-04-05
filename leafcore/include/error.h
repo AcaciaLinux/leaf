@@ -28,6 +28,8 @@ namespace Error{
 		NOTDIR,
 		CHDIR,
 		FS_ERROR,
+		BAD_ISTREAM,
+		BAD_OSTREAM,
 
 		//Package management
 		PARSE_INSTALLEDFILE,
@@ -53,7 +55,11 @@ namespace Error{
 		DL_BAD_STREAM,
 		DL_CURL_ERR,
 
-		//PackageListParse
+		//Package
+		PACKAGE_UNEXPECTED_EOF,
+		PACKAGE_STOI,
+
+		//PackageListParser
 		PKGPRS_BAD_STREAM,
 		PKGPRS_APPLY_DB,
 

@@ -10,34 +10,25 @@
 #include "leafconfig.h"
 #include "package.h"
 
-bool Package::parseInstalledFile(std::istream& in){
+void Package::parseInstalledFile(std::istream& in){
 	FUN();
-	_error.clear();
 
-	if (!in.good()){
-		_error = "Stream seems bad";
-		LOGE("Failed to parse .leafinstalled file: " + _error);
-		clear();
-		return false;
-	}
+	LEAF_DEBUG_EX("Package::parseInstalledFile()");
+
+	//TODO: tests
+
+	if (!in.good())
+		throw new LeafError(Error::BAD_ISTREAM, "parseInstalledFile() (This is a bug)");
 
 	std::string line;
 
 	{	//Parse name and version string
-		if (!getline(in, line)){
-			_error = "Uexpected EOF for name";
-			LOGE("Failed to parse .leafinstalled file: " + _error);
-			clear();
-			return false;
-		}
+		if (!getline(in, line))
+			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "name");
 		_name = line;
 
-		if (!getline(in, line)){
-			_error = "Uexpected EOF for version";
-			LOGE("Failed to parse .leafinstalled file: " + _error);
-			clear();
-			return false;
-		}
+		if (!getline(in, line))
+			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "version");
 		_versionString = line;
 	}
 	
@@ -45,47 +36,30 @@ bool Package::parseInstalledFile(std::istream& in){
 	int countFiles = 0;
 
 	{	//Parse dependency and file count
-		if (!getline(in, line)){
-			_error = "Uexpected EOF for dependency count";
-			LOGE("Failed to parse .leafinstalled file: " + _error);
-			clear();
-			return false;
-		}
-		
+		if (!getline(in, line))
+			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "dependency count");
 		try{
 			countDependencies = stoi(line);
 		} catch (...){
-			_error = "Error parsing dependency count string to integer: " + line;
-			LOGE("Failed to parse .leafinstalled file: " + _error);
 			clear();
-			return false;
+			throw new LeafError(Error::PACKAGE_STOI, line);
 		}
 		
-		if (!getline(in, line)){
-			_error = "Uexpected EOF for file count";
-			LOGE("Failed to parse .leafinstalled file: " + _error);
-			clear();
-			return false;
-		}
+		if (!getline(in, line))
+			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "file count");
 		
 		try{
 			countFiles = stoi(line);
 		} catch (...){
-			_error = "Error parsing file count string to integer: " + line;
-			LOGE("Failed to parse .leafinstalled file: " + _error);
 			clear();
-			return false;
+			throw new LeafError(Error::PACKAGE_STOI, line);
 		}
 	}
 
 	{	//Parse dependencies
 		for (int i = 0; i < countDependencies; i++){
-			if (!getline(in, line)){
-				_error = "Uexpected EOF for dependency " + std::to_string(i+1) + "/" + std::to_string(countDependencies);
-				LOGE("Failed to parse .leafinstalled file: " + _error);
-				clear();
-				return false;
-			}
+			if (!getline(in, line))
+				throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "dependency " + std::to_string(i+1) + "/" + std::to_string(countDependencies));
 
 			_dependencies.push_back(line);
 		}
@@ -93,16 +67,10 @@ bool Package::parseInstalledFile(std::istream& in){
 
 	{	//Parse files
 		for (int i = 0; i < countFiles; i++){
-			if (!getline(in, line)){
-				_error = "Uexpected EOF for file #" + std::to_string(i) + "/" + std::to_string(countFiles);
-				LOGE("Failed to parse .leafinstalled file: " + _error);
-				clear();
-				return false;
-			}
+			if (!getline(in, line))
+				throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "file " + std::to_string(i) + "/" + std::to_string(countFiles));
 
 			_provided_files.push_back(line);
 		}
 	}
-	
-	return true;
 }

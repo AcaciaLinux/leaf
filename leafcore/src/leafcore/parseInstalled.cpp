@@ -72,11 +72,7 @@ bool Leafcore::parseInstalled(){
 			throw new LeafError(Error::OPENFILER, "Installed file " + file);
 		}
 
-		if (!newPack->parseInstalledFile(inFile)){
-			_error = "Failed to parse installed package " + file + ": " + newPack->getError();
-			inFile.close();
-			return FAIL(_error);
-		}
+		newPack->parseInstalledFile(inFile);
 
 		_installedDB->renamePackage(file, newPack->getName());
 

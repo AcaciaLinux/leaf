@@ -22,6 +22,8 @@ std::string errorCodes[] = {
 	"Path is not a directory",
 	"Could not change to directory",
 	"General filesystem error",
+	"Bad input stream",
+	"Bad output stream",
 
 	//Package management
 	"Failed to parse leafinstalled file",
@@ -46,6 +48,10 @@ std::string errorCodes[] = {
 	"Downloader was not initialized",
 	"Downloader has encountered a bad stream",
 	"Libcurl had an error",
+
+	//Package
+	"Unexpected EOF when parsing",
+	"Failed to convert string to integer",
 
 	//Package list
 	"Package list not loaded",
