@@ -65,8 +65,5 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 		}
 	}
 
-	_error = _ep + "Feature not implemented";
-	return FAIL(_error);
-
 	return true;
 }
