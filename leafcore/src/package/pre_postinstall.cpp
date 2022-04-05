@@ -60,12 +60,17 @@ bool Package::runScript(std::string path){
 
 	int res = 0;
 
-	std::string command = "bash -c \"export ROOTDIR=" + lConfig.rootDir + " && bash ./" + path + "\"";
+	std::string envs = "";
+
+	envs += " ROOTDIR=" + lConfig.rootDir;
+	envs += " PKGROOT=" + this->getExtractedDir();
+
+	std::string command = "bash -c \"" + envs + " ./" + path + "\"";
 
 	LOGI("Running command: \"" + command + "\" in " + getExtractedDir());
 
 	if (hlog->getLevel() < Log::I)
-		res = system((command + " >> /dev/null").c_str());
+		res = system(command.c_str());
 	else
 		res = system(command.c_str());
 
