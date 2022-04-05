@@ -69,7 +69,12 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	}
 
 	{//Ask the user for permission
-		askUserOK("Do you want to continue?", true);
+		if (!askUserOK("Do you want to continue?", true)){
+			std::string msg = "Installing packages:";
+			for (Package* pkg : install_packages)
+				msg += " " + pkg->getFullName();
+			throw new LeafError(Error::USER_DISAGREE, msg);
+		}
 	}
 
 	for (Package* package : install_packages){

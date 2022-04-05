@@ -54,7 +54,14 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 		LOGU(outString);
 	}
 
-	askUserOK("Do you want to continue?", true);
+	{//Ask the user for permission
+		if (!askUserOK("Do you want to continue?", true)){
+			std::string msg = "Removing packages:";
+			for (Package* pkg : remove_packages)
+				msg += " " + pkg->getFullName();
+			throw new LeafError(Error::USER_DISAGREE, msg);
+		}
+	}
 
 	for (Package* p : remove_packages){
 		LOGU("Removing package " + p->getFullName() + "...");
