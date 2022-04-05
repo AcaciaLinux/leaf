@@ -13,6 +13,8 @@ bool Arguments::parse(int argc, char** argv){
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
 	args::Flag f_redownload(parser, "redownload", "Redownload the specified package even if it is in the cache", {"redownload"});
 	args::Flag f_forceOverwrite(parser, "force overwrite", "Force leaf to ignore file conflicts and write anyway", {"forceOverwrite"});
+	args::Flag f_noPreinstall(parser, "skip preinstall", "Do not execute the preinstall script", {"noPreinstall"});
+	args::Flag f_noPostinstall(parser, "skip postnstall", "Do not execute the postinstall script", {"noPostinstall"});
 	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
@@ -39,6 +41,16 @@ bool Arguments::parse(int argc, char** argv){
 		LOGE(std::string("Failed to parse options: ") + std::string(e.what()));
 		std::cerr << parser;
 		return false;
+	}
+
+	if (args::get(f_noPreinstall)){
+		LOGUW("WARNING: Disabled preinstall scripts, installed packages may not work!");
+		lConfig.runPreinstall = false;
+	}
+
+	if (args::get(f_noPostinstall)){
+		LOGUW("WARNING: Disabled postinstall scripts, installed packages may not work!");
+		lConfig.runPostinstall = false;
 	}
 
 	if (f_rootPath){

@@ -48,6 +48,12 @@ typedef struct leafconfig_struct{
 	//If leaf should overwrite existing files at the root
 	bool						forceOverwrite = false;
 
+	//If leaf should run the preinstall scripts of the packages installed
+	bool						runPreinstall = true;
+
+	//If leaf should run the postinstall scripts of the packages installed
+	bool						runPostinstall = true;
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";

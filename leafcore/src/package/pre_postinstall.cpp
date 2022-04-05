@@ -13,10 +13,18 @@
 #include <filesystem>
 
 bool Package::runPreinstall(){
+	if (!lConfig.runPreinstall){
+		LOGW("WARNING: Disabled preinstall script of package " + getFullName());
+		return true;
+	}
 	return runScript("preinstall.sh");
 }
 
 bool Package::runPostinstall(){
+	if (!lConfig.runPostinstall){
+		LOGW("WARNING: Disabled postinstall script of package " + getFullName());
+		return true;
+	}
 	return runScript("postinstall.sh");	
 }
 
