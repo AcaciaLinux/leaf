@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
+if (LEAF_STATIC)
+	set(BUILD_SHARED_LIBS OFF)
+endif()
+
 include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
@@ -8,12 +12,6 @@ include_directories(leafcore/include)
 set(CMAKE_CXX_STANDARD 17)
 
 option(LEAF_STATIC "Build a static version of leaf" OFF)
-
-if (LEAF_STATIC)
-	message("Building a static leaf executable!")
-	set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-	set(BUILD_SHARED_LIBS OFF)
-endif()
 
 if (CMAKE_BUILD_TYPE)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -38,6 +36,12 @@ set (PNAME ${PROJECT_NAME})
 
 file (GLOB_RECURSE CXXSOURCES "src/**.cpp")
 file (GLOB_RECURSE HEADERS "include/**.h")
+
+if (LEAF_STATIC)
+	message("Building a static leaf executable!")
+	set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+	set(BUILD_SHARED_LIBS OFF)
+endif()
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
 target_link_libraries(${PNAME} log leafcore)
