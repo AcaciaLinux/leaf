@@ -7,3 +7,9 @@
 [submodule "args"]
 	path = args
 	url = https://github.com/Taywee/args
+[submodule "leafcore/curl"]
+	path = leafcore/curl
+	url = https://github.com/curl/curl
+[submodule "leafcore/libarchive"]
+	path = leafcore/libarchive
+	url = https://github.com/libarchive/libarchive
