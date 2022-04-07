@@ -30,6 +30,12 @@ private:
 	 */
 	bool						switchVerbosity(uint8_t);
 
+	/**
+	 * @brief	Uses the std::filesystem api to get the full absolute path to the provided path
+	 * @param	root			The relative path from the leaf executable to look up
+	 */
+	bool						expandRootDir(std::string root);
+
 };
 
 #endif

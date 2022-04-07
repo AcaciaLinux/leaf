@@ -43,6 +43,11 @@ bool Arguments::parse(int argc, char** argv){
 		return false;
 	}
 
+	if (f_verbosity){
+		if (!switchVerbosity(args::get(f_verbosity)))
+			return false;
+	}
+
 	if (args::get(f_noPreinstall)){
 		LOGUW("WARNING: Disabled preinstall scripts, installed packages may not work!");
 		lConfig.runPreinstall = false;
@@ -60,8 +65,8 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (f_root){
-		lConfig.setRootDir(args::get(f_root));
-		LOGD("Using root path " + lConfig.rootDir);
+		if (!expandRootDir(args::get(f_root)))
+			return false;
 	}
 
 	if (args::get(f_forceOverwrite)){
@@ -74,17 +79,14 @@ bool Arguments::parse(int argc, char** argv){
 			return false;
 	}
 
-	if (f_verbosity){
-		if (!switchVerbosity(args::get(f_verbosity)))
-			return false;
-	}
-
 	if (args::get(f_redownload)){
 		lConfig.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
 	}
 
-	if (!this->setAction(args::get(a_action)))
+	if (!this->setAction(args::get(a_action))){
+		std::cout << parser << std::endl;
 		return false;
+	}
 
 	LOGD("Action to be performed: \"" + args::get(a_action) + "\"");
 
@@ -98,55 +100,4 @@ bool Arguments::parse(int argc, char** argv){
 	return true;
 }
 
-bool Arguments::setAction(std::string a){
-	FUN();
 
-	if (a == "update")
-		lConfig.action = ACTION_UPDATE;
-	else if (a == "install")
-		lConfig.action = ACTION_INSTALL;
-	else if (a == "remove")
-		lConfig.action = ACTION_REMOVE;
-
-	else{
-		std::cout << parser;
-		return false;
-	}
-
-	return true;
-}
-
-bool Arguments::switchVerbosity(uint8_t v){
-	FUN();
-
-	switch(v){
-	case 0:
-		lConfig.verbosity = CONFIG_V_DEFAULT;
-		hlog->setLevel(Log::U);
-		break;
-
-	case 1:
-		lConfig.verbosity = CONFIG_V_VERBOSE;
-		LOGU("Using verbose logging");
-		hlog->setLevel(Log::I);
-		break;
-
-	case 2:
-		lConfig.verbosity = CONFIG_V_SUPERVERBOSE;
-		LOGU("Using superverbose logging");
-		hlog->setLevel(Log::D);
-		break;
-
-	case 3:
-		lConfig.verbosity = CONFIG_V_ULTRAVERBOSE;
-		LOGU("Using ultraverbose logging");
-		hlog->setLevel(Log::MEM);
-		break;
-
-	default:
-		LOGUE("Invalid verbosity " + std::to_string(v) + "/{0, 1, 2, 3}");
-		return false;
-	}
-
-	return true;
-}
