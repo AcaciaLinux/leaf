@@ -1,5 +1,10 @@
 *.out
 *build*/
 Testing/
+
+#Needed for static build
+leafcore/curl/
+leafcore/libarchive
+
 CMakeLists.txt.user
 packages.list

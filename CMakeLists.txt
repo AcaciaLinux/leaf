@@ -45,5 +45,7 @@ endif()
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
 target_link_libraries(${PNAME} log leafcore)
-target_link_options(${PNAME} PRIVATE -static)
+if (LEAF_STATIC)
+	target_link_options(${PNAME} PRIVATE -static)
+endif()
 install (TARGETS ${PNAME} RUNTIME DESTINATION /usr/bin)
