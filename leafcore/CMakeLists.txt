@@ -54,7 +54,7 @@ if (LEAF_STATIC)
 	add_subdirectory(curl)
 	add_subdirectory(libarchive)
 
-	set(LEAFCORE_LIBRARIES "libcurl archive_static")
+	set(LEAFCORE_LIBRARIES libcurl archive_static)
 else()
 	find_package(LibArchive REQUIRED)
 	find_package(CURL REQUIRED)

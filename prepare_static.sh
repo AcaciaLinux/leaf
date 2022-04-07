@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 cd leafcore
 
 echo "Cloning curl..."
