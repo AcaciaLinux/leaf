@@ -15,6 +15,7 @@ if (LEAF_STATIC)
 	include_directories(curl/include)
 
 	##### CURL
+	set(BUILD_TESTING OFF)
 	set(CURL_STATICLIB ON) 
 	set(CURL_USE_LIBSSH OFF)
 	set(CURL_USE_LIBSSH2 OFF)
@@ -28,6 +29,7 @@ if (LEAF_STATIC)
 	#####
 
 	###### LIBARCHIVE
+	set(ENABLE_TEST OFF)
 	set(ENABLE_ZLIB OFF)
 	set(ENABLE_BZip2 OFF)
 	set(ENABLE_LZMA OFF)
@@ -38,6 +40,7 @@ if (LEAF_STATIC)
 	set(ENABLE_ACL OFF)
 	set(ENABLE_EXPAT OFF)
 
+	set(ENABLE_TEST OFF CACHE BOOL "")
 	set(ENABLE_ZLIB OFF CACHE BOOL "")
 	set(ENABLE_BZip2 OFF CACHE BOOL "")
 	set(ENABLE_LZMA OFF CACHE BOOL "")

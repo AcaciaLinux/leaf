@@ -1,5 +1,18 @@
+diff --git a/libarchive/archive_read_support_format_rar5.c b/libarchive/archive_read_support_format_rar5.c
+index a3cfa72..d8a16d7 100644
+--- a/libarchive/archive_read_support_format_rar5.c
++++ b/libarchive/archive_read_support_format_rar5.c
+@@ -48,7 +48,7 @@
+ #include "archive_entry_private.h"
+ 
+ #ifdef HAVE_BLAKE2_H
+-#include <blake2.h>
++#include <archive_blake2.h>
+ #else
+ #include "archive_blake2.h"
+ #endif
 diff --git a/libarchive/test/test_sparse_basic.c b/libarchive/test/test_sparse_basic.c
-index 133a8539..61b0ff5d 100644
+index 133a853..61b0ff5 100644
 --- a/libarchive/test/test_sparse_basic.c
 +++ b/libarchive/test/test_sparse_basic.c
 @@ -53,7 +53,7 @@ __FBSDID("$FreeBSD$");
