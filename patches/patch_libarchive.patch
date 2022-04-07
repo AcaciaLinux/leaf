@@ -1,3 +1,46 @@
+diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
+index e1d76a5..6bb8326 100644
+--- a/libarchive/CMakeLists.txt
++++ b/libarchive/CMakeLists.txt
+@@ -238,10 +238,10 @@ ELSEIF(ARCHIVE_ACL_SUNOS)
+ ENDIF()
+ 
+ # Libarchive is a shared library
+-ADD_LIBRARY(archive SHARED ${libarchive_SOURCES} ${include_HEADERS})
+-TARGET_INCLUDE_DIRECTORIES(archive PUBLIC .)
+-TARGET_LINK_LIBRARIES(archive ${ADDITIONAL_LIBS})
+-SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
++#ADD_LIBRARY(archive SHARED ${libarchive_SOURCES} ${include_HEADERS})
++#TARGET_INCLUDE_DIRECTORIES(archive PUBLIC .)
++#TARGET_LINK_LIBRARIES(archive ${ADDITIONAL_LIBS})
++#SET_TARGET_PROPERTIES(archive PROPERTIES SOVERSION ${SOVERSION})
+ 
+ # archive_static is a static library
+ ADD_LIBRARY(archive_static STATIC ${libarchive_SOURCES} ${include_HEADERS})
+@@ -253,14 +253,14 @@ IF(NOT WIN32 OR CYGWIN)
+   SET_TARGET_PROPERTIES(archive_static PROPERTIES OUTPUT_NAME archive)
+ ENDIF(NOT WIN32 OR CYGWIN)
+ 
+-IF(ENABLE_INSTALL)
++#IF(ENABLE_INSTALL)
+   # How to install the libraries
+-  INSTALL(TARGETS archive archive_static
+-          RUNTIME DESTINATION bin
+-          LIBRARY DESTINATION lib
+-          ARCHIVE DESTINATION lib)
+-  INSTALL_MAN(${libarchive_MANS})
+-  INSTALL(FILES ${include_HEADERS} DESTINATION include)
+-ENDIF()
++#  INSTALL(TARGETS archive_static
++#          RUNTIME DESTINATION bin
++#          LIBRARY DESTINATION lib
++#          ARCHIVE DESTINATION lib)
++#  INSTALL_MAN(${libarchive_MANS})
++#  INSTALL(FILES ${include_HEADERS} DESTINATION include)
++#ENDIF()
+ 
+-add_subdirectory(test)
++#add_subdirectory(test)
 diff --git a/libarchive/archive_read_support_format_rar5.c b/libarchive/archive_read_support_format_rar5.c
 index a3cfa72..d8a16d7 100644
 --- a/libarchive/archive_read_support_format_rar5.c
