@@ -20,6 +20,11 @@ bool Package::fetch(){
 
 	LOGI("Fetching package " + getFullName());
 
+	if (_isCollection){
+		LOGI("Skipping fetch of collection " + getFullName());
+		return true;
+	}
+
 	//Check if the database is ok
 	if (_db == nullptr){
 		_error = _ep + "Database is not accessible (nullptr)";

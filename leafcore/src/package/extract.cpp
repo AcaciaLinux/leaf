@@ -22,6 +22,11 @@ bool Package::extract(){
 
 	LOGI("Extracting package " + getFullName() + "...");
 
+	if (_isCollection){
+		LOGI("Skipping extracting of collection " + getFullName());
+		return true;
+	}
+
 	LOGD("Checking database...");
 	//Check if the database is ok
 	if (_db == nullptr){

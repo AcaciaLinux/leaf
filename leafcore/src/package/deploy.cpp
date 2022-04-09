@@ -19,6 +19,11 @@ bool Package::deploy(){
 	_error.clear();
 	std::string _ep = "Failed to deploy package " + getFullName() + ": ";
 
+	if (_isCollection){
+		LOGI("Skipping deployment of collection " + getFullName());
+		return true;
+	}
+
 	//Check if the database is ok
 	if (_db == nullptr){
 		throw new LeafError(Error::NODB);

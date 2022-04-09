@@ -165,6 +165,12 @@ public:
 	LeafDB*						getDB();
 
 	/**
+	 * @brief	If this package represents a collection and thus has no fetch URL and no .leafinstalled
+	 */
+	void						setIsCollection(bool);
+	bool						isCollection();
+
+	/**
 	 * @brief	Returns the destination for the package download
 	 */
 	std::string					getDownloadPath();
@@ -224,6 +230,8 @@ private:
 	std::string					_description;
 	std::deque<std::string>		_dependencies;
 	std::string					_fetchURL;
+
+	bool						_isCollection = false;
 	
 	std::deque<std::string>		_provided_files;
 	std::deque<std::string>		_provided_directories;

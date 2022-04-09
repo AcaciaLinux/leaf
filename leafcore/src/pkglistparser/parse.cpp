@@ -57,7 +57,12 @@ void PackageListParser::parse(std::istream& in){
 		Package* newPackage = new Package(blocks.at(0), blocks.at(1));
 		newPackage->_description = blocks.at(2);
 		newPackage->_dependencies = parseDependenciesString(blocks.at(3));
+
 		newPackage->_fetchURL = blocks.at(4);
+		if (newPackage->_fetchURL.empty()){
+			LOGI(newPackage->getFullName() + " gets treated as collection");
+			newPackage->setIsCollection(true);
+		}
 
 		_packages.push_back(newPackage);
 	}

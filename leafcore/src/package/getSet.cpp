@@ -64,6 +64,14 @@ LeafDB* Package::getDB(){
 	return _db;
 }
 
+void Package::setIsCollection(bool s){
+	_isCollection = s;
+}
+
+bool Package::isCollection(){
+	return _isCollection;
+}
+
 std::string Package::getDownloadPath(){
 	return lConfig.cacheDir() + "downloads/" + getFullName() + ".leafpkg";
 }
