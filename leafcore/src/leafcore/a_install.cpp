@@ -109,5 +109,10 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 		}
 	}
 
+	LOGU("Cleaning up package caches...");
+	for (Package* package : install_packages){
+		package->clearCache();
+	}
+
 	return true;
 }

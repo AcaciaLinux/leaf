@@ -114,6 +114,11 @@ public:
 	bool						removeFromRoot();
 
 	/**
+	 * @brief	Clears the extracted cache of the package
+	 */
+	bool						clearCache();
+
+	/**
 	 * @brief	Resolves a deque of packages that depend on this package
 	 */
 	bool						resolveDependentPackages();
