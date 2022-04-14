@@ -66,6 +66,9 @@ namespace Error{
 		//Package list
 		PKGLIST_NOTLOADED,
 
+		//Package database
+		PKG_DEP_NOTFOUND,
+
 		//Debugging exception
 		DEBUG_EXCEPTION,
 

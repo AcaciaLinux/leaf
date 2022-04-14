@@ -56,6 +56,9 @@ std::string errorCodes[] = {
 	//Package list
 	"Package list not loaded",
 
+	//Package database
+	"Package dependency not found",
+
 	//Debugging exception
 	"Debugging exception at function",
 

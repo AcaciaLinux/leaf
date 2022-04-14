@@ -6,7 +6,10 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "error.h"
+#include "leafdebug.h"
+#include "leafconfig.h"
+
 #include "leafdb.h"
 
 bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package* package){
@@ -21,52 +24,41 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 		}
 	}
 
-	//Add the package temporarily, we pull it back afterwards
+	//Add the package temporarily, pull it back afterwards
 	all_dependencies->push_back(package);
+	size_t pkg_temp_pos = all_dependencies->size()-1;
 
-	//Go through every dependency of the package
-	for (std::string dependencyName : package->getDependencies()){
-		//Get the package with the name of the dependency
-		Package* dependency = getPackage(dependencyName);
+	for (std::string depName : package->getDependencies()){
+		//Get the package from the name
+		Package* dependency = getPackage(depName);
 
-		//If the dependency was not found, error
-		if (dependency == nullptr){
-			_error = "LeafDB: Could not find dependency " + dependencyName + " for package " + package->getFullName();
-			return FAIL(_error);
-		}
+		//Check if the dependency was found
+		if (dependency == nullptr)
+			throw new LeafError(Error::PKG_DEP_NOTFOUND, depName);
 
 		bool alreadyAdded = false;
-
-		//Check if the dependency has already been added
 		for (size_t i = 0; i < all_dependencies->size(); i++){
-			if (all_dependencies->at(i)->getName() == dependencyName){
+			if (all_dependencies->at(i)->getName() == depName){
 				alreadyAdded = true;
-				LOGD("Pulling back dependency " + dependencyName);
+				LOGD("Pulling back dependency " + depName);
 				all_dependencies->erase(all_dependencies->begin() + i);
 				break;
 			}
 		}
 
-		//If the dependency would already be added, we kan skip resolving its dependencies
+		//If the dependency has already been added, skip the dependency search
 		if (!alreadyAdded){
 			//Scan for dependencies of the dependency
 			if (!resolveDependencies(all_dependencies, dependency))
 				return false;
-		}
-
-		//Add the dependency
-		all_dependencies->push_back(dependency);
-	}
-
-	//Find the package we first added and pull it back
-	for (size_t i = 0; i < all_dependencies->size(); i++){
-		if (all_dependencies->at(i) == package){
-			all_dependencies->erase(all_dependencies->begin() + i);
+		} else {
+			LOGD("Skipping scanning for dependencies for pulled back package " + depName);
 		}
 	}
 
-	//Now finally add the package
-	all_dependencies->push_back(package);	
+	//Remove the temporarily added package and add the package finally
+	all_dependencies->erase(all_dependencies->begin() + pkg_temp_pos);
+	all_dependencies->push_back(package);
 
 	return true;
 }
