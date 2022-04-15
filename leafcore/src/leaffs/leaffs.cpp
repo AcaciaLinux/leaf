@@ -61,7 +61,7 @@ bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive)
 			_directories.push_back(filePath);
 
 			//If recursive operation is nedded, do it
-			if (recursive)
+			if (recursive && !entry.is_symlink())
 				if (!getFiles(filePath, entry.path(), recursive))
 					return false;
 		} else 
