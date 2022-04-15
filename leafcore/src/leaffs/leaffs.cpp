@@ -55,13 +55,16 @@ bool LeafFS::getFiles(std::string prefix, std::string directory, bool recursive)
 
 		LOGF("Indexing " + filePath);
 
-		if (entry.is_directory()){
+		if (entry.is_symlink()){
+			//Add the symlink
+			_files.push_back(filePath);
+		} else if (entry.is_directory()){
 			
 			//Add the directory
 			_directories.push_back(filePath);
 
 			//If recursive operation is nedded, do it
-			if (recursive && !entry.is_symlink())
+			if (recursive)
 				if (!getFiles(filePath, entry.path(), recursive))
 					return false;
 		} else 
