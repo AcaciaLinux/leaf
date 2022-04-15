@@ -1,8 +1,20 @@
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
+option(LEAF_STATIC "Build a static version of leaf" OFF)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
+	set (LibArchive_INCLUDE_DIR /opt/homebrew/opt/libarchive/include)
+endif()
+
 if (LEAF_STATIC)
 	set(BUILD_SHARED_LIBS OFF)
+	set(LEAF_ADDITIONAL_LIBRARIES "")
+else()
+	find_package(LibArchive REQUIRED)
+	find_package(CURL REQUIRED)
+	set(LEAF_ADDITIONAL_LIBRARIES -lcurl -larchive ${LibArchive_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
 include_directories(include)
@@ -11,8 +23,6 @@ include_directories(leafcore/include)
 
 set(CMAKE_CXX_STANDARD 17)
 
-option(LEAF_STATIC "Build a static version of leaf" OFF)
-
 if (CMAKE_BUILD_TYPE)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)
 		enable_testing(true)
@@ -20,11 +30,6 @@ if (CMAKE_BUILD_TYPE)
 		add_subdirectory(tests)
 		add_definitions(-DDEBUG)
 	endif()
-endif()
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
-	set (LibArchive_INCLUDE_DIR /opt/homebrew/opt/libarchive/include)
 endif()
 
 add_subdirectory(leafcore)
@@ -44,7 +49,7 @@ if (LEAF_STATIC)
 endif()
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
-target_link_libraries(${PNAME} log leafcore)
+target_link_libraries(${PNAME} log leafcore ${LEAF_ADDITIONAL_LIBRARIES})
 if (LEAF_STATIC)
 	target_link_options(${PNAME} PRIVATE -static)
 endif()
