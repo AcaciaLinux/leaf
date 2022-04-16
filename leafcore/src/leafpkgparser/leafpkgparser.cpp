@@ -6,17 +6,15 @@
  */
 
 #include "log.h"
+#include "leafdebug.h"
 #include "leafpkgparser.h"
 
-bool LeafPkgParser::parse(std::istream& in){
+void LeafPkgParser::parse(std::istream& in){
 	FUN();
-	_error.clear();
+	LEAF_DEBUG_EX("LeafPkgParser::parse()");
 
-	if (in.bad()){
-		_error = "Stream is bad";
-		LOGE("Failed to parse leafpkg: " + _error);
-		return false;
-	}
+	if (in.bad())
+		throw new LeafError(Error::BAD_ISTREAM, "leaf.pkg parser - parse");
 
-	return false;
+	throw new LeafError(Error::FEATURE_NOT_IMPLEMENTED, "LeafPkgParser::parse()");
 }

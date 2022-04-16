@@ -15,6 +15,7 @@ std::string errorCodes[] = {
 	"Could not create file",
 	"Could not create directory",
 	"Could not copy file",
+	"Could not remove filesystem entry",
 	"Could not remove file",
 	"Could not remove directory",
 	"Could not open file for reading",
@@ -55,6 +56,7 @@ std::string errorCodes[] = {
 	"Failed to convert string to integer",
 	"File does already exist",
 	"Package download destination is empty",
+	"Package script failed to execute",
 
 	//PackageListParser
 	"Package list parser: Bad stream",
@@ -68,6 +70,9 @@ std::string errorCodes[] = {
 
 	//Debugging exception
 	"Debugging exception at function",
+
+	//Unimplemented feature
+	"Feature is currently not implemented",
 
 	"No error"
 };

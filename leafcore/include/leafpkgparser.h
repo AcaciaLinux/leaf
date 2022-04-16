@@ -15,12 +15,7 @@ public:
 	 * @brief	Parse the stream provided
 	 * @param	in				The stream to parse the file from
 	 */
-	bool						parse(std::istream& in);
-
-	/**
-	 * @brief	Returns the last error
-	 */
-	std::string					getError();
+	void						parse(std::istream& in);
 
 private:
 
