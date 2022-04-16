@@ -23,13 +23,13 @@ public:
 	 * 				If it exists
 	 * 				If it really IS a directory
 	 */
-	bool						check();
+	void						check();
 
 	/**
 	 * @brief	Reads all the entries in the directory, get them using getFiles()
 	 * @param	recursive		Read recursively
 	 */
-	bool						read(bool recursive);
+	void						read(bool recursive);
 
 	/**
 	 * @brief	Returns the previously read files in the directory
@@ -41,15 +41,7 @@ public:
 	 */
 	std::deque<std::string>		getDirectories();
 
-	/**
-	 * @brief	Returns the last error
-	 */
-	std::string					getError();
-
 private:
-
-	//Holds the last error in clear readable form
-	std::string					_error;
 
 	//The currently selected directory
 	std::string					_curDir;
@@ -60,9 +52,9 @@ private:
 	//The files contained in this directory parsed by readFiles() and readFilesRecursive()
 	std::deque<std::string>		_files;
 
-	bool						getFiles(std::string prefix, std::string directory, bool recursive);
+	void						getFiles(std::string prefix, std::string directory, bool recursive);
 };
 
-std::string					removeFile(std::string path, bool errorOnNotExisting);
+void							removeFile(std::string path, bool errorOnNotExisting);
 
 #endif

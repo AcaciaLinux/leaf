@@ -39,16 +39,10 @@ bool Leafcore::parseInstalled(){
 
 	{	//Read the directory
 		LeafFS installedDirFS(lConfig.installedDir());
+	
+		installedDirFS.check();
 
-		if (!installedDirFS.check()){
-			_error = "Failed to parse installed packages: " + installedDirFS.getError();
-			return FAIL(_error);
-		}
-
-		if (!installedDirFS.read(true)){
-			_error = "Failed to parse installed packages: " + installedDirFS.getError();
-			return FAIL(_error);
-		}
+		installedDirFS.read(true);
 
 		installedFiles = installedDirFS.getFiles();
 	}

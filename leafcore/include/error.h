@@ -74,6 +74,12 @@ namespace Error{
 		//Package database
 		PKG_DEP_NOTFOUND,
 
+		//LeafFS
+		LEAFFS_DIR_STR_EMPTY,
+		LEAFFS_DIR_NOT_EXISTING,
+		LEAFFS_DIR_NOT_DIR,
+		LEAFFS_FILE_NOT_EXISTING,
+
 		//Debugging exception
 		DEBUG_EXCEPTION,
 		
