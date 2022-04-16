@@ -103,10 +103,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	for (Package* package : install_packages){
 		LOGU("Deploying package " + package->getFullName() + "...");
 		
-		if (!package->deploy()){
-			_error = package->getError();
-			return FAIL(_error);
-		}
+		package->deploy();
 	}
 
 	LOGU("Cleaning up package caches...");

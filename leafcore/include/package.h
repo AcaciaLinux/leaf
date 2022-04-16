@@ -90,7 +90,7 @@ public:
 	 * 				createInstalledFile()
 	 * 				runPostinstall()
 	 */
-	bool						deploy();
+	void						deploy();
 
 	/**
 	 * @brief	Runs the preinstall.sh script if it exists

@@ -6,7 +6,7 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "error.h"
 #include "package.h"
 #include "leafconfig.h"
@@ -14,29 +14,20 @@
 #include <fstream>
 #include <filesystem>
 
-bool Package::deploy(){
+void Package::deploy(){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to deploy package " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::deploy()");
 
 	if (_isCollection){
 		LOGI("Skipping deployment of collection " + getFullName());
-		return true;
+		return;
 	}
 
 	//Check if the database is ok
-	if (_db == nullptr){
+	if (_db == nullptr)
 		throw new LeafError(Error::NODB);
-		_errorCode = EC::Package::NODB;
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
 
-	if (!_db->getCore()->createConfigDirs()){
-		_errorCode = EC::Package::NOCONFDIR;
-		_error = _ep + _db->getCore()->getError();
-		return FAIL(_error);
-	}
+	_db->getCore()->createConfigDirs();
 
 	bool overwrite = false;
 	if (std::filesystem::exists(getInstalledFilePath())){
@@ -47,12 +38,8 @@ bool Package::deploy(){
 	std::ofstream installedFile;
 	installedFile.open(getInstalledFilePath(), std::ios::trunc);
 
-	if (!installedFile.is_open()){
-		_errorCode = EC::Package::DEPLOY_OPENINSTALLEDFILE;
-		_error = _ep + "Leafinstalled file " + getInstalledFilePath() + " could not be opened for writing";
-		installedFile.close();
-		return FAIL(_error);
-	}
+	if (!installedFile.is_open())
+		throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
 
 	try {
 		
@@ -71,6 +58,4 @@ bool Package::deploy(){
 	}
 
 	installedFile.close();
-
-	return true;
 } 
