@@ -66,10 +66,7 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 	for (Package* p : remove_packages){
 		LOGU("Removing package " + p->getFullName() + "...");
 
-		if (!p->removeFromRoot()){
-			_error = _ep + p->getError();
-			return FAIL(_error);
-		}
+		p->removeFromRoot();
 	}
 
 	return true;

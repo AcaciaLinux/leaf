@@ -6,52 +6,48 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "package.h"
 #include "leafconfig.h"
 
 #include <filesystem>
 
-bool Package::runPreinstall(){
+void Package::runPreinstall(){
+	FUN();
+	LEAF_DEBUG_EX("Package::runPreinstall()");
 	if (!lConfig.runPreinstall){
 		LOGW("WARNING: Disabled preinstall script of package " + getFullName());
-		return true;
+		return;
 	}
-	return runScript("preinstall.sh");
+	runScript("preinstall.sh");
 }
 
-bool Package::runPostinstall(){
+void Package::runPostinstall(){
+	FUN();
+	LEAF_DEBUG_EX("Package::runPostinstall()");
 	if (!lConfig.runPostinstall){
 		LOGW("WARNING: Disabled postinstall script of package " + getFullName());
-		return true;
+		return;
 	}
-	return runScript("postinstall.sh");	
+	runScript("postinstall.sh");	
 }
 
-bool Package::runScript(std::string path){
+void Package::runScript(std::string path){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to run script for package " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::runScript()");
 
 	//Check if the database is ok
-	if (_db == nullptr){
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
-	if (!_db->getCore()->createCacheDirs()){
-		_error = _ep + _db->getCore()->getError();
-		return FAIL(_error);
-	}
+	_db->getCore()->createCacheDirs();
 
-	if (!std::filesystem::exists(getExtractedDir())){
-		_error = _ep + "Package " + getFullName() + " does not seem to be extracted to " + getExtractedDir();
-		return FAIL(_error);
-	}
+	if (!std::filesystem::exists(getExtractedDir()))
+		throw new LeafError(Error::PKG_NOTEXTRACTED);
 
 	if (!std::filesystem::exists(getExtractedDir() + path)){
 		LOGI("Script " + getExtractedDir() + path + " does not exist, skipping");
-		return true;
+		return;
 	}
 
 	std::string oldWorkDir = std::filesystem::current_path();
@@ -75,12 +71,9 @@ bool Package::runScript(std::string path){
 		res = system(command.c_str());
 
 	if (res != 0){
-		_error = _ep + "Script failed to run";
 		std::filesystem::current_path(oldWorkDir);
-		return FAIL(_error);
+		throw new LeafError(Error::PACKAGE_SCRIPT_FAILED, path);
 	}
 
 	std::filesystem::current_path(oldWorkDir);
-
-	return true;
 }

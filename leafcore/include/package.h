@@ -65,7 +65,7 @@ public:
 	/**
 	 * @brief	Fetches the package .leafpkg from the server
 	 */
-	bool						fetch();
+	void						fetch();
 
 	/**
 	 * @brief	Extracts the package into the package cache for deployment
@@ -75,7 +75,7 @@ public:
 	/**
 	 * @brief	Indexes the files that should be copied to the root
 	 */
-	bool						indexExtracted();
+	void						indexExtracted();
 
 	/**
 	 * @brief	Copies all the files of the package to the root
@@ -95,23 +95,23 @@ public:
 	/**
 	 * @brief	Runs the preinstall.sh script if it exists
 	 */
-	bool						runPreinstall();
+	void						runPreinstall();
 
 	/**
 	 * @brief	Runs the postinstall.sh script if it exists
 	 */
-	bool						runPostinstall();
+	void						runPostinstall();
 
 	/**
 	 * @brief	Runs the specified script if it is availabl
 	 * @param	path			The path to the script relative to the package extracted directory
 	 */
-	bool						runScript(std::string path);
+	void						runScript(std::string path);
 
 	/**
 	 * @brief	Removes this package from the root
 	 */
-	bool						removeFromRoot();
+	void						removeFromRoot();
 
 	/**
 	 * @brief	Clears the extracted cache of the package
@@ -211,24 +211,11 @@ public:
 	 */
 	std::string					toString();
 
-	/**
-	 * @brief	Returns the last error thrown
-	 */
-	std::string					getError();
-
-	/**
-	 * @brief	Returns the last error code
-	 */
-	EC::Package::ec				getErrorCode();
-
 #ifndef FRIEND_PACKAGE
 private:
 #endif
 
 	LeafDB*						_db = nullptr;
-
-	EC::Package::ec				_errorCode = EC::Package::NONE;
-	std::string					_error;
 
 	std::string					_name;
 	std::string					_versionString;

@@ -6,23 +6,19 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "package.h"
 #include "leafconfig.h"
 
 bool Package::resolveDependentPackages(){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to resolve dependent packages of " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::resolveDependentPackages()");
 
 	//Check if the database is ok
-	if (_db == nullptr){
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
-	_error = _ep + "Feature not implemented";
-	return FAIL(_error);
+	throw new LeafError(Error::FEATURE_NOT_IMPLEMENTED);
 
 	return true;
 }

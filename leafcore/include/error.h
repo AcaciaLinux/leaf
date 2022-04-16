@@ -21,6 +21,7 @@ namespace Error{
 		CREATEFILE,
 		CREATEDIR,
 		COPYFILE,
+		REMOVE,
 		REMOVEFILE,
 		REMOVEDIR,
 		OPENFILER,
@@ -60,6 +61,8 @@ namespace Error{
 		PACKAGE_UNEXPECTED_EOF,
 		PACKAGE_STOI,
 		PACKAGE_FILE_EXISTS,
+		PACKAGE_FETCH_DEST_EMPTY,
+		PACKAGE_SCRIPT_FAILED,
 
 		//PackageListParser
 		PKGPRS_BAD_STREAM,
@@ -73,6 +76,9 @@ namespace Error{
 
 		//Debugging exception
 		DEBUG_EXCEPTION,
+		
+		//Unimplemented feature
+		FEATURE_NOT_IMPLEMENTED,
 
 		NONE		
 	};

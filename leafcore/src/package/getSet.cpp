@@ -93,11 +93,3 @@ std::string Package::toString(){
 
 	return buf;
 }
-
-std::string Package::getError(){
-	return _error;
-}
-
-EC::Package::ec Package::getErrorCode(){
-	return _errorCode;
-}

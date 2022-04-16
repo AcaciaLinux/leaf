@@ -6,59 +6,48 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "package.h"
 #include "downloader.h"
 
 #include <fstream>
 #include <filesystem>
 
-bool Package::fetch(){
+void Package::fetch(){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to fetch package " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::fetch()");
 
 	LOGI("Fetching package " + getFullName());
 
 	if (_isCollection){
 		LOGI("Skipping fetch of collection " + getFullName());
-		return true;
+		return;
 	}
 
 	//Check if the database is ok
-	if (_db == nullptr){
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
 	//Check the leaf directories
-	if (!_db->getCore()->createCacheDirs()){
-		_error = _ep + _db->getCore()->getError();
-		return FAIL(_error);
-	}
+	_db->getCore()->createCacheDirs();
 
 	std::string destination = getDownloadPath();
 	
-	if (destination.empty()){
-		_error = _ep + "Destination directory: " + _error;
-		return FAIL(_error);
-	}
+	if (destination.empty())
+		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
 	//Create the downloader instance
 	Downloader dl;
 	dl.init();
 
-	LOGD("Opening destinatoin file " + destination + "...");
+	LOGD("Opening destination file " + destination + "...");
 	//Create and open the destination file
 	std::ofstream outFile;
 	outFile.open(destination, std::ios::trunc | std::ios::binary);
 
 	//Check if the destination file is open
-	if (!outFile.is_open()){
-		_error = _ep + "Could not open destination file " + destination + " for writing";
-		outFile.close();
-		return FAIL(_error);
-	}
+	if (!outFile.is_open())
+		throw new LeafError(Error::OPENFILEW, "Download for " + getFullName() + ": " + destination);
 
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
@@ -66,6 +55,4 @@ bool Package::fetch(){
 	dl.download(getFetchURL(), outFile);
 
 	outFile.close();
-
-	return true;
 }

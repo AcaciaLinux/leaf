@@ -85,10 +85,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 			continue;
 		}
 
-		if (!package->fetch()){
-			_error = package->getError();
-			return FAIL(_error);
-		}
+		package->fetch();
 	}
 
 	for (Package* package : install_packages){

@@ -54,6 +54,7 @@ std::string errorCodes[] = {
 	"Unexpected EOF when parsing",
 	"Failed to convert string to integer",
 	"File does already exist",
+	"Package download destination is empty",
 
 	//PackageListParser
 	"Package list parser: Bad stream",

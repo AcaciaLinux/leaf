@@ -6,51 +6,42 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "package.h"
 #include "leafconfig.h"
 
 #include <fstream>
 #include <filesystem>
 
-bool Package::removeFromRoot(){
+void Package::removeFromRoot(){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to remove package " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::removeFromRoot()");
 
 	//Check if the database is ok
-	if (_db == nullptr){
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
 	std::error_code ec;
-	for (std::string file : _provided_files){
-		if (std::filesystem::is_directory(lConfig.rootDir + file)){
-			if (std::filesystem::is_empty(lConfig.rootDir + file)){
-				LOGF("Removing empty directory " + lConfig.rootDir + file);
+	for (std::string entry : _provided_files){
+		if (std::filesystem::is_directory(lConfig.rootDir + entry)){
+			if (std::filesystem::is_empty(lConfig.rootDir + entry)){
+				LOGF("Removing empty directory " + lConfig.rootDir + entry);
 			} else {
-				LOGF("Skipping non empty directory " + lConfig.rootDir + file);
+				LOGF("Skipping non empty directory " + lConfig.rootDir + entry);
 				continue;
 			}
 		}
 
-		LOGF("Removing file " + lConfig.rootDir + file);
-		std::filesystem::remove_all(lConfig.rootDir + file, ec);
+		LOGF("Removing entry " + lConfig.rootDir + entry);
+		std::filesystem::remove_all(lConfig.rootDir + entry, ec);
 
-		if (ec){
-			_error = _ep + "Filesystem error: " + ec.message() + " when processing " + lConfig.rootDir + file;
-			return FAIL(_error);
-		}
+		if (ec)
+			throw new LeafError(Error::REMOVE, getFullName() + ": " + lConfig.rootDir + entry);
 	}
 
 	//Finally remove the leafinstalled file
 	std::filesystem::remove(getInstalledFilePath(), ec);
 
-	if (ec){
-		_error = _ep + "Failed to remove leafinstalled file " + getInstalledFilePath() + ": " + ec.message();
-		return FAIL(_error);
-	}
-
-	return true;
+	if (ec)
+		throw new LeafError(Error::REMOVEFILE, "Leafinstalled file of " + getFullName() + " at " + getInstalledFilePath());
 }
