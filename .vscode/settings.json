@@ -91,7 +91,20 @@
 		"__tuple": "cpp",
 		"ios": "cpp",
 		"locale": "cpp",
-		"stack": "cpp"
+		"stack": "cpp",
+		"barrier": "cpp",
+		"cfenv": "cpp",
+		"charconv": "cpp",
+		"csetjmp": "cpp",
+		"csignal": "cpp",
+		"coroutine": "cpp",
+		"latch": "cpp",
+		"queue": "cpp",
+		"ranges": "cpp",
+		"scoped_allocator": "cpp",
+		"shared_mutex": "cpp",
+		"span": "cpp",
+		"typeindex": "cpp"
 	},
 	"liveServer.settings.port": 5501
 }

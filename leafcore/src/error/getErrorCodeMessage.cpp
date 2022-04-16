@@ -14,6 +14,7 @@ std::string errorCodes[] = {
 	//File system
 	"Could not create file",
 	"Could not create directory",
+	"Could not copy file",
 	"Could not remove file",
 	"Could not remove directory",
 	"Could not open file for reading",
@@ -52,6 +53,11 @@ std::string errorCodes[] = {
 	//Package
 	"Unexpected EOF when parsing",
 	"Failed to convert string to integer",
+	"File does already exist",
+
+	//PackageListParser
+	"Package list parser: Bad stream",
+	"Package list parser: Apply to database",
 
 	//Package list
 	"Package list not loaded",

@@ -60,14 +60,15 @@ bool Package::deploy(){
 		return FAIL(_error);
 	}
 
-	if (!copyToRoot(overwrite)){
-		_error = _ep + _error;
+	try {
+		copyToRoot(overwrite);
+	} catch (LeafError* e) {
 		std::error_code ec;
 		std::filesystem::remove(getInstalledFilePath(), ec);
 		if (ec){
 			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
 		}
-		return FAIL(_error);
+		throw e;
 	}
 
 	if (!runPostinstall()){

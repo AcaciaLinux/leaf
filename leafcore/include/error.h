@@ -20,6 +20,7 @@ namespace Error{
 		//File system
 		CREATEFILE,
 		CREATEDIR,
+		COPYFILE,
 		REMOVEFILE,
 		REMOVEDIR,
 		OPENFILER,
@@ -58,6 +59,7 @@ namespace Error{
 		//Package
 		PACKAGE_UNEXPECTED_EOF,
 		PACKAGE_STOI,
+		PACKAGE_FILE_EXISTS,
 
 		//PackageListParser
 		PKGPRS_BAD_STREAM,

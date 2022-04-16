@@ -81,7 +81,7 @@ public:
 	 * @brief	Copies all the files of the package to the root
 	 * @param	forceOverwrite	If existing files should be overwritten
 	 */
-	bool						copyToRoot(bool forceOverwrite = false);
+	void						copyToRoot(bool forceOverwrite = false);
 
 	/**
 	 * @brief	Deploys the package to the root, uses the following steps:
