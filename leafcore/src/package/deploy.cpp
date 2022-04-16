@@ -54,14 +54,13 @@ bool Package::deploy(){
 		return FAIL(_error);
 	}
 
-	if (!runPreinstall()){
-		_errorCode = EC::Package::DEPLOY_RUNPREINSTALL;
-		_error = _ep + "Running preinstall.sh: " + _error;
-		return FAIL(_error);
-	}
-
 	try {
+		
+		runPreinstall();
 		copyToRoot(overwrite);
+		runPostinstall();
+		createInstalledFile(installedFile);
+
 	} catch (LeafError* e) {
 		std::error_code ec;
 		std::filesystem::remove(getInstalledFilePath(), ec);
@@ -69,28 +68,6 @@ bool Package::deploy(){
 			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
 		}
 		throw e;
-	}
-
-	if (!runPostinstall()){
-		_errorCode = EC::Package::DEPLOY_RUNPOSTINSTALL;
-		_error = _ep + "Running postinstall.sh: " + _error;
-		std::error_code ec;
-		std::filesystem::remove(getInstalledFilePath(), ec);
-		if (ec){
-			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
-		}
-		return FAIL(_error);
-	}
-
-	if (!createInstalledFile(installedFile)){
-		_error = _ep + _error;
-		installedFile.close();
-		std::error_code ec;
-		std::filesystem::remove(getInstalledFilePath(), ec);
-		if (ec){
-			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
-		}
-		return FAIL(_error);
 	}
 
 	installedFile.close();

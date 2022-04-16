@@ -54,7 +54,7 @@ public:
 	 * @brief	Outputs the .leafinstalled file from the package
 	 * @param	out				The output stream to write to
 	 */
-	bool						createInstalledFile(std::ostream& out);
+	void						createInstalledFile(std::ostream& out);
 
 	/**
 	 * @brief	Parse a .leafinstalled file to this package, everything will be overwritten

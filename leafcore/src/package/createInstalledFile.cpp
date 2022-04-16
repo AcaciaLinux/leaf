@@ -10,13 +10,13 @@
 #include "leafconfig.h"
 #include "package.h"
 
-bool Package::createInstalledFile(std::ostream& out){
+void Package::createInstalledFile(std::ostream& out){
 	FUN();
 
 	LEAF_DEBUG_EX("Package::createInstalledFile()");
 
 	if (!out.good())
-		return false;
+		throw new LeafError(Error::BAD_ISTREAM, "create installed file for " + getFullName());
 
 	out << _name << std::endl;
 	out << _versionString << std::endl;
@@ -32,6 +32,4 @@ bool Package::createInstalledFile(std::ostream& out){
 	for (auto rit = _provided_directories.rbegin(); rit != _provided_directories.rend(); ++rit){
 		out << *rit << std::endl;
 	}
-
-	return true;
 }
