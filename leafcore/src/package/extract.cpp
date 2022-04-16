@@ -6,7 +6,7 @@
  */
 
 #include "log.h"
-#include "fail.h"
+#include "leafdebug.h"
 #include "package.h"
 #include "leafarchive.h"
 #include "leafconfig.h"
@@ -15,30 +15,24 @@
 
 //TODO: Tests
 
-bool Package::extract(){
+void Package::extract(){
 	FUN();
-	_error.clear();
-	std::string _ep = "Failed to extract package " + getFullName() + ": ";
+	LEAF_DEBUG_EX("Package::extract()");
 
 	LOGI("Extracting package " + getFullName() + "...");
 
 	if (_isCollection){
 		LOGI("Skipping extracting of collection " + getFullName());
-		return true;
+		return;
 	}
 
 	LOGD("Checking database...");
 	//Check if the database is ok
-	if (_db == nullptr){
-		_error = _ep + "Database is not accessible (nullptr)";
-		return FAIL(_error);
-	}
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
 	//Check the leaf directories
-	if (!_db->getCore()->createCacheDirs()){
-		_error = _ep + _db->getCore()->getError();
-		return FAIL(_error);
-	}
+	_db->getCore()->createCacheDirs();
 
 	std::string downloadPath = getDownloadPath();
 	std::string extractedDir = getExtractedDir();
@@ -49,10 +43,8 @@ bool Package::extract(){
 		LOGD("Destination directory " + extractedDir + " exists, deleting...");
 		std::error_code errCode;
 		std::filesystem::remove_all(extractedDir, errCode);
-		if (errCode){
-			_error = _ep + "Failed to delete old extracted directory: " + errCode.message();
-			return FAIL(_error);
-		}
+		if (errCode)
+			throw new LeafError(Error::REMOVEDIR, extractedDir);
 	}
 
 	//Create the archive instance
@@ -65,6 +57,4 @@ bool Package::extract(){
 	//Extract the archive
 	LOGD("Extracting archive " + downloadPath + " into " + extractedDir + "...");
 	archive.extract(lConfig.packagesDir());
-
-	return true;
 }

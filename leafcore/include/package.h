@@ -70,7 +70,7 @@ public:
 	/**
 	 * @brief	Extracts the package into the package cache for deployment
 	 */
-	bool						extract();
+	void						extract();
 
 	/**
 	 * @brief	Indexes the files that should be copied to the root
