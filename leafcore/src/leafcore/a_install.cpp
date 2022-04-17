@@ -47,10 +47,8 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	std::deque<Package*> install_packages;
 	LOGU("Resolving dependencies...");
 	for (std::string packageName : packages){
-		Package* package = _packageListDB->getPackage(packageName);
-
-		if (package == nullptr)
-			throw new LeafError(Error::PKG_NOTFOUND, packageName);
+		//This throws an error if the package was not found
+		Package* package = _packageListDB->getPackage(packageName, true);
 
 		//Resolve the dependencies of the package recursively
 		if (!_packageListDB->resolveDependencies(&install_packages, package)){

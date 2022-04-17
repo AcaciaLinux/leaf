@@ -65,8 +65,15 @@ std::string errorCodes[] = {
 	//Package list
 	"Package list not loaded",
 
-	//Package database
-	"Package dependency not found",
+	//LeafFS
+	"LeafFS: Directory string is empty",
+	"LeafFS: Directory does not exist",
+	"LeafFS: Specified path is not a directory",
+	"LeafFS: File does not exist",
+
+	//LeafDB
+	"LeafDB: Package dependency not found",
+	"LeafDB: Package not found",
 
 	//Debugging exception
 	"Debugging exception at function",

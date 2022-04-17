@@ -41,8 +41,9 @@ public:
 	/**
 	 * @brief	Returns the package with the specified name, nullptr if no package was found
 	 * @param	name				The name of the package to get
+	 * @param	throwOnNotFound		If this function should throw a LeafError if the package could not be found
 	 */
-	Package*						getPackage(std::string name);
+	Package*						getPackage(std::string name, bool throwOnNotFound);
 
 	/**
 	 * @brief	Returns a vector of all packages providing a file

@@ -34,10 +34,8 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 	std::deque<Package*> remove_packages;
 	{//Resolve the packages names
 		for (std::string packageName : packages){
-			Package* package = _installedDB->getPackage(packageName);
-
-			if (package == nullptr)
-				throw new LeafError(Error::PKG_NOTINSTALLED, packageName);
+			//This throws an error if the package was not found
+			Package* package = _installedDB->getPackage(packageName, true);
 
 			remove_packages.push_back(package);
 		}

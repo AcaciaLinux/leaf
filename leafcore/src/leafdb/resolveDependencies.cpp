@@ -30,11 +30,11 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 
 	for (std::string depName : package->getDependencies()){
 		//Get the package from the name
-		Package* dependency = getPackage(depName);
+		Package* dependency = getPackage(depName, false);
 
 		//Check if the dependency was found
 		if (dependency == nullptr)
-			throw new LeafError(Error::PKG_DEP_NOTFOUND, depName);
+			throw new LeafError(Error::LEAFDB_PKG_DEP_NOTFOUND, depName);
 
 		bool alreadyAdded = false;
 		for (size_t i = 0; i < all_dependencies->size(); i++){

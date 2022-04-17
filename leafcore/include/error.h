@@ -13,6 +13,7 @@ namespace Error{
 		NOROOT,
 		NOCONFIG,
 		NOCACHE,
+		NULLPARAMETER,
 
 		//User answers
 		USER_DISAGREE,
@@ -71,14 +72,15 @@ namespace Error{
 		//Package list
 		PKGLIST_NOTLOADED,
 
-		//Package database
-		PKG_DEP_NOTFOUND,
-
 		//LeafFS
 		LEAFFS_DIR_STR_EMPTY,
 		LEAFFS_DIR_NOT_EXISTING,
 		LEAFFS_DIR_NOT_DIR,
 		LEAFFS_FILE_NOT_EXISTING,
+
+		//LeafDB
+		LEAFDB_PKG_DEP_NOTFOUND,
+		LEAFDB_PKG_NOT_FOUND,
 
 		//Debugging exception
 		DEBUG_EXCEPTION,
