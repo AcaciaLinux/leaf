@@ -8,8 +8,6 @@
 #include "leafdebug.h"
 #include "leafconfig.h"
 
-#include "fail.h"
-
 #include "leafcore.h"
 
 void Leafcore::a_remove(std::deque<std::string> packages){

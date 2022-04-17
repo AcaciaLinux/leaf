@@ -6,7 +6,6 @@
  */
 
 #include "log.h"
-#include "fail.h"
 #include "leafdb.h"
 
 LeafDB::LeafDB(Leafcore* core){
