@@ -7,6 +7,8 @@ std::string errorCodes[] = {
 	"Leaf root is not accessible",
 	"Leaf configuration could not be accessed",
 	"Leaf cache could not be accessed",
+	"No packages have been supplied for processing",
+	"An argument has been a nullptr (THIS IS A BUG!!!)",
 
 	//User answers
 	"User disagreed",

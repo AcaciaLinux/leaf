@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -13,12 +12,11 @@
 
 #include <filesystem>
 
-bool Leafcore::createConfigDirs(){
+void Leafcore::createConfigDirs(){
 	FUN();
-	LEAF_DEBUG("Leafcore::createConfigDirs()");
+	LEAF_DEBUG_EX("Leafcore::createConfigDirs()");
 
-	if (!checkDirectories())
-		return false;
+	checkDirectories();
 
 	{//Check the installed directory
 		std::error_code ec;
@@ -48,6 +46,4 @@ bool Leafcore::createConfigDirs(){
 				throw new LeafError(Error::NOTDIR, eMsg, ec);
 		}
 	}
-
-	return true;
 }

@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -13,9 +12,9 @@
 
 #include <filesystem>
 
-bool Leafcore::checkDirectories(){
+void Leafcore::checkDirectories(){
 	FUN();
-	LEAF_DEBUG("Leafcore::checkDirectories()");
+	LEAF_DEBUG_EX("Leafcore::checkDirectories()");
 
 	LOGD("Checking leaf directories...");
 
@@ -70,6 +69,4 @@ bool Leafcore::checkDirectories(){
 			throw new LeafError(Error::NOTDIR, "Cache directory " + lConfig.cacheDir());
 		}
 	}
-
-	return true;
 }

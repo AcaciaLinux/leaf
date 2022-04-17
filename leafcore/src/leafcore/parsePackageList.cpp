@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -14,21 +13,16 @@
 
 #include <fstream>
 
-bool Leafcore::parsePackageList(){
+void Leafcore::parsePackageList(){
 	FUN();
-	return parsePackageList(lConfig.pkgListPath());
+	parsePackageList(lConfig.pkgListPath());
 }
 
-bool Leafcore::parsePackageList(std::string path){
+void Leafcore::parsePackageList(std::string path){
 	FUN();
+	LEAF_DEBUG_EX("Leafcore::parsePackageList()");
 
-	LEAF_DEBUG("Leafcore::parsePackageList()");
-
-	//TODO: exceptions
-
-	_error.clear();
-	if (!checkDirectories())
-		return false;
+	checkDirectories();
 
 	if (_packageListDB == nullptr)
 		throw new LeafError(Error::NODB, "Package list");
@@ -60,6 +54,4 @@ bool Leafcore::parsePackageList(std::string path){
 
 	LOGI("Done parsing package list");
 	_loadedPkgList = true;
-
-	return true;
 }

@@ -5,37 +5,26 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
 #include "leafcore.h"
 
-#include "fail.h"
-
 #include <filesystem>
 
-bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
+void Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	FUN();
+	LEAF_DEBUG_EX("Leafcore::a_install()");
 
-	LEAF_DEBUG("Leafcore::a_install()");
-
-	//TODO: exceptions
-
-	_error.clear();
-	if (!checkDirectories())
-		return false;
+	checkDirectories();
 
 	//Check if the package list is loaded
 	if (!_loadedPkgList)
 		throw new LeafError(Error::PKGLIST_NOTLOADED);
 
 	//Check if there even are some packages to process
-	if (packages.size() == 0){
-		_error = "At least 1 package has to be submitted";
-		LOGE("Failed to perform install action: " + _error);
-		return false;
-	}
+	if (packages.size() == 0)
+		throw new LeafError(Error::NOPACKAGE);
 
 	{//Inform the user about the action
 		std::string msg = "Installing following packages:";
@@ -51,11 +40,7 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 		Package* package = _packageListDB->getPackage(packageName, true);
 
 		//Resolve the dependencies of the package recursively
-		if (!_packageListDB->resolveDependencies(&install_packages, package)){
-			_error = "Could not resolve dependencies for package " + packageName + ": " + _packageListDB->getError();
-			LOGE(_error);
-			return false;
-		}
+		_packageListDB->resolveDependencies(&install_packages, package);
 	}
 	LOGI("Done resolving dependencies");
 
@@ -102,6 +87,4 @@ bool Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 	for (Package* package : install_packages){
 		package->clearCache();
 	}
-
-	return true;
 }

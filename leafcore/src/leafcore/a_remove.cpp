@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -13,23 +12,13 @@
 
 #include "leafcore.h"
 
-bool Leafcore::a_remove(std::deque<std::string> packages){
+void Leafcore::a_remove(std::deque<std::string> packages){
 	FUN();
+	LEAF_DEBUG_EX("Leafcore::a_remove()");
 
-	LEAF_DEBUG("Leafcore::a_remove()");
+	checkDirectories();
 
-	//TODO: exceptions
-
-	_error.clear();
-	std::string _ep = "Could not remove packages: ";
-	if (!checkDirectories())
-		return false;
-
-	//Parse the installed files
-	if (!parseInstalled()){
-		_error = _ep + _error;
-		return FAIL(_error);
-	}
+	parseInstalled();
 
 	std::deque<Package*> remove_packages;
 	{//Resolve the packages names
@@ -66,6 +55,4 @@ bool Leafcore::a_remove(std::deque<std::string> packages){
 
 		p->removeFromRoot();
 	}
-
-	return true;
 }

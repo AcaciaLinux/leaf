@@ -23,46 +23,46 @@ public:
 	 * @brief	Reads the package list at the supplied path
 	 * @param	path			The full path to the package list
 	 */
-	bool						parsePackageList(std::string path);
-	bool						parsePackageList();
+	void						parsePackageList(std::string path);
+	void						parsePackageList();
 
 	/**
 	 * @brief	Parses all the installed packages into the leaf database
 	 */
-	bool						parseInstalled();
+	void						parseInstalled();
 
 	/**
 	 * @brief	Updates the local package list
 	 */
-	bool						a_update();
+	void						a_update();
 
 	/**
 	 * @brief	Installs the provided package with all of its dependencies
 	 * @param	packages		The packages to process
 	 * @param	force			Force leaf to fetch the package, even if it is in the cache
 	 */
-	bool						a_install(std::deque<std::string> packages, bool force = false);
+	void						a_install(std::deque<std::string> packages, bool force = false);
 
 	/**
 	 * @brief	Removes the specified packages from the system
 	 * @param	packages		The packages to remove 
 	 */
-	bool						a_remove(std::deque<std::string> packages);
+	void						a_remove(std::deque<std::string> packages);
 
 	/**
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
-	bool						checkDirectories();
+	void						checkDirectories();
 
 	/**
 	 * @brief	Creates all the cache directories
 	 */
-	bool						createCacheDirs();
+	void						createCacheDirs();
 
 	/**
 	 * @brief	Creates all the configuration directories
 	 */
-	bool						createConfigDirs();
+	void						createConfigDirs();
 
 	/**
 	 * @brief	Asks the user for permission to do something in the format "question (y/n)"
@@ -77,11 +77,6 @@ public:
 	void						setPkgListURL(std::string);
 	std::string					getPkgListURL();
 
-	/**
-	 * @brief	Returns the last error
-	 */
-	std::string					getError();
-
 private:
 
 	//Where the currently loaded package list file is
@@ -95,9 +90,6 @@ private:
 
 	//The database of the installed packages
 	LeafDB*						_installedDB;
-
-	//Holds the last error in clear readable form
-	std::string					_error;
 };
 
 #endif

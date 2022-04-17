@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -14,16 +13,11 @@
 
 #include <fstream>
 
-bool Leafcore::a_update(){
+void Leafcore::a_update(){
 	FUN();
+	LEAF_DEBUG_EX("Leafcore::a_update()");
 
-	LEAF_DEBUG("Leafcore::a_update()");
-
-	//TODO: exceptions
-
-	_error.clear();
-	if (!checkDirectories())
-		return false;
+	checkDirectories();
 
 	std::string pkgListFilePath = lConfig.pkgListPath();
 	LOGI("Fetching package list from " + _pkglistURL + " to " + pkgListFilePath);
@@ -42,6 +36,4 @@ bool Leafcore::a_update(){
 	dl.download(_pkglistURL, file);
 	
 	file.close();
-
-	return true;
 }

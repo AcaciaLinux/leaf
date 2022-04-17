@@ -5,28 +5,20 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
 #include "leafcore.h"
 #include "leaffs.h"
 
-#include "fail.h"
-
 #include <filesystem>
 #include <fstream>
 
-bool Leafcore::parseInstalled(){
+void Leafcore::parseInstalled(){
 	FUN();
+	LEAF_DEBUG_EX("Leafcore::parseInstalled()");
 
-	LEAF_DEBUG("Leafcore::parseInstalled()");
-
-	//TODO: exception
-
-	_error.clear();
-	if (!checkDirectories())
-		return false;
+	checkDirectories();
 
 	if (_installedDB == nullptr)
 		throw new LeafError(Error::NODB, "Installed db");
@@ -49,7 +41,7 @@ bool Leafcore::parseInstalled(){
 
 	if (installedFiles.size() == 0){
 		LOGW("It seems that no packages are installed on the system");
-		return true;
+		return;
 	}
 
 	LOGD("Installed packages: ");
@@ -74,6 +66,4 @@ bool Leafcore::parseInstalled(){
 
 		inFile.close();
 	}
-
-	return true;
 }

@@ -5,7 +5,6 @@
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
-#include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
 
@@ -13,11 +12,10 @@
 
 #include <filesystem>
 
-bool Leafcore::createCacheDirs(){
+void Leafcore::createCacheDirs(){
 	FUN();
-	LEAF_DEBUG("Leafcore::createCacheDirs()");
-	if (!checkDirectories())
-		return false;
+	LEAF_DEBUG_EX("Leafcore::createCacheDirs()");
+	checkDirectories();
 
 	{//Check the download directory
 		std::error_code ec;
@@ -76,6 +74,4 @@ bool Leafcore::createCacheDirs(){
 				throw new LeafError(Error::NOTDIR, eMsg);
 		}
 	}
-
-	return true;
 }

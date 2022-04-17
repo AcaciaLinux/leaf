@@ -13,6 +13,7 @@ namespace Error{
 		NOROOT,
 		NOCONFIG,
 		NOCACHE,
+		NOPACKAGE,
 		NULLPARAMETER,
 
 		//User answers
