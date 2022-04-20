@@ -39,9 +39,8 @@ public:
 	/**
 	 * @brief	Installs the provided package with all of its dependencies
 	 * @param	packages		The packages to process
-	 * @param	force			Force leaf to fetch the package, even if it is in the cache
 	 */
-	void						a_install(std::deque<std::string> packages, bool force = false);
+	void						a_install(std::deque<std::string> packages);
 
 	/**
 	 * @brief	Removes the specified packages from the system

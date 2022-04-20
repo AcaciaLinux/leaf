@@ -12,6 +12,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::HelpFlag f_help(parser, "help", "Display this help menu", {'h', "help"});
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
 	args::Flag f_redownload(parser, "redownload", "Redownload the specified package even if it is in the cache", {"redownload"});
+	args::Flag f_redownloadAll(parser, "redownloadAll", "Redownload all the package and dependencies even if they are in the cache", {"redownloadAll"});
 	args::Flag f_forceOverwrite(parser, "force overwrite", "Force leaf to ignore file conflicts and write anyway", {"forceOverwrite"});
 	args::Flag f_noPreinstall(parser, "skip preinstall", "Do not execute the preinstall script", {"noPreinstall"});
 	args::Flag f_noPostinstall(parser, "skip postnstall", "Do not execute the postinstall script", {"noPostinstall"});
@@ -79,7 +80,9 @@ bool Arguments::parse(int argc, char** argv){
 			return false;
 	}
 
-	if (args::get(f_redownload)){
+	if (args::get(f_redownloadAll)){
+		lConfig.redownload = CONFIG_REDOWNLOAD_ALL;
+	} else if (args::get(f_redownload)){
 		lConfig.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
 	}
 

@@ -114,9 +114,14 @@ public:
 	void						removeFromRoot();
 
 	/**
+	 * @brief	Removes the cached .leafpkg file if present
+	 */
+	void						removeDownloadCache();
+
+	/**
 	 * @brief	Clears the extracted cache of the package
 	 */
-	bool						clearCache();
+	void						clearCache();
 
 	/**
 	 * @brief	Resolves a deque of packages that depend on this package

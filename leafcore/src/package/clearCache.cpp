@@ -13,7 +13,7 @@
 
 #include <filesystem>
 
-bool Package::clearCache(){
+void Package::clearCache(){
 	FUN();
 
 	//TODO: test this function
@@ -21,7 +21,7 @@ bool Package::clearCache(){
 
 	if (_isCollection){
 		LOGI("Skipping cache clearing of collection " + getFullName());
-		return true;
+		return;
 	}
 
 	std::string extractedDir = getExtractedDir();
@@ -37,6 +37,4 @@ bool Package::clearCache(){
 	} else {
 		LOGI("Cache directory " + extractedDir + " of package " + getFullName() + " did not exist");
 	}
-
-	return true;
 }

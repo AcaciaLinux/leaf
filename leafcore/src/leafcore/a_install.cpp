@@ -12,7 +12,7 @@
 
 #include <filesystem>
 
-void Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
+void Leafcore::a_install(std::deque<std::string> packages){
 	FUN();
 	LEAF_DEBUG_EX("Leafcore::a_install()");
 
@@ -91,15 +91,48 @@ void Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 		}
 	}
 
-	for (Package* package : install_packages){
-		LOGU("Downloading package " + package->getFullName() + "...");
+	{	//Check for the redownload config and delete cached downloads if neccesary
 
-		if (std::filesystem::exists(package->getDownloadPath())){
-			LOGI("Skipping download of package " + package->getFullName());
-			continue;
+		LOGI("Checking for redownloads...");
+		switch(lConfig.redownload){
+			//If the redownload of the specified files is wanted
+			case CONFIG_REDOWNLOAD_SPECIFIED:
+				LOGU("Removing download cache of specified packages...");
+				for (std::string package : packages){
+					
+					//Search for the package
+					for (Package* search : install_packages){
+						//If it is to be installed, remove its cache
+						if (search->getName() == package){
+							search->removeDownloadCache();
+							break;
+						}
+					}
+				}
+				break;
+
+			//If the redownload of all packages and dependencies is wanted
+			case CONFIG_REDOWNLOAD_ALL:
+				LOGU("Removing download cache of all packages and dependencies...");
+				for (Package* p : install_packages)
+					p->removeDownloadCache();
+				break;
+
+			//Skip if there is nothing to remove
+			default:
+				break;
 		}
 
-		package->fetch();
+		for (Package* package : install_packages){
+			LOGU("Downloading package " + package->getFullName() + "...");
+
+			if (std::filesystem::exists(package->getDownloadPath())){
+				LOGI("Skipping download of package " + package->getFullName());
+				continue;
+			}
+
+			package->fetch();
+		}
 	}
 
 	for (Package* package : install_packages){

@@ -43,7 +43,7 @@ int main(int argc, char** argv){
 
 			leaf.parseInstalled();
 
-			leaf.a_install(lConfig.packages, lConfig.redownload == CONFIG_REDOWNLOAD_SPECIFIED);
+			leaf.a_install(lConfig.packages);
 		} else if (lConfig.action == ACTION_REMOVE){
 			Leafcore leaf;
 
