@@ -19,9 +19,23 @@ void removeFile(std::string path, bool errorOnNotExisting){
 
 	std::error_code ec;
 
-	if (fs::exists(path) || fs::is_symlink(path)){
+	bool exists = fs::exists(path, ec);
+	if (ec)
+		throw new LeafError(Error::FS_ERROR, path, ec);
+
+	bool isLink = fs::is_symlink(path, ec);
+	if (ec)
+		throw new LeafError(Error::FS_ERROR, path, ec);
+
+	if (isLink)
+		LOGF("File to remove " + path + " is a symlink");
+
+	if (exists || isLink){
 		
-		if (fs::is_directory(path)){
+		if (isLink){
+			LOGF("Removing symlink " + path);
+			fs::remove(path, ec);
+		} else if (fs::is_directory(path)){
 			if (fs::is_empty(path)){
 				LOGF("Removing empty directory " + path);
 				fs::remove_all(path, ec);
