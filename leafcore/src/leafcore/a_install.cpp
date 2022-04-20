@@ -42,10 +42,41 @@ void Leafcore::a_install(std::deque<std::string> packages, bool forceDownload){
 		//Resolve the dependencies of the package recursively
 		_packageListDB->resolveDependencies(&install_packages, package);
 	}
+
+	{	//Go through every package and see if it is already installed
+		LOGI("Checking for already installed dependencies...");
+		size_t len_packages = install_packages.size();
+		for (size_t i = 0; i < len_packages; i++){
+
+			//Get the package to check
+			Package* p_check = install_packages.at(i);
+			LOGD("Checking if " + p_check->getName() + " is already installed...");
+
+			//Find it in the installed db
+			Package* p = _installedDB->getPackage(p_check->getName(), false);
+			
+			//If the package is already installed, skip its installation
+			if (p != nullptr){
+				LOGI(p_check->getName() + " is already installed: YES");
+				install_packages.erase(install_packages.begin() + i);
+				i--;
+				len_packages--;
+			} else {
+				LOGI(p_check->getName() + " is already installed: NO");
+			}
+		}
+	}
+
 	LOGI("Done resolving dependencies");
 
+	//If there is nothing to do, exit this function
+	if (install_packages.size() == 0){
+		LOGU("There is nothing to do");
+		return;
+	}
+
 	{//Inform the user about the packages to install
-		std::string msg = "Following packages will be fetched:";
+		std::string msg = "Following packages will be installed:";
 		for (Package* pkg : install_packages)
 			msg += " " + pkg->getFullName();
 		LOGU(msg);
