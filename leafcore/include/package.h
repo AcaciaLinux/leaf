@@ -11,34 +11,6 @@ class Package;
 #include <unordered_map>
 #include <ostream>
 #include <istream>
-
-namespace EC{
-	namespace Package{
-		enum ec{
-			//general
-			NODB,
-			NOROOT,
-			NOCONFDIR,
-			CREATEFILE,
-			CREATEDIR,
-			REMOVEFILE,
-			REMOVEDIR,
-			FS_ERROR,
-
-			//deploy()
-			DEPLOY_OPENINSTALLEDFILE,
-			DEPLOY_RUNPREINSTALL,
-			DEPLOY_RUNPOSTINSTALL,
-
-			//copyToRoot()
-			COPYTOROOT_NOPACKAGE,
-			COPYTOROOT_EXISTING_FILE,
-
-			NONE
-		};
-	}
-}
-
 class Package{
 
 public:
