@@ -8,3 +8,6 @@ leafcore/libarchive
 
 CMakeLists.txt.user
 packages.list
+.vscode/configurationCache.log
+.vscode/targets.log
+.vscode/dryrun.log
