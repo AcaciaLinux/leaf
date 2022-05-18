@@ -1,6 +1,8 @@
 [submodule "Log"]
 	path = Log
 	url = https://github.com/maxkofler/Log
+	shallow = true
 [submodule "args"]
 	path = args
 	url = https://github.com/Taywee/args
+	shallow = true
