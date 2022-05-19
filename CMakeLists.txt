@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 option(LEAF_STATIC "Build a static version of leaf" OFF)
-option(EXPLICIT_STD_FS "Force the compiler to use stdc++fs" OFF)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
@@ -24,7 +23,7 @@ else()
 	set(LEAF_ADDITIONAL_LIBRARIES -lcurl -larchive ${LibArchive_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
-if (${CMAKE_CXX_COMPILER_ID} EQUAL "GNU")
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
 	message("Forcing the GNU compiler to link against stdc++fs")
 	set(LEAF_ADDITIONAL_LIBRARIES ${LEAF_ADDITIONAL_LIBRARIES} stdc++fs)
 endif()
