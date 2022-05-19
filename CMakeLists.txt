@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
+message("Compiler used: " ${CMAKE_CXX_COMPILER_ID})
+
 set(LEAF_ADDITIONAL_LIBRARIES "")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,8 +24,8 @@ else()
 	set(LEAF_ADDITIONAL_LIBRARIES -lcurl -larchive ${LibArchive_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
-if (EXPLICIT_STD_FS)
-	message("Forcing the compiler to link against stdc++fs")
+if (${CMAKE_CXX_COMPILER_ID} EQUAL "GNU")
+	message("Forcing the GNU compiler to link against stdc++fs")
 	set(LEAF_ADDITIONAL_LIBRARIES ${LEAF_ADDITIONAL_LIBRARIES} stdc++fs)
 endif()
 
