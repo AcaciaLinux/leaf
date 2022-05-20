@@ -90,5 +90,5 @@ endif()
 target_link_libraries(leafcore log ${LEAFCORE_LIBRARIES})
 target_compile_features(leafcore PRIVATE cxx_std_17)
 
-install(TARGETS leafcore DESTINATION lib)
+install(TARGETS leafcore DESTINATION /usr/lib)
 install(DIRECTORY include/ DESTINATION include/leafcore)
