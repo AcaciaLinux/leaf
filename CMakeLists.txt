@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 project(leaf)
 
+message("Compiler used: " ${CMAKE_CXX_COMPILER_ID})
+
+set(LEAF_ADDITIONAL_LIBRARIES "")
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
 option(LEAF_STATIC "Build a static version of leaf" OFF)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -10,18 +17,20 @@ endif()
 
 if (LEAF_STATIC)
 	set(BUILD_SHARED_LIBS OFF)
-	set(LEAF_ADDITIONAL_LIBRARIES "")
 else()
 	find_package(LibArchive REQUIRED)
 	find_package(CURL REQUIRED)
 	set(LEAF_ADDITIONAL_LIBRARIES -lcurl -larchive ${LibArchive_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
+	message("Forcing the GNU compiler to link against stdc++fs")
+	set(LEAF_ADDITIONAL_LIBRARIES ${LEAF_ADDITIONAL_LIBRARIES} stdc++fs)
+endif()
+
 include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
-
-set(CMAKE_CXX_STANDARD 17)
 
 if (CMAKE_BUILD_TYPE)
 	if (CMAKE_BUILD_TYPE MATCHES Debug)

@@ -14,8 +14,6 @@
 #include "pkglistparser.h"
 #include "leafcore.h"
 
-Log::Log* hlog;
-
 #include <deque>
 
 int main(int argc, char** argv){

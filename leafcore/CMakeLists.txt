@@ -80,9 +80,15 @@ if (LEAF_STATIC)
 	set(BUILD_SHARED_LIBS OFF)
 endif()
 
-add_library(leafcore STATIC ${HEADERS} ${CXXSOURCES})
-target_link_libraries(leafcore ${LEAFCORE_LIBRARIES})
 if (LEAF_STATIC)
+	add_library(leafcore STATIC ${HEADERS} ${CXXSOURCES})	
 	target_link_options(leafcore PRIVATE -static)
+else()
+	add_library(leafcore SHARED ${HEADERS} ${CXXSOURCES})
 endif()
+
+target_link_libraries(leafcore log ${LEAFCORE_LIBRARIES})
 target_compile_features(leafcore PRIVATE cxx_std_17)
+
+install(TARGETS leafcore DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include/leafcore)
