@@ -22,6 +22,8 @@ void Downloader::download(std::string url, std::ostream& out){
 
 	LEAF_DEBUG_EX("Downloader::download()");
 
+	LOGI("Downloading from \"" + url + "\"...");
+
 	CURLcode res;
 
 	if (!_curl)
