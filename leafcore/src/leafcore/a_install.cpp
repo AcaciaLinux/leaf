@@ -112,11 +112,14 @@ void Leafcore::a_install(std::deque<std::string> packages){
 				break;
 
 			//If the redownload of all packages and dependencies is wanted
-			case CONFIG_REDOWNLOAD_ALL:
+			case CONFIG_REDOWNLOAD_ALL:{
 				LOGU("Removing download cache of all packages and dependencies...");
-				for (Package* p : install_packages)
-					p->removeDownloadCache();
+
+				for (Package* package : install_packages)
+					package->removeDownloadCache();
+				
 				break;
+			}
 
 			//Skip if there is nothing to remove
 			default:
