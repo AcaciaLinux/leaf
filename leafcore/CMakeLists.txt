@@ -59,8 +59,8 @@ if (LEAF_STATIC)
 
 	set(LEAFCORE_LIBRARIES libcurl archive_static)
 else()
-	find_package(LibArchive REQUIRED)
-	find_package(CURL REQUIRED)
+	find_package(LibArchive)
+	find_package(CURL)
 
 	include_directories(${LibArchive_INCLUDE_DIRS})
 	include_directories(${CURL_INCLUDES})
