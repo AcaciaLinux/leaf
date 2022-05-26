@@ -23,9 +23,12 @@ void removeFile(std::string path, bool errorOnNotExisting){
 	if (ec)
 		throw new LeafError(Error::FS_ERROR, path, ec);
 
-	bool isLink = fs::is_symlink(path, ec);
-	if (ec)
-		throw new LeafError(Error::FS_ERROR, path, ec);
+	bool isLink = false;
+	if (exists){
+		isLink = fs::is_symlink(path, ec);
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, path, ec);
+	}
 
 	if (isLink)
 		LOGF("File to remove " + path + " is a symlink");
