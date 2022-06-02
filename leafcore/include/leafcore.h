@@ -7,6 +7,7 @@ class Leafcore;
 #include <list>
 
 #include "leafdb.h"
+#include "configparser.h"
 
 /**
  * @brief	The core leaf interface
@@ -89,6 +90,9 @@ private:
 
 	//The database of the installed packages
 	LeafDB*						_installedDB;
+
+	//The config parser for the main leaf configuration
+	ConfigParser				_configParser;
 };
 
 #endif
