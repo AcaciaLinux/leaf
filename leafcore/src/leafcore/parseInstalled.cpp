@@ -30,7 +30,7 @@ void Leafcore::parseInstalled(){
 	createConfigDirs();
 
 	{	//Read the directory
-		LeafFS installedDirFS(lConfig.installedDir());
+		LeafFS installedDirFS(_config.installedDir());
 	
 		installedDirFS.check();
 
@@ -51,7 +51,7 @@ void Leafcore::parseInstalled(){
 		Package* newPack = _installedDB->newPackage(file, "");
 
 		std::ifstream inFile;
-		inFile.open(lConfig.installedDir() + file, std::ios::in);
+		inFile.open(_config.installedDir() + file, std::ios::in);
 
 		if (!inFile.is_open()){
 			inFile.close();

@@ -19,7 +19,7 @@ void Leafcore::a_update(){
 
 	checkDirectories();
 
-	std::string pkgListFilePath = lConfig.pkgListPath();
+	std::string pkgListFilePath = _config.pkgListPath();
 	LOGI("Fetching package list from " + _pkglistURL + " to " + pkgListFilePath);
 	//Create the output file stream and check it
 	std::ofstream file;

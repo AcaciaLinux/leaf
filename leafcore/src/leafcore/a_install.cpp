@@ -94,7 +94,7 @@ void Leafcore::a_install(std::deque<std::string> packages){
 	{	//Check for the redownload config and delete cached downloads if neccesary
 
 		LOGI("Checking for redownloads...");
-		switch(lConfig.redownload){
+		switch(_config.redownload){
 			//If the redownload of the specified files is wanted
 			case CONFIG_REDOWNLOAD_SPECIFIED:
 				LOGU("Removing download cache of specified packages...");

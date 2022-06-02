@@ -93,6 +93,6 @@ typedef struct leafconfig_struct{
 
 } leaf_config_t;
 
-extern leaf_config_t lConfig;
+//extern leaf_config_t lConfig;
 
 #endif

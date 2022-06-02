@@ -15,7 +15,7 @@
 
 void Leafcore::parsePackageList(){
 	FUN();
-	parsePackageList(lConfig.pkgListPath());
+	parsePackageList(_config.pkgListPath());
 }
 
 void Leafcore::parsePackageList(std::string path){

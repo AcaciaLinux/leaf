@@ -8,6 +8,7 @@ class Leafcore;
 
 #include "leafdb.h"
 #include "configparser.h"
+#include "leafconfig.h"
 
 /**
  * @brief	The core leaf interface
@@ -93,6 +94,9 @@ private:
 
 	//The config parser for the main leaf configuration
 	ConfigParser				_configParser;
+
+	//The current leaf config to use
+	leaf_config_t				_config;
 };
 
 #endif
