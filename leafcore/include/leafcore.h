@@ -78,6 +78,12 @@ public:
 	void						setPkgListURL(std::string);
 	std::string					getPkgListURL();
 
+	/**
+	 * @brief	Get a reference to the current leaf config
+	 * @return	leaf_config_t
+	 */
+	leaf_config_t&				getConfig();
+
 private:
 
 	//Where the currently loaded package list file is

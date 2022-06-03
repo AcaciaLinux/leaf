@@ -7,6 +7,7 @@
 
 #include "package.h"
 #include "leafconfig.h"
+#include "error.h"
 
 std::deque<std::string>& Package::getProvidedFiles(){
 	return _provided_files;
@@ -73,15 +74,27 @@ bool Package::isCollection(){
 }
 
 std::string Package::getDownloadPath(){
-	return lConfig.cacheDir() + "downloads/" + getFullName() + ".leafpkg";
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
+	
+	return _db->getCore()->getConfig().cacheDir() + "downloads/" + getFullName() + ".leafpkg";
 }
 
 std::string Package::getExtractedDir(){
-	return lConfig.packagesDir() + getFullName() + "/";
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
+	
+	return _db->getCore()->getConfig().packagesDir() + getFullName() + "/";
 }
 
 std::string Package::getInstalledFilePath(){
-	return lConfig.installedDir() + getName() + ".leafinstalled";
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
+	
+	return _db->getCore()->getConfig().installedDir() + getName() + ".leafinstalled";
 }
 
 std::string Package::toString(){

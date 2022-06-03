@@ -56,5 +56,5 @@ void Package::extract(){
 	
 	//Extract the archive
 	LOGD("Extracting archive " + downloadPath + " into " + extractedDir + "...");
-	archive.extract(lConfig.packagesDir());
+	archive.extract(_db->getCore()->getConfig().packagesDir());
 }

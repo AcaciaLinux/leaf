@@ -18,15 +18,18 @@ void Package::copyToRoot(bool forceOverwrite){
 	FUN();
 	LEAF_DEBUG_EX("Package::copyToRoot()");
 
-	if (lConfig.forceOverwrite)
-		forceOverwrite = true;
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
 
-	LOGI("Copying package " + getFullName() + " to root " + lConfig.rootDir);
+	std::string rootDir = _db->getCore()->getConfig().rootDir;
+
+	LOGI("Copying package " + getFullName() + " to root " + rootDir);
 
 	namespace fs = std::filesystem;
 
-	if (!fs::exists(lConfig.rootDir))
-		throw new LeafError(Error::NOROOT, lConfig.rootDir);
+	if (!fs::exists(rootDir))
+		throw new LeafError(Error::NOROOT, rootDir);
 
 	if (!fs::exists(getExtractedDir()))
 		throw new LeafError(Error::PKG_NOTEXTRACTED, getFullName());
@@ -39,11 +42,11 @@ void Package::copyToRoot(bool forceOverwrite){
 		for (std::string file : _provided_files){
 			
 			//Directories can be overwritten
-			if (!std::filesystem::is_directory(lConfig.rootDir + file)){
+			if (!std::filesystem::is_directory(rootDir + file)){
 
 				//If the file exists, error out
-				if (std::filesystem::exists(lConfig.rootDir + file))
-					throw new LeafError(Error::PACKAGE_FILE_EXISTS, lConfig.rootDir + file);
+				if (std::filesystem::exists(rootDir + file))
+					throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
 			}
 		}
 	}
@@ -54,7 +57,7 @@ void Package::copyToRoot(bool forceOverwrite){
 	fs::copy_options options = fs::copy_options::copy_symlinks;
 
 	std::string dataDir = getExtractedDir() + "data/";
-	std::string destDir = lConfig.rootDir;
+	std::string destDir = rootDir;
 
 	LOGI("Creating destination directories...");
 

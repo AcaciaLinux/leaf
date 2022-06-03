@@ -29,7 +29,7 @@ void Package::deploy(){
 
 	_db->getCore()->createConfigDirs();
 
-	bool overwrite = false;
+	bool overwrite = _db->getCore()->getConfig().forceOverwrite;
 	if (std::filesystem::exists(getInstalledFilePath())){
 		LOGI("Leafinstalled file for package " + getName() + " exists, reinstalling...");
 		overwrite = true;

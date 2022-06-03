@@ -14,3 +14,7 @@ void Leafcore::setPkgListURL(std::string url){
 std::string Leafcore::getPkgListURL(){
 	return _pkglistURL;
 }
+
+leaf_config_t& Leafcore::getConfig(){
+	return _config;
+}
