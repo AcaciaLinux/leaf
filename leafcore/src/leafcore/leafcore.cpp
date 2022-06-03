@@ -23,6 +23,7 @@ Leafcore::Leafcore(){
 	if (configFile.is_open()){
 		_configParser.parse(configFile);
 
+		_config.setRootDir(_config.rootDir + _configParser.get("root", ""));
 		_pkglistURL = _configParser.get("pkglist", "http://84.252.121.236/packages/leaf.pkglist");
 	} else {
 		LOGUW("Leafcore: No config file found, using command line config");
