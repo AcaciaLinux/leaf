@@ -5,10 +5,10 @@
 #include "leafconfig.h"
 
 TEST(Package, noURL){
-	lConfig.rootDir = "./root/";
-	lConfig.noAsk = true;
-
 	LeafDB db(new Leafcore);
+
+	db.getCore()->getConfig().rootDir = "./root/";
+	db.getCore()->getConfig().noAsk = true;
 
 	Package* newP = db.newPackage("Test", "1.0");
 

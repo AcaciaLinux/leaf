@@ -2,11 +2,11 @@
 
 TEST(Leafcore, askUserOK_debug){
 	FUN();
-	lConfig.noAsk = true;
 
 	LEAF_DEBUG_SET_FAIL("Leafcore::askUserOK()");
 	
 	Leafcore core;
+	core.getConfig().noAsk = true;
 	
 	if (core.askUserOK(""))
 		FAIL() << "Debug fail did not fail";
@@ -20,12 +20,12 @@ TEST(Leafcore, askUserOK_noAsk){
 	Leafcore core;
 
 	//First check without noAsk
-	lConfig.noAsk = false;
+	core.getConfig().noAsk = false;
 	if (core.askUserOK("") == true)
 		FAIL() << "askUserOK gave unwanted ok";
 
 	//Now check with noAsk set
-	lConfig.noAsk = true;
+	core.getConfig().noAsk = true;
 	if (core.askUserOK("") == false)
 		FAIL() << "askUserOK ignored leafconfig.noAsk";
 }
