@@ -51,12 +51,12 @@ bool Arguments::parse(int argc, char** argv){
 
 	if (args::get(f_noPreinstall)){
 		LOGUW("WARNING: Disabled preinstall scripts, installed packages may not work!");
-		lConfig.runPreinstall = false;
+		_config.runPreinstall = false;
 	}
 
 	if (args::get(f_noPostinstall)){
 		LOGUW("WARNING: Disabled postinstall scripts, installed packages may not work!");
-		lConfig.runPostinstall = false;
+		_config.runPostinstall = false;
 	}
 
 	if (f_rootPath){
@@ -72,7 +72,7 @@ bool Arguments::parse(int argc, char** argv){
 
 	if (args::get(f_forceOverwrite)){
 		LOGUW("WARNING: You use forceOverwrite, leaf will not check for file conflicts!");
-		lConfig.forceOverwrite = true;
+		_config.forceOverwrite = true;
 	}
 
 	if (args::get(f_verbose)){
@@ -81,9 +81,9 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (args::get(f_redownloadAll)){
-		lConfig.redownload = CONFIG_REDOWNLOAD_ALL;
+		_config.redownload = CONFIG_REDOWNLOAD_ALL;
 	} else if (args::get(f_redownload)){
-		lConfig.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
+		_config.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
 	}
 
 	if (!this->setAction(args::get(a_action))){
@@ -97,7 +97,7 @@ bool Arguments::parse(int argc, char** argv){
 	auto packages_res = args::get(a_packages);
 	for (auto i : packages_res){
 		LOGD(" -> " + i);
-		lConfig.packages.push_back(i);
+		_config.packages.push_back(i);
 	}
 
 	return true;

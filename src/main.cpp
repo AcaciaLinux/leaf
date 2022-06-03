@@ -27,6 +27,8 @@ int main(int argc, char** argv){
 		return -1;
 	}
 
+	leaf_config_t lConfig = arguments.getConfig();
+
 	try {
 		if (lConfig.action == ACTION_UPDATE){
 			Leafcore leaf;

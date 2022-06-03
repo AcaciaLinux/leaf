@@ -11,8 +11,6 @@
 
 #include <fstream>
 
-leaf_config_t lConfig;
-
 Leafcore::Leafcore(){
 	FUN();
 
@@ -20,7 +18,7 @@ Leafcore::Leafcore(){
 	_installedDB = new LeafDB(this);
 
 	std::ifstream configFile;
-	configFile.open(lConfig.rootDir + "etc/leaf/leaf.conf");
+	configFile.open(_config.rootDir + "etc/leaf/leaf.conf");
 
 	if (configFile.is_open()){
 		_configParser.parse(configFile);

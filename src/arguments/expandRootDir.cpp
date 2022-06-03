@@ -16,7 +16,7 @@ bool Arguments::expandRootDir(std::string root){
 	}
 
 	LOGD("Expanded absolute path of " + root + ": " + buf);
-	lConfig.setRootDir(buf);
+	_config.setRootDir(buf);
 
 	return true;
 }

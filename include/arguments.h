@@ -4,6 +4,8 @@
 #include <deque>
 #include <string>
 
+#include "leafcore/leafconfig.h"
+
 class Arguments{
 
 public:
@@ -15,6 +17,11 @@ public:
 	 * @return	Success, false should terminate the program
 	 */
 	bool						parse(int argc, char** argv);
+
+	/**
+	 * @brief	Returns the parsed config
+	 */
+	leaf_config_t				getConfig();
 
 private:
 
@@ -36,6 +43,10 @@ private:
 	 */
 	bool						expandRootDir(std::string root);
 
+	/**
+	 * @brief	The parsed config in by the command line arguments
+	 */
+	leaf_config_t				_config;
 };
 
 #endif
