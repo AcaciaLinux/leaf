@@ -42,6 +42,11 @@ if (BUILD_TESTS)
 	add_definitions(-DDEBUG)
 endif()
 
+if(BUILD_DOCS)
+	message("Building Doxygen documentation")
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
+endif()
+
 add_subdirectory(leafcore)
 
 add_subdirectory(Log)
