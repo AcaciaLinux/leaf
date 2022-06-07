@@ -4,8 +4,8 @@
 #include "leafconfig.h"
 
 #include <deque>
+#include <map>
 #include <string>
-#include <istream>
 
 enum hook_exec_time{
 	HOOK_EXEC_PRE,
@@ -20,13 +20,23 @@ public:
 
 	/**
 	 * @brief	Parses the hook description provided by the in stream
-	 * @param	in				The stream to parse
+	 * @param	inFile			The path to the file to get parsed
 	 */
-	void						parse(std::istream& in);
+	void						parse(std::string inFile);
 
 #ifndef FRIEND_HOOK
 private:
 #endif
+
+	/**
+	 * @brief	If the hook has been parsed and validated successfully
+	 */
+	bool						_valid = false;
+
+	/**
+	 * @brief	The path to the file that contains the description for this hook
+	 */
+	std::string					_filePath;
 
 	/**
 	 * @brief	A deque of the actions this hook should react to
@@ -52,6 +62,12 @@ private:
 	 * @brief	The command to get executed when the hook engages
 	 */
 	std::string					_exec;
+
+	/**
+	 * @brief	Applies the supplied map to the internal values
+	 * @param	entries			A reference to the entries to parse
+	 */
+	void						apply(std::map<std::string, std::string>& entries);
 };
 
 #endif

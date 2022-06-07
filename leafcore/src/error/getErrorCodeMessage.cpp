@@ -67,6 +67,9 @@ std::string errorCodes[] = {
 	//ConfigParser
 	"Config file parser: Bad stream",
 
+	//Hooks
+	"Hook: Could not find required value",
+
 	//Package list
 	"Package list not loaded",
 

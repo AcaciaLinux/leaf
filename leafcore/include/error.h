@@ -73,6 +73,9 @@ namespace Error{
 		//ConfigParser
 		CFGPRS_BAD_STREAM,
 
+		//Hooks
+		HOOK_REQUIRED_VALUE,
+
 		//Package list
 		PKGLIST_NOTLOADED,
 
