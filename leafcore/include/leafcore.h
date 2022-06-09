@@ -79,6 +79,12 @@ public:
 	std::string					getPkgListURL();
 
 	/**
+	 * @brief	Sets the config this Leafcore instance will use
+	 * @param	config			The config to apply
+	 */
+	void						setConfig(leaf_config_t config);
+
+	/**
 	 * @brief	Get a reference to the current leaf config
 	 * @return	leaf_config_t
 	 */

@@ -4,7 +4,7 @@
 #include <deque>
 #include <string>
 
-#include "leafcore/leafconfig.h"
+#include "leafconfig.h"
 
 class Arguments{
 

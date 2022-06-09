@@ -32,13 +32,15 @@ int main(int argc, char** argv){
 	try {
 		if (lConfig.action == ACTION_UPDATE){
 			Leafcore leaf;
+			leaf.setConfig(lConfig);
 
 			leaf.a_update();
 
 			return 0;
 		} else if (lConfig.action == ACTION_INSTALL) {
 			Leafcore leaf;
-			
+			leaf.setConfig(lConfig);
+
 			leaf.parsePackageList();
 
 			leaf.parseInstalled();
@@ -46,6 +48,7 @@ int main(int argc, char** argv){
 			leaf.a_install(lConfig.packages);
 		} else if (lConfig.action == ACTION_REMOVE){
 			Leafcore leaf;
+			leaf.setConfig(lConfig);
 
 			leaf.a_remove(lConfig.packages);
 		}
