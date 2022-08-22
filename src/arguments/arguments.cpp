@@ -16,6 +16,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::Flag f_forceOverwrite(parser, "force overwrite", "Force leaf to ignore file conflicts and write anyway", {"forceOverwrite"});
 	args::Flag f_noPreinstall(parser, "skip preinstall", "Do not execute the preinstall script", {"noPreinstall"});
 	args::Flag f_noPostinstall(parser, "skip postnstall", "Do not execute the postinstall script", {"noPostinstall"});
+	args::Flag f_noAsk(parser, "noAsk", "Do not ask questions and assume yes every time", {"noAsk"});
 	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
@@ -69,6 +70,9 @@ bool Arguments::parse(int argc, char** argv){
 		if (!expandRootDir(args::get(f_root)))
 			return false;
 	}
+
+	if (f_noAsk)
+		_config.noAsk = args::get(f_noAsk);
 
 	if (args::get(f_forceOverwrite)){
 		LOGUW("WARNING: You use forceOverwrite, leaf will not check for file conflicts!");

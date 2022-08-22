@@ -16,9 +16,21 @@
 
 #include <deque>
 
+#ifdef LOG_ENABLE_PROFILING
+#include <fstream>
+#endif
+
 int main(int argc, char** argv){
 	hlog = new Log::Log(Log::U);
 	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
+
+	#ifdef LOG_ENABLE_PROFILING
+	std::ofstream* profileStream = new std::ofstream();
+	profileStream->open("profile.json", std::ios::out);
+	hlog->setFeature(Log::FEATURE_PROFILE, true);
+	hlog->setProfileStream(profileStream);
+	#endif
+
 	FUN();
 
 	Arguments arguments;
@@ -59,4 +71,8 @@ int main(int argc, char** argv){
 	} catch (...){
 		LOGUE("Failed with unknown fatal exception");
 	}
+
+	#ifdef LOG_ENABLE_PROFILING
+	delete profileStream;
+	#endif
 }
