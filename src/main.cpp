@@ -68,6 +68,8 @@ int main(int argc, char** argv){
 				Leafcore leaf;
 				leaf.setConfig(lConfig);
 
+				leaf.parseInstalled();
+
 				leaf.a_installLocal(lConfig.packages);
 			}
 		} catch (LeafError* e){

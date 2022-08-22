@@ -34,7 +34,12 @@ void Package::extract(){
 	//Check the leaf directories
 	_db->getCore()->createCacheDirs();
 
-	std::string downloadPath = getDownloadPath();
+	std::string sourcePath;
+	if (_isLocal)
+		sourcePath = _localSourcePath;
+	else
+		sourcePath = getDownloadPath();
+	
 	std::string extractedDir = getExtractedDir();
 
 	std::error_code errCode;
@@ -51,10 +56,10 @@ void Package::extract(){
 	LeafArchive archive;
 
 	//Load the archive
-	LOGD("Loading archive " + downloadPath + "...");
-	archive.load(downloadPath);
+	LOGD("Loading archive " + sourcePath + "...");
+	archive.load(sourcePath);
 	
 	//Extract the archive
-	LOGD("Extracting archive " + downloadPath + " into " + extractedDir + "...");
+	LOGD("Extracting archive " + sourcePath + " into " + extractedDir + "...");
 	archive.extract(_db->getCore()->getConfig().packagesDir());
 }

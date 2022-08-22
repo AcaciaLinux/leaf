@@ -205,7 +205,10 @@ private:
 	std::string					_fetchURL;
 
 	bool						_isCollection = false;
+
+	//Information about local files
 	bool						_isLocal = false;
+	std::string					_localSourcePath;
 	
 	std::deque<std::string>		_provided_files;
 	std::deque<std::string>		_provided_directories;

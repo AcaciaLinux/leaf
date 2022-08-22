@@ -59,6 +59,7 @@ Package* Package::CreateFromLocal(std::string path){
 
 	Package* newPackage = new Package();
 	newPackage->_isLocal = true;
+	newPackage->_localSourcePath = path;
 
 	newPackage->_name = fileName.substr(0, delimiterPos);
 	newPackage->_versionString = fileName.substr(delimiterPos+1);
