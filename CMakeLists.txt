@@ -64,7 +64,7 @@ if (LEAF_STATIC)
 endif()
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
-target_link_libraries(${PNAME} PRIVATE log leafcore ${LEAF_ADDITIONAL_LIBRARIES})
+target_link_libraries(${PNAME} PRIVATE leafcore ${LEAF_ADDITIONAL_LIBRARIES})
 if (LEAF_STATIC)
 	target_link_options(${PNAME} PRIVATE -static)
 endif()

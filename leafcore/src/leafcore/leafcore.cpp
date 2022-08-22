@@ -11,8 +11,6 @@
 
 #include <fstream>
 
-Log::Log* hlog = nullptr;
-
 Leafcore::Leafcore(){
 	FUN();
 
