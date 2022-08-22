@@ -40,9 +40,15 @@ public:
 
 	/**
 	 * @brief	Installs the provided package with all of its dependencies
-	 * @param	packages		The packages to process
+	 * @param	packages		The packages to install
 	 */
 	void						a_install(std::deque<std::string> packages);
+
+	/**
+	 * @brief	Installs the provided local leaf packages
+	 * @param	packages		The packages to install
+	 */
+	void						a_installLocal(std::deque<std::string> packages);
 
 	/**
 	 * @brief	Removes the specified packages from the system

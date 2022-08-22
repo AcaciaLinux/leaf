@@ -13,6 +13,8 @@ bool Arguments::setAction(std::string a){
 		_config.action = ACTION_INSTALL;
 	else if (a == "remove")
 		_config.action = ACTION_REMOVE;
+	else if (a == "installLocal")
+		_config.action = ACTION_INSTALLLOCAL;
 	else
 		return false;
 

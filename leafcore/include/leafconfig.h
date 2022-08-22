@@ -22,7 +22,8 @@ enum leaf_action{
 	ACTION_NONE = 0,
 	ACTION_UPDATE = 1,
 	ACTION_INSTALL = 2,
-	ACTION_REMOVE = 3
+	ACTION_REMOVE = 3,
+	ACTION_INSTALLLOCAL = 4
 };
 
 typedef struct leafconfig_struct{
@@ -53,6 +54,9 @@ typedef struct leafconfig_struct{
 
 	//If leaf should run the postinstall scripts of the packages installed
 	bool						runPostinstall = true;
+
+	//If leaf should install dependencies or if it should ignore them and proceed installing the package anyway
+	bool						installDependencies = true;
 
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){

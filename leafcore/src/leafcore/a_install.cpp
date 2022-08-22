@@ -34,13 +34,19 @@ void Leafcore::a_install(std::deque<std::string> packages){
 	}
 
 	std::deque<Package*> install_packages;
-	LOGU("Resolving dependencies...");
+	
+	if (_config.installDependencies)
+		LOGU("Resolving dependencies...");
+	else
+		LOGU("Not installing package dependencies!");
+
 	for (std::string packageName : packages){
 		//This throws an error if the package was not found
 		Package* package = _packageListDB->getPackage(packageName, true);
 
 		//Resolve the dependencies of the package recursively
-		_packageListDB->resolveDependencies(&install_packages, package);
+		if (_config.installDependencies)
+			_packageListDB->resolveDependencies(&install_packages, package);
 	}
 
 	{	//Go through every package and see if it is already installed

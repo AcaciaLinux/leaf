@@ -15,6 +15,7 @@ class Package{
 
 public:
 	Package(std::string name, std::string version);
+	static Package* CreateFromLocal(std::string path);
 
 	/**
 	 * @brief	Adds the supplied file path to the supplied files by the package
@@ -192,6 +193,9 @@ public:
 private:
 #endif
 
+	//The default constructor hidden away from the user
+	Package();
+
 	LeafDB*						_db = nullptr;
 
 	std::string					_name;
@@ -201,6 +205,7 @@ private:
 	std::string					_fetchURL;
 
 	bool						_isCollection = false;
+	bool						_isLocal = false;
 	
 	std::deque<std::string>		_provided_files;
 	std::deque<std::string>		_provided_directories;

@@ -6,16 +6,64 @@
  */
 
 #include "log.h"
+#include "error.h"
 #include "package.h"
 
 #include <algorithm>
 #include <stdint.h>
+#include <filesystem>
+
+Package::Package(){
+	FUN();
+	LOGF("Created new unknown package");
+}
 
 Package::Package(std::string name, std::string version){
 	FUN();
 	_name = name;
 	_versionString = version;
 	LOGF("Created package \"" + getFullName() + "\"");
+}
+
+Package* Package::CreateFromLocal(std::string path){
+	FUN();
+	LOGF("Creating new local package from path \"" + path + "\"");
+
+	using namespace std;
+	std::filesystem::path fsPath(path);
+
+	//Check if the file even exists
+	{
+		std::error_code ec;
+		bool exists = std::filesystem::exists(path, ec);
+
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, "Checking if " + path + " exists: ", ec);
+		
+		if (!exists)
+			throw new LeafError(Error::PKG_NOTEXISTING, path);
+	}
+
+	//Check if the package name ends in .lfpkg
+	if (fsPath.extension() != ".lfpkg")
+		throw new LeafError(Error::PKG_NOTLFPKG, path);
+
+	//Create the name of the package
+	std::string fileName = fsPath.filename().string();
+	fileName = fileName.substr(0, fileName.find(".lfpkg"));
+
+	//Check if there is at least one '-' to separate the version
+	size_t delimiterPos = fileName.rfind('-');
+	if (delimiterPos == std::string::npos)
+		throw new LeafError(Error::PKG_NODELIMITER, path);
+
+	Package* newPackage = new Package();
+	newPackage->_isLocal = true;
+
+	newPackage->_name = fileName.substr(0, delimiterPos);
+	newPackage->_versionString = fileName.substr(delimiterPos+1);
+	
+	return newPackage;
 }
 
 void Package::addProvidedFile(std::string filepath){
