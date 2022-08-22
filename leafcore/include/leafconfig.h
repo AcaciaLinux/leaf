@@ -46,6 +46,9 @@ typedef struct leafconfig_struct{
 	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
 	bool						noAsk = false;
 
+	//If leaf should keep its package caches after a transaction
+	bool						noClean = false;
+
 	//If leaf should overwrite existing files at the root
 	bool						forceOverwrite = false;
 

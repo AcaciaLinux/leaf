@@ -156,8 +156,10 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		package->deploy();
 	}
 
-	LOGU("Cleaning up package caches...");
-	for (Package* package : install_packages){
-		package->clearCache();
+	if (!_config.noClean){
+		LOGU("Cleaning up package caches...");
+		for (Package* package : install_packages){
+			package->clearCache();
+		}
 	}
 }

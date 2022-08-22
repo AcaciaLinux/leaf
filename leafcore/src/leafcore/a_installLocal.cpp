@@ -11,6 +11,7 @@
 #include "leafcore.h"
 
 #include <filesystem>
+#include <fstream>
 
 //TODO: Tests
 
@@ -87,15 +88,32 @@ void Leafcore::a_installLocal(std::deque<std::string> packages){
 		package->extract();
 	}
 
+	//Apply the leaf.pkg file to every package
+	for (Package* package : install_packages){
+		std::ifstream pkgFile;
+		std::string pkgFilePath = package->getExtractedDir() + "/leaf.pkg";
+		LOGU("Applying leaf.pkg file for " + package->getFullName() + "...");
+
+		pkgFile.open(pkgFilePath, std::ios::in);
+		if (!pkgFile.is_open())
+			throw new LeafError(Error::OPENFILER, "leaf.pkg of " + package->getFullName() + " at " + pkgFilePath);
+
+		leafpkg_t lfpkg = LeafPkg::parse(pkgFile);
+		package->applyLeafPkg(lfpkg);
+		LOGU("New package: " + package->toString());
+	}
+
 	for (Package* package : install_packages){
 		LOGU("Deploying package " + package->getFullName() + "...");
 		
 		package->deploy();
 	}
 
-	LOGU("Cleaning up package caches...");
-	for (Package* package : install_packages){
-		package->clearCache();
-		delete package;
+	if (!_config.noClean){
+		LOGU("Cleaning up package caches...");
+		for (Package* package : install_packages){
+			package->clearCache();
+			delete package;
+		}
 	}
 }

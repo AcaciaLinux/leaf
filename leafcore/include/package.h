@@ -5,6 +5,7 @@ class Package;
 
 #include "file.h"
 #include "leafdb.h"
+#include "leafpkg.h"
 
 #include <string>
 #include <deque>
@@ -142,6 +143,12 @@ public:
 	std::string					getFetchURL();
 
 	/**
+	 * @brief	Applies the data supplied by a leaf.pkg file
+	 * @param	lfpkg			The struct to apply
+	 */
+	void						applyLeafPkg(leafpkg_t lfpkg);
+
+	/**
 	 * @brief	The database the package belongs to
 	 */
 	void						setDB(LeafDB* db);
@@ -200,6 +207,7 @@ private:
 
 	std::string					_name;
 	std::string					_versionString;
+	uint32_t					_realVersion;
 	std::string					_description;
 	std::deque<std::string>		_dependencies;
 	std::string					_fetchURL;
