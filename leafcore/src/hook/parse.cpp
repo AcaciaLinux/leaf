@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <map>
+#include <regex>
 
 void Hook::parse(std::string inFile){
 	FUN();
@@ -88,6 +89,8 @@ void Hook::parse(std::string inFile){
 		//Get the name and the value
 		name = line.substr(0, delimiterPos);
 		value = line.substr(delimiterPos+1);
+
+		value = std::regex_replace(value, std::regex("^ +| +$|( ) +"), "$1");
 
 		//Store them in the entries
 		entries[name] = value;

@@ -86,6 +86,11 @@ typedef struct leafconfig_struct{
 		return configDir() + "installed/";
 	}
 
+	//The directory where all the leaf hooks are stored
+	std::string					hooksDir(){
+		return configDir() + "hooks/";
+	}
+
 	//The path to the package list
 	std::string					pkgListPath(){
 		return configDir() + "leaf.pkglist";

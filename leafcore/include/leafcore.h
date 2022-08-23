@@ -5,10 +5,12 @@ class Leafcore;
 
 #include <string>
 #include <list>
+#include <deque>
 
 #include "leafdb.h"
 #include "configparser.h"
 #include "leafconfig.h"
+#include "hook.h"
 
 /**
  * @brief	The core leaf interface
@@ -32,6 +34,11 @@ public:
 	 * @brief	Parses all the installed packages into the leaf database
 	 */
 	void						parseInstalled();
+
+	/**
+	 * @brief	Finds and parses leaf hooks in the $ROOT/etc/leaf/hooks directory
+	 */
+	void						parseHooks();
 
 	/**
 	 * @brief	Updates the local package list
@@ -112,6 +119,9 @@ private:
 
 	//The config parser for the main leaf configuration
 	ConfigParser				_configParser;
+
+	//All the hooks leafcore has found
+	std::deque<Hook>			_hooks;
 
 	//The current leaf config to use
 	leaf_config_t				_config;

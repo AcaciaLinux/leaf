@@ -43,31 +43,23 @@ int main(int argc, char** argv){
 		leaf_config_t lConfig = arguments.getConfig();
 
 		try {
-			if (lConfig.action == ACTION_UPDATE){
-				Leafcore leaf;
-				leaf.setConfig(lConfig);
+			Leafcore leaf;
+			leaf.setConfig(lConfig);
+			leaf.parseHooks();
 
+			if (lConfig.action == ACTION_UPDATE){
 				leaf.a_update();
 
 				return 0;
 			} else if (lConfig.action == ACTION_INSTALL) {
-				Leafcore leaf;
-				leaf.setConfig(lConfig);
-
 				leaf.parsePackageList();
 
 				leaf.parseInstalled();
 
 				leaf.a_install(lConfig.packages);
 			} else if (lConfig.action == ACTION_REMOVE){
-				Leafcore leaf;
-				leaf.setConfig(lConfig);
-
 				leaf.a_remove(lConfig.packages);
 			} else if (lConfig.action == ACTION_INSTALLLOCAL){
-				Leafcore leaf;
-				leaf.setConfig(lConfig);
-
 				leaf.parseInstalled();
 
 				leaf.a_installLocal(lConfig.packages);
