@@ -13,6 +13,8 @@
 
 #include <algorithm>
 
+static leaf_action parseAction(std::string& str);
+
 void Hook::apply(std::map<std::string, std::string>& entries){
 	FUN();
 	LEAF_DEBUG_EX("Hook::apply()");
@@ -33,19 +35,48 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'exec' in " + _filePath);
 
 	{	//Parse the 'action' value
-		std::string action = entries["action"];
-		action.erase(std::remove_if(action.begin(), action.begin(), isspace), action.begin());
+		std::string actionString = entries["action"];
+		actionString.erase(std::remove_if(actionString.begin(), actionString.begin(), isspace), actionString.begin());
 
 		std::string buf;
-		for (char c : action){
+		for (char c : actionString){
 			if (c == ','){
-				#warning Implementation missing: parsing action
+
+				leaf_action action = parseAction(buf);
+				if (action != ACTION_NONE){
+					LOGF("[Hook][apply] Adding action " + std::to_string(action) + " to hook");
+					_actions.push_back(action);
+				}
+				
 				buf.clear();
 				continue;
 			}
 
 			buf += c;
 		}
-	}
 
+		leaf_action action = parseAction(buf);
+		if (action != ACTION_NONE){
+			LOGF("[Hook][apply] Adding action " + std::to_string(action) + " to hook");
+			_actions.push_back(action);
+		}
+	}
+}
+
+static leaf_action parseAction(std::string& buf){
+	FUN();
+
+	leaf_action action;
+	if (buf == "update")
+		action = ACTION_UPDATE;
+	else if (buf == "install")
+		action = ACTION_INSTALL;
+	else if (buf == "remove")
+		action = ACTION_REMOVE;
+	else if (buf == "installLocal")
+		action = ACTION_INSTALLLOCAL;
+	else
+		action = ACTION_NONE;
+
+	return action;
 }
