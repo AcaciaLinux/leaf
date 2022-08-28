@@ -44,7 +44,7 @@ void Leafcore::parseHooks(){
 		LOGD("Parsing hook at " + file + "...");
 		Hook hook;
 		hook.parse(file);
-		_hooks.push_back(std::move(hook));
+		_hooks.push_back(hook);
 	}
 
 }

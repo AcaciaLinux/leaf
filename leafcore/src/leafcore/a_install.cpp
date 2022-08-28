@@ -97,6 +97,14 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 	}
 
+	{//Execute pre-install hooks
+		LOGU("Running pre install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running pre install hook...");
+			hook.execPre(_config);
+		}
+	}
+
 	{	//Check for the redownload config and delete cached downloads if neccesary
 
 		LOGI("Checking for redownloads...");
@@ -154,6 +162,14 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		LOGU("Deploying package " + package->getFullName() + "...");
 		
 		package->deploy();
+	}
+
+	{//Execute post-install hooks
+		LOGU("Running post install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running post install hook...");
+			hook.execPost(_config);
+		}
 	}
 
 	if (!_config.noClean){

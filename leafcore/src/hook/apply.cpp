@@ -12,8 +12,11 @@
 #include "hook.h"
 
 #include <algorithm>
+#include <deque>
 
+static std::deque<std::string> splitBy(std::string& str, char separator);
 static leaf_action parseAction(std::string& str);
+static hook_exec_time parseExecTime(std::string& str);
 
 void Hook::apply(std::map<std::string, std::string>& entries){
 	FUN();
@@ -34,33 +37,46 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 	if (entries.count("exec") <= 0)
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'exec' in " + _filePath);
 
-	{	//Parse the 'action' value
-		std::string actionString = entries["action"];
-		actionString.erase(std::remove_if(actionString.begin(), actionString.begin(), isspace), actionString.begin());
+	{//Parse all the actions
+		std::deque<std::string> actions = splitBy(entries["action"], ',');
 
-		std::string buf;
-		for (char c : actionString){
-			if (c == ','){
-
-				leaf_action action = parseAction(buf);
-				if (action != ACTION_NONE){
-					LOGF("[Hook][apply] Adding action " + std::to_string(action) + " to hook");
-					_actions.push_back(action);
-				}
-				
-				buf.clear();
-				continue;
-			}
-
-			buf += c;
-		}
-
-		leaf_action action = parseAction(buf);
-		if (action != ACTION_NONE){
+		for (std::string actionString : actions){
+			leaf_action action = parseAction(actionString);
 			LOGF("[Hook][apply] Adding action " + std::to_string(action) + " to hook");
 			_actions.push_back(action);
 		}
 	}
+
+	{//Parse all the packages
+		auto packages = splitBy(entries["packages"], ',');
+
+		for (std::string packageString : packages){
+			LOGF("[Hook][apply] Adding package " + packageString + " to hook");
+			_packages.push_back(packageString);
+		}
+	}
+
+	_execTime = parseExecTime(entries["when"]);
+	#warning Rundependencies
+	_exec = entries["exec"];
+}
+
+static std::deque<std::string> splitBy(std::string& str, char separator){
+	FUN();
+
+	std::deque<std::string> res;
+
+	std::string buf;
+	for (char c : str){
+		if (c == separator){
+			res.push_back(std::string(buf));
+			buf.clear();
+		} else
+			buf += c;
+	}
+	res.push_back(std::string(buf));
+
+	return res;
 }
 
 static leaf_action parseAction(std::string& buf){
@@ -79,4 +95,17 @@ static leaf_action parseAction(std::string& buf){
 		action = ACTION_NONE;
 
 	return action;
+}
+
+static hook_exec_time parseExecTime(std::string& str){
+	FUN();
+
+	hook_exec_time time = HOOK_EXEC_NEVER;
+
+	if (str == "pre")
+		time = HOOK_EXEC_PRE;
+	else if (str == "post")
+		time = HOOK_EXEC_POST;
+
+	return time;
 }
