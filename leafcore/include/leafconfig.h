@@ -22,7 +22,8 @@ enum leaf_action{
 	ACTION_NONE = 0,
 	ACTION_UPDATE = 1,
 	ACTION_INSTALL = 2,
-	ACTION_REMOVE = 3
+	ACTION_REMOVE = 3,
+	ACTION_INSTALLLOCAL = 4
 };
 
 typedef struct leafconfig_struct{
@@ -45,6 +46,9 @@ typedef struct leafconfig_struct{
 	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
 	bool						noAsk = false;
 
+	//If leaf should keep its package caches after a transaction
+	bool						noClean = false;
+
 	//If leaf should overwrite existing files at the root
 	bool						forceOverwrite = false;
 
@@ -53,6 +57,9 @@ typedef struct leafconfig_struct{
 
 	//If leaf should run the postinstall scripts of the packages installed
 	bool						runPostinstall = true;
+
+	//If leaf should install dependencies or if it should ignore them and proceed installing the package anyway
+	bool						installDependencies = true;
 
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
@@ -77,6 +84,11 @@ typedef struct leafconfig_struct{
 	//The directory leaf stores the installed packages information
 	std::string					installedDir(){
 		return configDir() + "installed/";
+	}
+
+	//The directory where all the leaf hooks are stored
+	std::string					hooksDir(){
+		return configDir() + "hooks/";
 	}
 
 	//The path to the package list

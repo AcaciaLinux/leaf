@@ -9,7 +9,8 @@
 
 enum hook_exec_time{
 	HOOK_EXEC_PRE,
-	HOOK_EXEC_POST
+	HOOK_EXEC_POST,
+	HOOK_EXEC_NEVER
 };
 
 class Hook{
@@ -23,6 +24,44 @@ public:
 	 * @param	inFile			The path to the file to get parsed
 	 */
 	void						parse(std::string inFile);
+
+	/**
+	 * @brief	Checks if this hook should engage on the provided action
+	 * @param	action			The action to check
+	 */
+	bool						checkAction(leaf_action& action);
+
+	/**
+	 * @brief	Check if this hook should engage on the provided package name
+	 * @param	package			The package name to check
+	 */
+	bool						checkPackage(std::string& package);
+
+	/**
+	 * @brief	Returns if the hook should engage, excluding if it should launch pre or post
+	 * @param	config			The leaf config to check packages, actions...
+	 */
+	bool						shouldEngage(leaf_config_t& config);
+
+	/**
+	 * @brief	Executes the hook executable
+	 * @return	int				The result code of the command
+	 */
+	int							exec();
+
+	/**
+	 * @brief	Checks if this hook should engage at the "pre" step and executes if so
+	 * @param	config			The leaf config to check packages, actions...
+	 * @return	int				The result code of the command, 0 if not executed
+	 */
+	int							execPre(leaf_config_t& config);
+
+	/**
+	 * @brief	Checks if this hook should engage at the "post" step and executes if so
+	 * @param	config			The leaf config to check packages, actions...
+	 * @return	int				The result code of the command, 0 if not executed
+	 */
+	int							execPost(leaf_config_t& config);
 
 #ifndef FRIEND_HOOK
 private:

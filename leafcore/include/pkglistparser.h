@@ -25,17 +25,17 @@ public:
 	 */
 	void						applyToDB(LeafDB& db);
 
+	/**
+	 * @brief	Parses the dependency string of a package list entry
+	 * @return	A vector containing the names
+	 */
+	static std::deque<std::string>		parseDependenciesString(std::string);
+
 #ifndef FRIEND_PKGLISTPARSER
 private:
 #endif
 
 	std::deque<Package*>		_packages;
-
-	/**
-	 * @brief	Parses the dependency string of a package list entry
-	 * @return	A vector containing the names
-	 */
-	std::deque<std::string>		parseDependenciesString(std::string);
 };
 
 #endif

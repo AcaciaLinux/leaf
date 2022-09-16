@@ -99,7 +99,7 @@ std::string Package::getInstalledFilePath(){
 
 std::string Package::toString(){
 	std::string buf = "Package ";
-	buf += _name + " (" + _description + ")";
+	buf += _name + _versionString + " (" + std::to_string(_realVersion) + ") " + "(" + _description + ")";
 	for (std::string dep : _dependencies)
 		buf += " [" + dep + "]";
 	buf += " " + _fetchURL;

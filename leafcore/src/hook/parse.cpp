@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <map>
+#include <regex>
 
 void Hook::parse(std::string inFile){
 	FUN();
@@ -29,17 +30,17 @@ void Hook::parse(std::string inFile){
 		bool exists = std::filesystem::exists(inFile, ec);
 
 		if (ec)
-			throw new LeafError(Error::FS_ERROR, "HookParser: Checking for existance of \"" + inFile + "\"");
+			throw new LeafError(Error::FS_ERROR, "[Hook][parse] Checking for existance of \"" + inFile + "\"");
 		
 		if (!exists)
-			throw new LeafError(Error::OPENFILER, "HookParser: \"" + inFile + "\" does not exist");
+			throw new LeafError(Error::OPENFILER, "[Hook][parse] \"" + inFile + "\" does not exist");
 	}
 
 	std::ifstream in;
 	in.open(inFile, std::ios::in);
 
 	if (!in.is_open())
-		throw new LeafError(Error::OPENFILER, "HookParser: Could not open file \"" + inFile + "\"");
+		throw new LeafError(Error::OPENFILER, "[Hook][parse] Could not open file \"" + inFile + "\"");
 
 	std::string line, name, value;
 	size_t delimiterPos = 0;
@@ -53,7 +54,7 @@ void Hook::parse(std::string inFile){
 
 		//If the delimiter was not found
 		if(delimiterPos == line.npos){
-			LOGF("HookParser: Ignoring line without delimiter \"" + line + "\"");
+			LOGF("[Hook][parse] Ignoring line without delimiter \"" + line + "\"");
 			continue;
 		}
 
@@ -65,7 +66,7 @@ void Hook::parse(std::string inFile){
 
 		//Ignore commented lines
 		if (line[0] == '#'){
-			LOGF("HookParser: Ignoring commented line \"" + line + "\"");
+			LOGF("[Hook][parse] Ignoring commented line \"" + line + "\"");
 			continue;
 		}
 
@@ -75,13 +76,13 @@ void Hook::parse(std::string inFile){
 
 		//If no name was specified for the value
 		if(delimiterPos == 0){
-			LOGE("HookParser: Entry value without name not allowed in line \"" + line + "\"");
+			LOGE("[Hook][parse] Entry value without name not allowed in line \"" + line + "\"");
 			continue;
 		}
 
 		//If no value was specified for a name
 		if (delimiterPos == line.length()-1){
-			LOGE("HookParser: Entry name without value not allowed in line \"" + line + "\"");
+			LOGE("[Hook][parse] Entry name without value not allowed in line \"" + line + "\"");
 			continue;
 		}
 
@@ -89,11 +90,14 @@ void Hook::parse(std::string inFile){
 		name = line.substr(0, delimiterPos);
 		value = line.substr(delimiterPos+1);
 
+		//Remove leading and trailing whitespaces
+		value = std::regex_replace(value, std::regex("^ +| +$|( ) +"), "$1");
+
 		//Store them in the entries
 		entries[name] = value;
 
 		//Log the result
-		LOGF("HookParser: Added entry \"" + name + "\" -> \"" + entries[name] + "\"");
+		LOGF("[Hook][parse] Added entry \"" + name + "\" -> \"" + entries[name] + "\"");
 	}
 
 	apply(entries);

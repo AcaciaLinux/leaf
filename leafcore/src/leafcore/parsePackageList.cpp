@@ -39,7 +39,7 @@ void Leafcore::parsePackageList(std::string path){
 	//Try opening package list file
 	if (!file.is_open()){
 		file.close();
-		throw new LeafError(Error::OPENFILEW, "Package list, try \"leaf update\" to fix this");		
+		throw new LeafError(Error::OPENFILER, "Package list, try \"leaf update\" to fix this");		
 	}
 
 	PackageListParser parser;

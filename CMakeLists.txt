@@ -47,6 +47,8 @@ if(BUILD_DOCS)
 	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
 endif()
 
+set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
+
 add_subdirectory(leafcore)
 
 add_subdirectory(Log)

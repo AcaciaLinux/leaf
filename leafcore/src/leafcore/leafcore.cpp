@@ -30,3 +30,10 @@ Leafcore::Leafcore(){
 	}
 
 }
+
+Leafcore::~Leafcore(){
+	FUN();
+
+	delete _packageListDB;
+	delete _installedDB;
+}
