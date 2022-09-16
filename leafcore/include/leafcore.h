@@ -24,6 +24,11 @@ public:
 	Leafcore();
 
 	/**
+	 * @brief	The destructor for the leafcore
+	 */
+	~Leafcore();
+
+	/**
 	 * @brief	Reads the package list at the supplied path
 	 * @param	path			The full path to the package list
 	 */
