@@ -20,7 +20,7 @@ void Leafcore::a_update(){
 	checkDirectories();
 
 	std::string pkgListFilePath = _config.pkgListPath();
-	LOGI("Fetching package list from " + _pkglistURL + " to " + pkgListFilePath);
+	LOGI("Fetching package list from " + _config.pkgListURL + " to " + pkgListFilePath);
 	//Create the output file stream and check it
 	std::ofstream file;
 	file.open(pkgListFilePath, std::ios::trunc);
@@ -33,7 +33,7 @@ void Leafcore::a_update(){
 	//Create the downloader instance and download the file
 	Downloader dl;
 	dl.init();
-	dl.download(_pkglistURL, file);
+	dl.download(_config.pkgListURL, file);
 	
 	file.close();
 }

@@ -31,6 +31,9 @@ typedef struct leafconfig_struct{
 	//The root directory leaf should work on (normally "/")
 	std::string					rootDir = "/";
 
+	//The URL for fetching the main package list
+	std::string					pkgListURL = "acacia.maxkofler.eu:8080?get=packagelist";
+
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
 
