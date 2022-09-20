@@ -8,7 +8,7 @@ class Leafcore;
 #include <deque>
 
 #include "leafdb.h"
-#include "configparser.h"
+#include "parser.h"
 #include "leafconfig.h"
 #include "hook.h"
 
@@ -27,6 +27,11 @@ public:
 	 * @brief	The destructor for the leafcore
 	 */
 	~Leafcore();
+
+	/**
+	 * @brief	Parses the leaf config from the predetermined path
+	 */
+	void						parseConfig();
 
 	/**
 	 * @brief	Reads the package list at the supplied path
@@ -114,7 +119,7 @@ private:
 	LeafDB*						_installedDB;
 
 	//The config parser for the main leaf configuration
-	ConfigParser				_configParser;
+	Parser						_configParser;
 
 	//All the hooks leafcore has found
 	std::deque<Hook>			_hooks;

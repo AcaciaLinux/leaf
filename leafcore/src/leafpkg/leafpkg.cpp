@@ -8,7 +8,7 @@
 #include "log.h"
 #include "leafdebug.h"
 #include "leafpkg.h"
-#include "configparser.h"
+#include "parser.h"
 #include "pkglistparser.h"
 
 namespace LeafPkg{
@@ -18,7 +18,7 @@ namespace LeafPkg{
 
 		leafpkg_t lfpkg;
 
-		ConfigParser parser;
+		Parser parser;
 		parser.parse(inStream);
 
 		lfpkg.name = parser.get("name", "");

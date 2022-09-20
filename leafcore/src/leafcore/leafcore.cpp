@@ -17,18 +17,7 @@ Leafcore::Leafcore(){
 	_packageListDB = new LeafDB(this);
 	_installedDB = new LeafDB(this);
 
-	std::ifstream configFile;
-	configFile.open(_config.rootDir + "etc/leaf/leaf.conf");
-
-	if (configFile.is_open()){
-		_configParser.parse(configFile);
-
-		_config.setRootDir(_config.rootDir + "/" + _configParser.get("root", ""));
-		_config.pkgListURL = _configParser.get("pkglist", _config.pkgListURL);
-	} else {
-		LOGUW("Leafcore: No config file found, using command line config");
-	}
-
+	parseConfig();
 }
 
 Leafcore::~Leafcore(){
