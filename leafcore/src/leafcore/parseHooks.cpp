@@ -21,6 +21,10 @@ void Leafcore::parseHooks(){
 
 	_hooks.clear();
 
+	//Check and create the hooks directory if not existing
+	createConfigDirs();
+
+	//Load the hooks directory and index it
 	std::string hooksDir = _config.hooksDir();
 	LeafFS fs(hooksDir);
 	fs.read(true);

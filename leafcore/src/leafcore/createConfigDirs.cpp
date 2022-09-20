@@ -46,4 +46,33 @@ void Leafcore::createConfigDirs(){
 				throw new LeafError(Error::NOTDIR, eMsg, ec);
 		}
 	}
+
+	{//Check the hooks directory
+		std::error_code ec;
+		std::string eMsg = "Hooks directory " + _config.installedDir();
+
+		//Check if the directory exists
+		bool exists = std::filesystem::exists(_config.hooksDir(), ec);
+
+		if (ec)
+			throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+		//Check if the filesystem entry exists
+		if (!exists){
+			std::filesystem::create_directories(_config.hooksDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::CREATEDIR, eMsg, ec);
+		}
+		else	//Else check if the filesystem entry is a directory
+		{
+			bool isDirectory = std::filesystem::is_directory(_config.hooksDir(), ec);
+
+			if (ec)
+				throw new LeafError(Error::FS_ERROR, eMsg, ec);
+
+			if (!isDirectory)
+				throw new LeafError(Error::NOTDIR, eMsg, ec);
+		}
+	}
 }
