@@ -5,18 +5,11 @@
 #include <map>
 #include <istream>
 
-class ConfigParser{
+#include "parser.h"
+
+class ConfigParser : public Parser{
 
 public:
-	ConfigParser();
-	~ConfigParser();
-
-	/**
-	 * @brief	Parses the config provided by the stream
-	 * @param	in				The stream to parse the config from
-	 */
-	void						parse(std::istream& in);
-
 	/**
 	 * @brief	Returns the found config if specifies, else the default
 	 * @param	name			The name for the value in the config file

@@ -23,9 +23,8 @@ Leafcore::Leafcore(){
 	if (configFile.is_open()){
 		_configParser.parse(configFile);
 
-		_config.setRootDir(_config.rootDir + _configParser.get("root", ""));
-		#warning What is this doing???
-		//_pkglistURL = _configParser.get("pkglist", _config.pkgListURL);
+		_config.setRootDir(_config.rootDir + "/" + _configParser.get("root", ""));
+		_config.pkgListURL = _configParser.get("pkglist", _config.pkgListURL);
 	} else {
 		LOGUW("Leafcore: No config file found, using command line config");
 	}
