@@ -91,12 +91,6 @@ public:
 	bool						askUserOK(std::string question, bool defaultOption = true);
 
 	/**
-	 * @brief	The URL to fetch the package list from (has default)
-	 */
-	void						setPkgListURL(std::string);
-	std::string					getPkgListURL();
-
-	/**
 	 * @brief	Sets the config this Leafcore instance will use
 	 * @param	config			The config to apply
 	 */
@@ -112,9 +106,6 @@ private:
 
 	//Where the currently loaded package list file is
 	bool						_loadedPkgList = false;
-
-	//The URL where to fetch the package list from
-	std::string					_pkglistURL = "http://84.252.121.236/packages/leaf.pkglist";
 
 	//The database of the available packages in the package list
 	LeafDB*						_packageListDB;

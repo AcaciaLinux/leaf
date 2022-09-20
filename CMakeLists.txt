@@ -12,6 +12,10 @@ option(LEAF_STATIC "Build a static version of leaf" OFF)
 option(BUILD_DOCS "Build the documentation for leafcore" OFF)
 option(BUILD_TESTS "Build the test suite" OFF)
 
+set(LOG_MAXLEVEL 15 CACHE STRING "Set the maximum log level")
+set(LOG_NOCHECK ON CACHE BOOL "Disable Log checks")
+set(LOG_NOMUTEX ON CACHE BOOL "Disable Log mutexes")
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
 	set (LibArchive_INCLUDE_DIR /opt/homebrew/opt/libarchive/include)

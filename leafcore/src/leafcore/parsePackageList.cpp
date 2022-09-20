@@ -29,8 +29,6 @@ void Leafcore::parsePackageList(std::string path){
 
 	_packageListDB->clear();
 
-	_pkglistURL = path;
-
 	LOGI("Parsing package list " + path);
 
 	std::ifstream file;
