@@ -11,8 +11,11 @@
 
 #include "hook.h"
 
+#include "pkglistparser.h"
+
 #include <algorithm>
 #include <deque>
+#include <regex>
 
 static std::deque<std::string> splitBy(std::string& str, char separator);
 static leaf_action parseAction(std::string& str);
@@ -31,8 +34,8 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 	if (entries.count("when") <= 0)
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'when' in " + _filePath);
 
-	if (entries.count("rundep") <= 0)
-		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'rundep' in " + _filePath);
+	if (entries.count("rundeps") <= 0)
+		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'rundeps' in " + _filePath);
 
 	if (entries.count("exec") <= 0)
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'exec' in " + _filePath);
@@ -57,7 +60,7 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 	}
 
 	_execTime = parseExecTime(entries["when"]);
-	#warning Rundependencies
+	_runDeps = PackageListParser::parseDependenciesString(entries["rundeps"]);
 	_exec = entries["exec"];
 }
 
@@ -69,11 +72,16 @@ static std::deque<std::string> splitBy(std::string& str, char separator){
 	std::string buf;
 	for (char c : str){
 		if (c == separator){
+			//Remove leading and trailing whitespaces
+			buf = std::regex_replace(buf, std::regex("^ +| +$|( ) +"), "$1");
+
 			res.push_back(std::string(buf));
 			buf.clear();
 		} else
 			buf += c;
 	}
+	//Remove leading and trailing whitespaces
+	buf = std::regex_replace(buf, std::regex("^ +| +$|( ) +"), "$1");
 	res.push_back(std::string(buf));
 
 	return res;
