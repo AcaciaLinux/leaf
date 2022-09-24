@@ -29,6 +29,10 @@ std::string Package::getFullName(){
 	return _name + "-" + _versionString;
 }
 
+void Package::setRealVersion(uint32_t v){
+	_realVersion = v;
+}
+
 uint32_t Package::getRealVersion(){
 	return _realVersion;
 }

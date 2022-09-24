@@ -119,8 +119,9 @@ public:
 	std::string					getName();
 
 	/**
-	 * @brief	Returns the real version of the package
+	 * @brief	The real version of the package
 	 */
+	void						setRealVersion(uint32_t);
 	uint32_t					getRealVersion();
 	
 	/**
