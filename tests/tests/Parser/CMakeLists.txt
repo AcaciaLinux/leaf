@@ -1,5 +1,5 @@
 
-set(TEST_NAME ConfigParserTest)
+set(TEST_NAME ParserTest)
 
 file(GLOB_RECURSE sources "./src/**.cpp")
 

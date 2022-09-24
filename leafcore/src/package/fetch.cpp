@@ -52,7 +52,31 @@ void Package::fetch(){
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
-	dl.download(getFetchURL(), outFile);
-
+	size_t dRes = dl.download(getFetchURL(), outFile);
 	outFile.close();
+
+	//If everything is ok, return
+	if (dRes < 400)
+		return;
+
+
+	std::ifstream ecFile(destination, std::ios::in);
+	if (!ecFile.is_open()){
+		ecFile.close();
+		throw new LeafError(Error::OPENFILER, destination + "for reading back branchmaster error code");
+	}
+
+	std::string resString;
+	if (!getline(ecFile, resString)){
+		ecFile.close();
+		throw new LeafError(Error::OPENFILER, destination + "while reading back branchmaster error code");
+	}
+
+	BranchMaster::ec ec = BranchMaster::parseEC(dRes, resString);
+
+
+	if (ec == BranchMaster::E_NONE)
+		LOGUW("The package fetch resulted in a HTTP error code, but the code parsing resulted in no error, something suspicous could be going on!");
+	else
+		throw new LeafError(Error::BRANCHMASTER_ERROR, BranchMaster::getECString(ec));
 }

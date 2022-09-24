@@ -11,3 +11,6 @@ packages.list
 .vscode/configurationCache.log
 .vscode/targets.log
 .vscode/dryrun.log
+
+.DS_STORE
+

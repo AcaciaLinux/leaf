@@ -87,13 +87,14 @@ TEST(PackageListParser, parse_invalid_block_len){
 TEST(PackageListParser, parse_right_parse){
 	FUN();
 
-	std::istringstream inString("Name;Version;Description;[Dependency];URL");
+	std::istringstream inString("Name;2;Version;Description;[Dependency];URL");
 
 	try{
 			PackageListParser parser;
 			parser.parse(inString);
 
 			ASSERT_EQ(parser._packages.back()->getName(), "Name");
+			ASSERT_EQ(parser._packages.back()->getRealVersion(), 2);
 			ASSERT_EQ(parser._packages.back()->getVersion(), "Version");
 			ASSERT_EQ(parser._packages.back()->getDescription(), "Description");
 			ASSERT_EQ(parser._packages.back()->getDependencies().back(), "Dependency");

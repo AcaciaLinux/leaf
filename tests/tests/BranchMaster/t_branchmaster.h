@@ -1,5 +1,5 @@
-#ifndef __T_XXX_H__
-#define __T_XXX_H__
+#ifndef __T_BranchMaster_H__
+#define __T_BranchMaster_H__
 
 #include <gtest/gtest.h>
 #include <stdlib.h>
@@ -9,8 +9,8 @@
 #include "leafdebug.h"
 #include "checks.h"
 
-#define FRIEND_XXX
+#define FRIEND_BranchMaster
 
-#include "configparser.h"
+#include "branchmaster.h"
 
 #endif

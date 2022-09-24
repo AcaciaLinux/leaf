@@ -22,9 +22,9 @@ public:
 	 * @brief	Downloads from the supplied url to the supplied stream
 	 * @param	url			The URL to download from
 	 * @param	out			The stream to supply the data to
-	 * @return	Success
+	 * @return	The HTTP response code
 	 */
-	void					download(std::string url, std::ostream& out);
+	size_t					download(std::string url, std::ostream& out);
 
 #ifndef FRIEND_DOWNLOADER
 private:

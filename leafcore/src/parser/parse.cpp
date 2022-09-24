@@ -1,31 +1,29 @@
 /**
- * @file		configparser/parse.cpp
+ * @file		parser/parse.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
- * @brief		The implementation of ConfigParser::parse()
+ * @brief		The implementation of Parser::parse()
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
 #include "error.h"
 #include "leafdebug.h"
-#include "leafconfig.h"
 
-#include "configparser.h"
+#include "parser.h"
 
-#include <algorithm>
+#include <map>
+#include <regex>
 
-void ConfigParser::parse(std::istream& in){
+//TODO: Tests
+
+void Parser::parse(std::istream& inStream){
 	FUN();
-
-	LEAF_DEBUG_EX("ConfigParser::parse()");
-
-	//Check if the instream is good
-	if (!in.good())
-		throw new LeafError(Error::CFGPRS_BAD_STREAM);
+	LEAF_DEBUG_EX("Parser::parse()");
 
 	std::string line, name, value;
 	size_t delimiterPos = 0;
+	_entries.clear();
 
-	while(getline(in, line)){
+	while(getline(inStream, line)){
 
 		//Find the delimiter
 		delimiterPos = 0;
@@ -33,7 +31,7 @@ void ConfigParser::parse(std::istream& in){
 
 		//If the delimiter was not found
 		if(delimiterPos == line.npos){
-			LOGF("ConfigParser: Ignoring line without delimiter \"" + line + "\"");
+			LOGF("[Parser][parse] Ignoring line without delimiter \"" + line + "\"");
 			continue;
 		}
 
@@ -45,7 +43,7 @@ void ConfigParser::parse(std::istream& in){
 
 		//Ignore commented lines
 		if (line[0] == '#'){
-			LOGF("ConfigParser: Ignoring commented line \"" + line + "\"");
+			LOGF("[Parser][parse] Ignoring commented line \"" + line + "\"");
 			continue;
 		}
 
@@ -55,13 +53,13 @@ void ConfigParser::parse(std::istream& in){
 
 		//If no name was specified for the value
 		if(delimiterPos == 0){
-			LOGE("ConfigParser: Config value without name not allowed in line \"" + line + "\"");
+			LOGE("[Parser][parse] Entry value without name not allowed in line \"" + line + "\"");
 			continue;
 		}
 
 		//If no value was specified for a name
 		if (delimiterPos == line.length()-1){
-			LOGE("ConfigParser: Config name without value not allowed in line \"" + line + "\"");
+			LOGE("[Parser][parse] Entry name without value not allowed in line \"" + line + "\"");
 			continue;
 		}
 
@@ -69,10 +67,13 @@ void ConfigParser::parse(std::istream& in){
 		name = line.substr(0, delimiterPos);
 		value = line.substr(delimiterPos+1);
 
-		//Store them in the configs
-		this->_configs[name] = value;
+		//Remove leading and trailing whitespaces
+		value = std::regex_replace(value, std::regex("^ +| +$|( ) +"), "$1");
+
+		//Store them in the entries
+		_entries[name] = value;
 
 		//Log the result
-		LOGF("ConfigParser: Added config \"" + name + "\" -> \"" + this->_configs[name] + "\"");
+		LOGF("[Parser][parse] Added entry \"" + name + "\" -> \"" + _entries[name] + "\"");
 	}
 }

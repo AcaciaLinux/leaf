@@ -1,15 +1,15 @@
-#include "../t_configparser.h"
+#include "../t_parser.h"
 
 #include <fstream>
 
-TEST(ConfigParser, parse_debug){
+TEST(Parser, parse_debug){
 	FUN();
 
-	LEAF_DEBUG_SET_FAIL("ConfigParser::parse()");
+	LEAF_DEBUG_SET_FAIL("Parser::parse()");
 
 	try{
 
-		ConfigParser parser;
+		Parser parser;
 
 		parser.parse(std::cin);
 		

@@ -13,6 +13,10 @@ void Leafcore::setConfig(leaf_config_t config){
 	LOGD("Leafcore: Updating main config struct");
 
 	_config = config;
+
+	//Update the config from the config file with the
+	//config supplied to this command has higher priority
+	parseConfig();
 }
 
 leaf_config_t& Leafcore::getConfig(){

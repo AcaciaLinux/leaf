@@ -67,14 +67,14 @@ std::string errorCodes[] = {
 	"Package list parser: Bad stream",
 	"Package list parser: Apply to database",
 
-	//ConfigParser
-	"Config file parser: Bad stream",
-
 	//Hooks
 	"Hook: Could not find required value",
 
 	//Package list
 	"Package list not loaded",
+
+	//BranchMaster
+	"Package server error",
 
 	//LeafFS
 	"LeafFS: Directory string is empty",

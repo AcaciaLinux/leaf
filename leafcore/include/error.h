@@ -73,14 +73,14 @@ namespace Error{
 		PKGPRS_BAD_STREAM,
 		PKGPRS_APPLY_DB,
 
-		//ConfigParser
-		CFGPRS_BAD_STREAM,
-
 		//Hooks
 		HOOK_REQUIRED_VALUE,
 
 		//Package list
 		PKGLIST_NOTLOADED,
+
+		//BranchMaster
+		BRANCHMASTER_ERROR,
 
 		//LeafFS
 		LEAFFS_DIR_STR_EMPTY,
