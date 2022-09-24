@@ -29,6 +29,10 @@ std::string Package::getFullName(){
 	return _name + "-" + _versionString;
 }
 
+uint32_t Package::getRealVersion(){
+	return _realVersion;
+}
+
 void Package::setVersion(std::string version){
 	_versionString = version;
 }

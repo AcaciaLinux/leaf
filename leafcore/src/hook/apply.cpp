@@ -17,31 +17,31 @@
 #include <deque>
 #include <regex>
 
-static std::deque<std::string> splitBy(std::string& str, char separator);
-static leaf_action parseAction(std::string& str);
-static hook_exec_time parseExecTime(std::string& str);
+static std::deque<std::string> splitBy(const std::string& str, char separator);
+static leaf_action parseAction(const std::string& str);
+static hook_exec_time parseExecTime(const std::string& str);
 
-void Hook::apply(std::map<std::string, std::string>& entries){
+void Hook::apply(){
 	FUN();
 	LEAF_DEBUG_EX("Hook::apply()");
 
-	if (entries.count("action") <= 0)
+	if (Parser::get("action", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'action' in " + _filePath);
 
-	if (entries.count("packages") <= 0)
+	if (Parser::get("package", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'packages' in " + _filePath);
 
-	if (entries.count("when") <= 0)
+	if (Parser::get("when", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'when' in " + _filePath);
 
-	if (entries.count("rundeps") <= 0)
+	if (Parser::get("rundeps", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'rundeps' in " + _filePath);
 
-	if (entries.count("exec") <= 0)
+	if (Parser::get("exec", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'exec' in " + _filePath);
 
 	{//Parse all the actions
-		std::deque<std::string> actions = splitBy(entries["action"], ',');
+		std::deque<std::string> actions = splitBy(Parser::get("action", ""), ',');
 
 		for (std::string actionString : actions){
 			leaf_action action = parseAction(actionString);
@@ -51,7 +51,7 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 	}
 
 	{//Parse all the packages
-		auto packages = splitBy(entries["packages"], ',');
+		auto packages = splitBy(Parser::get("packages", ""), ',');
 
 		for (std::string packageString : packages){
 			LOGF("[Hook][apply] Adding package " + packageString + " to hook");
@@ -59,12 +59,12 @@ void Hook::apply(std::map<std::string, std::string>& entries){
 		}
 	}
 
-	_execTime = parseExecTime(entries["when"]);
-	_runDeps = PackageListParser::parseDependenciesString(entries["rundeps"]);
-	_exec = entries["exec"];
+	_execTime = parseExecTime(Parser::get("when", ""));
+	_runDeps = PackageListParser::parseDependenciesString(Parser::get("rundeps", ""));
+	_exec = Parser::get("exec", "");
 }
 
-static std::deque<std::string> splitBy(std::string& str, char separator){
+static std::deque<std::string> splitBy(const std::string& str, char separator){
 	FUN();
 
 	std::deque<std::string> res;
@@ -87,7 +87,7 @@ static std::deque<std::string> splitBy(std::string& str, char separator){
 	return res;
 }
 
-static leaf_action parseAction(std::string& buf){
+static leaf_action parseAction(const std::string& buf){
 	FUN();
 
 	leaf_action action;
@@ -105,7 +105,7 @@ static leaf_action parseAction(std::string& buf){
 	return action;
 }
 
-static hook_exec_time parseExecTime(std::string& str){
+static hook_exec_time parseExecTime(const std::string& str){
 	FUN();
 
 	hook_exec_time time = HOOK_EXEC_NEVER;

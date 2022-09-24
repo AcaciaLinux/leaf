@@ -2,6 +2,7 @@
 #define __HOOK_H__
 
 #include "leafconfig.h"
+#include "parser.h"
 
 #include <deque>
 #include <map>
@@ -13,7 +14,7 @@ enum hook_exec_time{
 	HOOK_EXEC_NEVER
 };
 
-class Hook{
+class Hook : private Parser{
 
 public:
 	Hook();
@@ -104,9 +105,8 @@ private:
 
 	/**
 	 * @brief	Applies the supplied map to the internal values
-	 * @param	entries			A reference to the entries to parse
 	 */
-	void						apply(std::map<std::string, std::string>& entries);
+	void						apply();
 };
 
 #endif

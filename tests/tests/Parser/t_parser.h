@@ -9,8 +9,8 @@
 #include "leafdebug.h"
 #include "checks.h"
 
-#define FRIEND_XXX
+#define FRIEND_PARSER
 
-#include "configparser.h"
+#include "parser.h"
 
 #endif

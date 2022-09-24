@@ -117,6 +117,11 @@ public:
 	 */
 	void						setName(std::string);
 	std::string					getName();
+
+	/**
+	 * @brief	Returns the real version of the package
+	 */
+	uint32_t					getRealVersion();
 	
 	/**
 	 * @brief	Returns the package name in the following format: "name-version":
@@ -206,8 +211,8 @@ private:
 	LeafDB*						_db = nullptr;
 
 	std::string					_name;
-	std::string					_versionString;
 	uint32_t					_realVersion;
+	std::string					_versionString;
 	std::string					_description;
 	std::deque<std::string>		_dependencies;
 	std::string					_fetchURL;
