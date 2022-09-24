@@ -50,7 +50,8 @@ void Leafcore::a_update(){
 
 	std::string resString;
 	if (!getline(ecFile, resString)){
-		#warning Handle this error
+		ecFile.close();
+		throw new LeafError(Error::OPENFILER, pkgListFilePath + "while reading back branchmaster error code");
 	}
 
 	BranchMaster::ec ec = BranchMaster::parseEC(dRes, resString);
@@ -59,5 +60,5 @@ void Leafcore::a_update(){
 	if (ec == BranchMaster::E_NONE)
 		LOGUW("The package list fetch resulted in a HTTP error code, but the code parsing resulted in no error, something suspicous could be going on!");
 	else
-		throw new LeafError(Error::BRANCHMASTER_ERROR, getBranchMasterECString(ec));
+		throw new LeafError(Error::BRANCHMASTER_ERROR, BranchMaster::getECString(ec));
 }

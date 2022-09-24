@@ -1,16 +1,16 @@
 /**
- * @file		leafcore/getBranchMasterECString.cpp
+ * @file		branchmaster/getECString.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
- * @brief		The implementation of Leafcore::getBranchMasterEC()
+ * @brief		The implementation of BranchMaster::getEC()
  * @copyright	Copyright (c) 2022
  */
 #include "log.h"
 #include "error.h"
 #include "leafdebug.h"
 
-#include "leafcore.h"
+#include "branchmaster.h"
 
-std::string Leafcore::getBranchMasterECString(BranchMaster::ec error){
+std::string BranchMaster::getECString(BranchMaster::ec error){
 	FUN();
 
 	using namespace BranchMaster;

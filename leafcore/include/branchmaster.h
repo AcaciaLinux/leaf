@@ -21,7 +21,13 @@ namespace BranchMaster{
 	 * @param	httpCode		The HTTP response code
 	 * @param	response		The response
 	 */
-	BranchMaster::ec parseEC(size_t httpCode, const std::string& response);
+	BranchMaster::ec 			parseEC(size_t httpCode, const std::string& response);
+
+	/**
+	 * @brief	Return a full string description of a BranchMaster error code
+	 * @param	ec				The error code to resolve
+	 */
+	std::string					getECString(BranchMaster::ec ec);
 }
 
 #endif

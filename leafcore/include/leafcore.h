@@ -108,12 +108,6 @@ public:
 	 */
 	leaf_config_t&				getConfig();
 
-	/**
-	 * @brief	Return a full string description of a BranchMaster error code
-	 * @param	ec				The error code to resolve
-	 */
-	std::string					getBranchMasterECString(BranchMaster::ec ec);
-
 private:
 
 	//Where the currently loaded package list file is
