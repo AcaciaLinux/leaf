@@ -21,3 +21,5 @@ add_subdirectory(tests/Parser)
 
 add_subdirectory(tests/Package)
 add_subdirectory(tests/Leafcore)
+
+add_subdirectory(tests/BranchMaster)
