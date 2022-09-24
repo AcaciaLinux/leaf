@@ -10,16 +10,18 @@ namespace BranchMaster{
 		E_REQUEST,
 		E_GET,
 		E_PKGNAME,
-		E_VERSION,
+		E_VERSIONTAG,
 		E_GENERAL,
-		E_PACKAGE
+		E_PACKAGE,
+		E_VERSION
 	};
 
 	/**
 	 * @brief	Parses the branchmaster error code responded via the http body
+	 * @param	httpCode		The HTTP response code
 	 * @param	response		The response
 	 */
-	BranchMaster::ec parseEC(const std::string& response);
+	BranchMaster::ec parseEC(size_t httpCode, const std::string& response);
 }
 
 #endif

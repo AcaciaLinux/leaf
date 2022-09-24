@@ -73,6 +73,9 @@ std::string errorCodes[] = {
 	//Package list
 	"Package list not loaded",
 
+	//BranchMaster
+	"Package server error",
+
 	//LeafFS
 	"LeafFS: Directory string is empty",
 	"LeafFS: Directory does not exist",

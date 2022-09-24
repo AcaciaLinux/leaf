@@ -14,7 +14,7 @@
 
 //TODO: Tests
 
-BranchMaster::ec BranchMaster::parseEC(const std::string& str){
+BranchMaster::ec BranchMaster::parseEC(size_t httpCode, const std::string& str){
 	FUN();
 	LEAF_DEBUG_EX("BranchMaster::parseEC()");
 
@@ -25,7 +25,10 @@ BranchMaster::ec BranchMaster::parseEC(const std::string& str){
 	else if (std::regex_match(str, std::regex(".*E_PKGNAME.*")))
 		return BranchMaster::E_PKGNAME;
 	else if (std::regex_match(str, std::regex(".*E_VERSION.*")))
-		return BranchMaster::E_VERSION;
+		if (httpCode == 400)
+			return BranchMaster::E_VERSIONTAG;
+		else
+			return BranchMaster::E_VERSION;
 	else if (std::regex_match(str, std::regex(".*E_GENERAL.*")))
 		return BranchMaster::E_GENERAL;
 	else if (std::regex_match(str, std::regex(".*E_PACKAGE.*")))

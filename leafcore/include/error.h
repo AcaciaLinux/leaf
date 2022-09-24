@@ -79,6 +79,9 @@ namespace Error{
 		//Package list
 		PKGLIST_NOTLOADED,
 
+		//BranchMaster
+		BRANCHMASTER_ERROR,
+
 		//LeafFS
 		LEAFFS_DIR_STR_EMPTY,
 		LEAFFS_DIR_NOT_EXISTING,

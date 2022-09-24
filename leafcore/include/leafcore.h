@@ -11,6 +11,7 @@ class Leafcore;
 #include "parser.h"
 #include "leafconfig.h"
 #include "hook.h"
+#include "branchmaster.h"
 
 /**
  * @brief	The core leaf interface
@@ -106,6 +107,12 @@ public:
 	 * @return	leaf_config_t
 	 */
 	leaf_config_t&				getConfig();
+
+	/**
+	 * @brief	Return a full string description of a BranchMaster error code
+	 * @param	ec				The error code to resolve
+	 */
+	std::string					getBranchMasterECString(BranchMaster::ec ec);
 
 private:
 
