@@ -51,7 +51,7 @@ void PackageListParser::parse(std::istream& in){
 			for (std::string block : blocks){
 				logbuf += " {" + block + "}";
 			}
-			LOGD(logbuf);
+			LOGF(logbuf);
 		}
 
 		Package* newPackage = new Package(blocks.at(0), blocks.at(2));
