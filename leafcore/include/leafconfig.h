@@ -32,7 +32,7 @@ typedef struct leafconfig_struct{
 	std::string					rootDir = "/";
 
 	//The URL for fetching the main package list
-	std::string					pkgListURL = "acacia.maxkofler.eu:8080?get=packagelist";
+	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
 
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
