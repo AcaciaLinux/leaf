@@ -13,13 +13,11 @@
 #include <map>
 #include <regex>
 
-//TODO: Tests
-
 void Parser::parse(std::istream& inStream){
 	FUN();
 	LEAF_DEBUG_EX("Parser::parse()");
 
-	std::string line, name, value;
+	std::string line, key, value;
 	size_t delimiterPos = 0;
 	_entries.clear();
 
@@ -35,15 +33,13 @@ void Parser::parse(std::istream& inStream){
 			continue;
 		}
 
-		//Strip all whitespaces except these of the config value
-		line.erase(std::remove_if(line.begin(), line.begin()+delimiterPos, isspace), line.begin()+delimiterPos);
-		
 		//Refind the delimiter since it got moved
 		delimiterPos = line.find('=');
 
 		//Ignore commented lines
 		if (line[0] == '#'){
 			LOGF("[Parser][parse] Ignoring commented line \"" + line + "\"");
+			LEAF_DEBUG_EX("Parser::comment");
 			continue;
 		}
 
@@ -53,27 +49,32 @@ void Parser::parse(std::istream& inStream){
 
 		//If no name was specified for the value
 		if(delimiterPos == 0){
-			LOGE("[Parser][parse] Entry value without name not allowed in line \"" + line + "\"");
+			LOGE("[Parser][parse] Entry value without key not allowed in line \"" + line + "\"");
+			LEAF_DEBUG_EX("Parser::nokey");
 			continue;
 		}
 
 		//If no value was specified for a name
 		if (delimiterPos == line.length()-1){
 			LOGE("[Parser][parse] Entry name without value not allowed in line \"" + line + "\"");
+			LEAF_DEBUG_EX("Parser::novalue");
 			continue;
 		}
 
 		//Get the name and the value
-		name = line.substr(0, delimiterPos);
+		key = line.substr(0, delimiterPos);
 		value = line.substr(delimiterPos+1);
 
-		//Remove leading and trailing whitespaces
+		//Remove leading and trailing whitespaces from key
+		key = std::regex_replace(key, std::regex("^ +| +$|( ) +"), "$1");
+
+		//Remove leading and trailing whitespaces from value
 		value = std::regex_replace(value, std::regex("^ +| +$|( ) +"), "$1");
 
 		//Store them in the entries
-		_entries[name] = value;
+		_entries[key] = value;
 
 		//Log the result
-		LOGF("[Parser][parse] Added entry \"" + name + "\" -> \"" + _entries[name] + "\"");
+		LOGF("[Parser][parse] Added entry \"" + key + "\" -> \"" + _entries[key] + "\"");
 	}
 }

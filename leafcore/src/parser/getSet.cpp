@@ -12,6 +12,7 @@
 
 std::string Parser::get(const std::string& key, const std::string& def){
 	FUN();
+	LEAF_DEBUG_EX("Parser::get()");
 
 	if (_entries.count(key) == 0)
 		return def;
