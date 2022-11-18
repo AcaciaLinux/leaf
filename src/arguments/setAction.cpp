@@ -15,6 +15,8 @@ bool Arguments::setAction(std::string a){
 		_config.action = ACTION_REMOVE;
 	else if (a == "installLocal")
 		_config.action = ACTION_INSTALLLOCAL;
+	else if (a == "upgrade")
+		_config.action = ACTION_UPGRADE;
 	else
 		return false;
 

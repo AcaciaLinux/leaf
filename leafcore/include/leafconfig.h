@@ -23,7 +23,8 @@ enum leaf_action{
 	ACTION_UPDATE = 1,
 	ACTION_INSTALL = 2,
 	ACTION_REMOVE = 3,
-	ACTION_INSTALLLOCAL = 4
+	ACTION_INSTALLLOCAL = 4,
+	ACTION_UPGRADE = 5
 };
 
 typedef struct leafconfig_struct{
