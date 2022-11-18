@@ -34,13 +34,19 @@ void Leafcore::a_install(std::deque<std::string> packages){
 	}
 
 	std::deque<Package*> install_packages;
-	LOGU("Resolving dependencies...");
+	
+	if (_config.installDependencies)
+		LOGU("Resolving dependencies...");
+	else
+		LOGU("Not installing package dependencies!");
+
 	for (std::string packageName : packages){
 		//This throws an error if the package was not found
 		Package* package = _packageListDB->getPackage(packageName, true);
 
 		//Resolve the dependencies of the package recursively
-		_packageListDB->resolveDependencies(&install_packages, package);
+		if (_config.installDependencies)
+			_packageListDB->resolveDependencies(&install_packages, package);
 	}
 
 	{	//Go through every package and see if it is already installed
@@ -91,10 +97,18 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 	}
 
-	{	//Check for the redownload config and delete cached downloads if neccesary
+	{//Execute pre-install hooks
+		LOGU("Running pre install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running pre install hook...");
+			hook.execPre(_config);
+		}
+	}
+
+	{//Check for the redownload config and delete cached downloads if neccesary
 
 		LOGI("Checking for redownloads...");
-		switch(lConfig.redownload){
+		switch(_config.redownload){
 			//If the redownload of the specified files is wanted
 			case CONFIG_REDOWNLOAD_SPECIFIED:
 				LOGU("Removing download cache of specified packages...");
@@ -150,8 +164,18 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		package->deploy();
 	}
 
-	LOGU("Cleaning up package caches...");
-	for (Package* package : install_packages){
-		package->clearCache();
+	{//Execute post-install hooks
+		LOGU("Running post install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running post install hook...");
+			hook.execPost(_config);
+		}
+	}
+
+	if (!_config.noClean){
+		LOGU("Cleaning up package caches...");
+		for (Package* package : install_packages){
+			package->clearCache();
+		}
 	}
 }

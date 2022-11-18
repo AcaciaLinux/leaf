@@ -16,6 +16,8 @@ bool Arguments::parse(int argc, char** argv){
 	args::Flag f_forceOverwrite(parser, "force overwrite", "Force leaf to ignore file conflicts and write anyway", {"forceOverwrite"});
 	args::Flag f_noPreinstall(parser, "skip preinstall", "Do not execute the preinstall script", {"noPreinstall"});
 	args::Flag f_noPostinstall(parser, "skip postnstall", "Do not execute the postinstall script", {"noPostinstall"});
+	args::Flag f_noAsk(parser, "noAsk", "Do not ask questions and assume yes every time", {"noAsk"});
+	args::Flag f_noClean(parser, "noClean", "Do not clean the leaf caches after installation", {"noClean"});
 	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
@@ -51,12 +53,12 @@ bool Arguments::parse(int argc, char** argv){
 
 	if (args::get(f_noPreinstall)){
 		LOGUW("WARNING: Disabled preinstall scripts, installed packages may not work!");
-		lConfig.runPreinstall = false;
+		_config.runPreinstall = false;
 	}
 
 	if (args::get(f_noPostinstall)){
 		LOGUW("WARNING: Disabled postinstall scripts, installed packages may not work!");
-		lConfig.runPostinstall = false;
+		_config.runPostinstall = false;
 	}
 
 	if (f_rootPath){
@@ -70,9 +72,15 @@ bool Arguments::parse(int argc, char** argv){
 			return false;
 	}
 
+	if (f_noAsk)
+		_config.noAsk = args::get(f_noAsk);
+
+	if (f_noClean)
+		_config.noClean = args::get(f_noClean);
+
 	if (args::get(f_forceOverwrite)){
 		LOGUW("WARNING: You use forceOverwrite, leaf will not check for file conflicts!");
-		lConfig.forceOverwrite = true;
+		_config.forceOverwrite = true;
 	}
 
 	if (args::get(f_verbose)){
@@ -81,9 +89,9 @@ bool Arguments::parse(int argc, char** argv){
 	}
 
 	if (args::get(f_redownloadAll)){
-		lConfig.redownload = CONFIG_REDOWNLOAD_ALL;
+		_config.redownload = CONFIG_REDOWNLOAD_ALL;
 	} else if (args::get(f_redownload)){
-		lConfig.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
+		_config.redownload = CONFIG_REDOWNLOAD_SPECIFIED;
 	}
 
 	if (!this->setAction(args::get(a_action))){
@@ -97,7 +105,7 @@ bool Arguments::parse(int argc, char** argv){
 	auto packages_res = args::get(a_packages);
 	for (auto i : packages_res){
 		LOGD(" -> " + i);
-		lConfig.packages.push_back(i);
+		_config.packages.push_back(i);
 	}
 
 	return true;

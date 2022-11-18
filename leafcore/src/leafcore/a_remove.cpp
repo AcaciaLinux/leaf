@@ -48,9 +48,25 @@ void Leafcore::a_remove(std::deque<std::string> packages){
 		}
 	}
 
+	{//Execute pre-action hooks
+		LOGU("Running pre remove hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running pre remove hook...");
+			hook.execPre(_config);
+		}
+	}
+
 	for (Package* p : remove_packages){
 		LOGU("Removing package " + p->getFullName() + "...");
 
 		p->removeFromRoot();
+	}
+
+	{//Execute post-action hooks
+		LOGU("Running post remove hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running post remove hook...");
+			hook.execPost(_config);
+		}
 	}
 }

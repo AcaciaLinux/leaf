@@ -41,8 +41,8 @@ void PackageListParser::parse(std::istream& in){
 		//Push the last block
 		blocks.push_back(buf);
 
-		if (blocks.size() != 5){
-			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/5");
+		if (blocks.size() != 6){
+			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/6");
 			continue;
 		}
 
@@ -51,14 +51,15 @@ void PackageListParser::parse(std::istream& in){
 			for (std::string block : blocks){
 				logbuf += " {" + block + "}";
 			}
-			LOGD(logbuf);
+			LOGF(logbuf);
 		}
 
-		Package* newPackage = new Package(blocks.at(0), blocks.at(1));
-		newPackage->_description = blocks.at(2);
-		newPackage->_dependencies = parseDependenciesString(blocks.at(3));
+		Package* newPackage = new Package(blocks.at(0), blocks.at(2));
+		newPackage->_realVersion = stoi(blocks.at(1));
+		newPackage->_description = blocks.at(3);
+		newPackage->_dependencies = parseDependenciesString(blocks.at(4));
 
-		newPackage->_fetchURL = blocks.at(4);
+		newPackage->_fetchURL = blocks.at(5);
 		if (newPackage->_fetchURL.empty()){
 			LOGI(newPackage->getFullName() + " gets treated as collection");
 			newPackage->setIsCollection(true);

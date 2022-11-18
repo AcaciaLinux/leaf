@@ -38,6 +38,9 @@ std::string errorCodes[] = {
 	"Package is not installed",
 	"Package is not downloaded",
 	"Package is not extracted",
+	"Package is not a .lfpkg file",
+	"Package name does not contain the '-' delimiter for the version",
+	"Local package archive does not exist",
 
 	//Archive
 	"It seems that an archive has already been loaded",
@@ -64,8 +67,14 @@ std::string errorCodes[] = {
 	"Package list parser: Bad stream",
 	"Package list parser: Apply to database",
 
+	//Hooks
+	"Hook: Could not find required value",
+
 	//Package list
 	"Package list not loaded",
+
+	//BranchMaster
+	"Package server error",
 
 	//LeafFS
 	"LeafFS: Directory string is empty",

@@ -9,6 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 option(LEAF_STATIC "Build a static version of leaf" OFF)
+option(BUILD_DOCS "Build the documentation for leafcore" OFF)
+option(BUILD_TESTS "Build the test suite" OFF)
+
+set(LOG_MAXLEVEL 15 CACHE STRING "Set the maximum log level")
+set(LOG_NOCHECK ON CACHE BOOL "Disable Log checks")
+set(LOG_NOMUTEX ON CACHE BOOL "Disable Log mutexes")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
@@ -32,14 +38,20 @@ include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
 
-if (CMAKE_BUILD_TYPE)
-	if (CMAKE_BUILD_TYPE MATCHES Debug)
-		enable_testing(true)
-		add_subdirectory(Log/googletest)
-		add_subdirectory(tests)
-		add_definitions(-DDEBUG)
-	endif()
+
+if (BUILD_TESTS)
+	enable_testing(true)
+	add_subdirectory(Log/googletest)
+	add_subdirectory(tests)
+	add_definitions(-DDEBUG)
 endif()
+
+if(BUILD_DOCS)
+	message("Building Doxygen documentation")
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
+endif()
+
+set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
 
 add_subdirectory(leafcore)
 
@@ -58,7 +70,7 @@ if (LEAF_STATIC)
 endif()
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
-target_link_libraries(${PNAME} PRIVATE log leafcore ${LEAF_ADDITIONAL_LIBRARIES})
+target_link_libraries(${PNAME} PRIVATE leafcore ${LEAF_ADDITIONAL_LIBRARIES})
 if (LEAF_STATIC)
 	target_link_options(${PNAME} PRIVATE -static)
 endif()

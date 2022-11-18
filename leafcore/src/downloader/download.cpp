@@ -17,14 +17,14 @@ static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 	return size*nmemb;
 }
 
-void Downloader::download(std::string url, std::ostream& out){
+size_t Downloader::download(std::string url, std::ostream& out){
 	FUN();
 
 	LEAF_DEBUG_EX("Downloader::download()");
 
-	LOGI("Downloading from \"" + url + "\"...");
+	LOGI("[Downloader][download] Downloading from \"" + url + "\"...");
 
-	CURLcode res;
+	CURLcode curlRes;
 
 	if (!_curl)
 		throw new LeafError(Error::DL_NOT_INIT);
@@ -38,8 +38,15 @@ void Downloader::download(std::string url, std::ostream& out){
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);
 	curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 
-	res = curl_easy_perform(_curl);
+	curlRes = curl_easy_perform(_curl);
 
-	if (res != CURLE_OK)
-		throw new LeafError(Error::DL_CURL_ERR, curl_easy_strerror(res));
+	if (curlRes != CURLE_OK)
+		throw new LeafError(Error::DL_CURL_ERR, curl_easy_strerror(curlRes));
+
+	size_t httpRes = 0;
+	curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &httpRes);
+
+	LOGI("[Downloader][download] HTTP response code: " + std::to_string(httpRes));
+
+	return httpRes;
 }

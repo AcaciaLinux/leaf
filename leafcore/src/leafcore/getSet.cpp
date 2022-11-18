@@ -5,12 +5,20 @@
  * @copyright	Copyright (c) 2022
  */
 
+#include "log.h"
 #include "leafcore.h"
 
-void Leafcore::setPkgListURL(std::string url){
-	_pkglistURL = url;
+void Leafcore::setConfig(leaf_config_t config){
+	FUN();
+	LOGD("Leafcore: Updating main config struct");
+
+	_config = config;
+
+	//Update the config from the config file with the
+	//config supplied to this command has higher priority
+	parseConfig();
 }
 
-std::string Leafcore::getPkgListURL(){
-	return _pkglistURL;
+leaf_config_t& Leafcore::getConfig(){
+	return _config;
 }

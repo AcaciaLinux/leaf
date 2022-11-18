@@ -18,6 +18,7 @@ void Package::createInstalledFile(std::ostream& out){
 		throw new LeafError(Error::BAD_ISTREAM, "create installed file for " + getFullName());
 
 	out << _name << std::endl;
+	out << _realVersion << std::endl;
 	out << _versionString << std::endl;
 	out << std::to_string(_dependencies.size()) << std::endl;
 	out << std::to_string(_provided_files.size() + _provided_directories.size()) << std::endl;

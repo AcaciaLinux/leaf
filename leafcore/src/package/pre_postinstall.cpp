@@ -15,7 +15,12 @@
 void Package::runPreinstall(){
 	FUN();
 	LEAF_DEBUG_EX("Package::runPreinstall()");
-	if (!lConfig.runPreinstall){
+
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
+	
+	if (!_db->getCore()->getConfig().runPreinstall){
 		LOGW("WARNING: Disabled preinstall script of package " + getFullName());
 		return;
 	}
@@ -25,7 +30,12 @@ void Package::runPreinstall(){
 void Package::runPostinstall(){
 	FUN();
 	LEAF_DEBUG_EX("Package::runPostinstall()");
-	if (!lConfig.runPostinstall){
+
+	//Check if the database is ok
+	if (_db == nullptr)
+		throw new LeafError(Error::NODB);
+
+	if (!_db->getCore()->getConfig().runPostinstall){
 		LOGW("WARNING: Disabled postinstall script of package " + getFullName());
 		return;
 	}
@@ -58,7 +68,7 @@ void Package::runScript(std::string path){
 
 	std::string envs = "";
 
-	envs += " ROOTDIR=" + lConfig.rootDir;
+	envs += " ROOTDIR=" + _db->getCore()->getConfig().rootDir;
 	envs += " PKGROOT=" + this->getExtractedDir();
 
 	std::string command = "bash -c \"" + envs + " ./" + path + "\"";

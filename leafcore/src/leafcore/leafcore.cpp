@@ -9,11 +9,20 @@
 #include "leafconfig.h"
 #include "leafcore.h"
 
-leaf_config_t lConfig;
+#include <fstream>
 
 Leafcore::Leafcore(){
 	FUN();
 
 	_packageListDB = new LeafDB(this);
 	_installedDB = new LeafDB(this);
+
+	parseConfig();
+}
+
+Leafcore::~Leafcore(){
+	FUN();
+
+	delete _packageListDB;
+	delete _installedDB;
 }

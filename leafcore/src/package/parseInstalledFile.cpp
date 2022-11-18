@@ -26,6 +26,17 @@ void Package::parseInstalledFile(std::istream& in){
 			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "name");
 		_name = line;
 
+		size_t realversion;
+		if (!getline(in, line))
+			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "realversion");
+		try{
+			realversion = stoi(line);
+		} catch (...){
+			clear();
+			throw new LeafError(Error::PACKAGE_STOI, line);
+		}
+		_realVersion = realversion;
+
 		if (!getline(in, line))
 			throw new LeafError(Error::PACKAGE_UNEXPECTED_EOF, "version");
 		_versionString = line;

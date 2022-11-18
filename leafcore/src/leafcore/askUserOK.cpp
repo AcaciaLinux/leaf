@@ -18,7 +18,7 @@ bool Leafcore::askUserOK(std::string question, bool defaultOption){
 	FUN();
 	LEAF_DEBUG("Leafcore::askUserOK()");
 
-	if (lConfig.noAsk)
+	if (_config.noAsk)
 		return true;
 
 	LEAF_DEBUG("Leafcore::askUserOK()-noAsk");

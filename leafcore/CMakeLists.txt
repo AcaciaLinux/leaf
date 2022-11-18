@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 project(libleafcore)
 
-if (CMAKE_BUILD_TYPE)
-	if (CMAKE_BUILD_TYPE MATCHES Debug)
-		message("Building in debug mode, performance will be much lower!")
+if (BUILD_TESTS)
+		message("Building in tests, performance will be much lower and fail guards will be used!")
 		add_definitions(-DDEBUG)
-	endif()
 endif()
 
 if (LEAF_STATIC)

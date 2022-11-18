@@ -5,6 +5,7 @@ class Package;
 
 #include "file.h"
 #include "leafdb.h"
+#include "leafpkg.h"
 
 #include <string>
 #include <deque>
@@ -15,6 +16,7 @@ class Package{
 
 public:
 	Package(std::string name, std::string version);
+	static Package* CreateFromLocal(std::string path);
 
 	/**
 	 * @brief	Adds the supplied file path to the supplied files by the package
@@ -115,6 +117,12 @@ public:
 	 */
 	void						setName(std::string);
 	std::string					getName();
+
+	/**
+	 * @brief	The real version of the package
+	 */
+	void						setRealVersion(uint32_t);
+	uint32_t					getRealVersion();
 	
 	/**
 	 * @brief	Returns the package name in the following format: "name-version":
@@ -139,6 +147,12 @@ public:
 	 */
 	void						setFetchURL(std::string);
 	std::string					getFetchURL();
+
+	/**
+	 * @brief	Applies the data supplied by a leaf.pkg file
+	 * @param	lfpkg			The struct to apply
+	 */
+	void						applyLeafPkg(leafpkg_t lfpkg);
 
 	/**
 	 * @brief	The database the package belongs to
@@ -192,15 +206,23 @@ public:
 private:
 #endif
 
+	//The default constructor hidden away from the user
+	Package();
+
 	LeafDB*						_db = nullptr;
 
 	std::string					_name;
+	uint32_t					_realVersion;
 	std::string					_versionString;
 	std::string					_description;
 	std::deque<std::string>		_dependencies;
 	std::string					_fetchURL;
 
 	bool						_isCollection = false;
+
+	//Information about local files
+	bool						_isLocal = false;
+	std::string					_localSourcePath;
 	
 	std::deque<std::string>		_provided_files;
 	std::deque<std::string>		_provided_directories;
