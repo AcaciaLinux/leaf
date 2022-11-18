@@ -63,6 +63,12 @@ public:
 	void						a_install(std::deque<std::string> packages);
 
 	/**
+	 * @brief	Upgrades the supplied packages
+	 * @param	packages		The packages to install
+	 */
+	void						a_upgrade(std::deque<std::string> packages);
+
+	/**
 	 * @brief	Installs the provided local leaf packages
 	 * @param	packages		The packages to install
 	 */
