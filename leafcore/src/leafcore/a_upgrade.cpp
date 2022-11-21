@@ -120,10 +120,27 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 		i.second->fetch();
 	}
 
+	//Deploy the new packages
 	for (const auto& i : upgradePkgs){
-		LOGU("Upgrading package " + i.second->getFullName() + "...");
+		LOGU("Changing package " + i.second->getFullName() + "...");
 
 		i.second->extract();
 		i.second->deploy();
+	}
+
+	{//Execute post-install hooks
+		LOGU("Running post install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running post install hook...");
+			hook.execPost(_config);
+		}
+	}
+
+	//Clean caches
+	if (!_config.noClean){
+		LOGU("Cleaning up package caches...");
+		for (const auto& i : upgradePkgs){
+			i.first->clearCache();
+		}
 	}
 }
