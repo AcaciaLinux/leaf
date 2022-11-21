@@ -9,7 +9,9 @@
 #include "leafconfig.h"
 
 #define FRIEND_LEAFDB
+#define FRIEND_PACKAGE
 #include "leafcore.h"
+#include "leaffs.h"
 
 #include "util.h"
 
@@ -125,6 +127,16 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 		LOGU("Changing package " + i.second->getFullName() + "...");
 
 		i.second->extract();
+		i.second->indexExtracted();
+
+		LOGI("[Leafcore][a_upgrade] Checking for removed files...");
+		for (std::string f : i.first->_provided_files){
+			if (std::find(i.second->_provided_files.begin(), i.second->_provided_files.end(), f) == i.second->_provided_files.end()){
+				LOGF("[Leafcore][a_upgrade] File " + f + " has been removed from package " + i.first->getFullName());
+				removeFile(_config.rootDir + "/" + f, false);
+			}
+		}
+
 		i.second->deploy();
 	}
 
