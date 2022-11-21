@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <map>
 
+// TODO: Remove files that have been removed between changes
 void Leafcore::a_upgrade(std::deque<std::string> packages){
 	FUN();
 	LEAF_DEBUG_EX("Leafcore::a_upgrade()");
@@ -77,5 +78,52 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 				upgradePkgs[i.first] = i.second;
 			}
 		}
+	}
+
+	//Check if there is even something to do
+	if (upgradePkgs.size() == 0){
+		LOGU("There is nothing to do");
+		return;
+	}
+
+	{//Inform the user about the packages to upgrade
+		std::string msg = "Following packages will be changed:";
+		for (const auto& pkg : upgradePkgs){
+			msg += "\n\t" + pkg.first->getName();
+			msg += ": " + pkg.first->getVersion() + " (" + std::to_string(pkg.first->getRealVersion()) + ")";
+			msg += " -> " + pkg.second->getVersion() + " (" + std::to_string(pkg.second->getRealVersion()) + ")";
+		}
+			
+		LOGU(msg);
+	}
+
+	{//Ask the user for permission
+		if (!askUserOK("Do you want to continue?", true)){
+			std::string msg = "Upgrading packages:";
+			for (const auto& pkg : upgradePkgs)
+				msg += " " + pkg.first->getFullName();
+			throw new LeafError(Error::USER_DISAGREE, msg);
+		}
+	}
+
+	{//Execute pre-install hooks
+		LOGU("Running pre install hooks...");
+		for (Hook& hook : _hooks){
+			LOGD("Running pre install hook...");
+			hook.execPre(_config);
+		}
+	}
+
+	for (const auto& i : upgradePkgs){
+		LOGU("Downloading package " + i.second->getFullName() + "...");
+
+		i.second->fetch();
+	}
+
+	for (const auto& i : upgradePkgs){
+		LOGU("Upgrading package " + i.second->getFullName() + "...");
+
+		i.second->extract();
+		i.second->deploy();
 	}
 }
