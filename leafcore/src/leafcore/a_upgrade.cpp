@@ -141,6 +141,7 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 		LOGU("Cleaning up package caches...");
 		for (const auto& i : upgradePkgs){
 			i.first->clearCache();
+			i.second->clearCache();
 		}
 	}
 }
