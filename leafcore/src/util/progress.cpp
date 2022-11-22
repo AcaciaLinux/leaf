@@ -23,13 +23,18 @@ void LeafUtil::Progress::init(){
 	FUN();
 
 	#ifdef LEAF_NCURSES
-		int col, row;
-		initscr();
-		getmaxyx(stdscr, row, col);
-		refresh();
-		endwin();
-
-		screen_width = col;
+		try{
+			int col, row;
+			initscr();
+			getmaxyx(stdscr, row, col);
+			refresh();
+			endwin();
+			screen_width = col;
+		} catch (...){
+			LOGUE("Failed to determine terminal size, falling back!");
+			screen_width = 0;
+		}
+		
 		LOGI("[LeafUtil][Progress][init] Screen width = " + std::to_string(screen_width));
 	#endif
 }
