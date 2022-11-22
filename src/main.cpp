@@ -13,6 +13,7 @@
 #include "downloader.h"
 #include "pkglistparser.h"
 #include "leafcore.h"
+#include "dist.h"
 
 #include <deque>
 
@@ -33,6 +34,11 @@ int main(int argc, char** argv){
 
 	{
 		FUN();
+
+		LOGU("Leaf - The AcaciaLinux package manager");
+		LOGU("Copyright (c) maxkofler (https://maxkofler.eu/) and the AcaciaLinux developers (https://acacialinux.org/)");
+		LOGU("Version: " LEAFCORE_VERSION " (" LEAFCORE_CODENAME ")");
+		LOGU("");
 
 		Arguments arguments;
 
