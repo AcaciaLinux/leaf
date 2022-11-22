@@ -22,7 +22,7 @@ static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 static int progressFunc(void* ptr, double dltotal, double dlnow, double ultotal, double ulnow){
 	FUN();
 
-	LeafUtil::Progress::print(*((std::string*)ptr), (uint64_t)dltotal, (uint64_t)dlnow, 10);
+	LeafUtil::Progress::print(*((std::string*)ptr), (uint64_t)dltotal, (uint64_t)dlnow, 50);
 
 	return 0;
 }
@@ -49,6 +49,8 @@ size_t Downloader::download(std::string url, std::ostream& out, std::string pref
 	curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, progressFunc);
 	curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, &prefix);
 	curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
+
+	LeafUtil::Progress::init();
 
 	curlRes = curl_easy_perform(_curl);
 
