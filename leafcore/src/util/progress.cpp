@@ -25,7 +25,12 @@ void LeafUtil::Progress::init(){
 
 	#ifdef LEAF_NCURSES
 		int col, row;
-		std::string term = std::string(getenv("TERM"));
+		char* cTerm = getenv("TERM");
+
+		std::string term;
+		if (cTerm != NULL){
+			term = std::string(cTerm);
+		}
 
 		if (term.length() == 0){
 			if (!printed_warning_fallback){
