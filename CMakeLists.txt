@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 option(LEAF_STATIC "Build a static version of leaf" OFF)
+option(LEAF_NONCURSES "Build leaf without ncurses dependency" OFF)
 option(BUILD_DOCS "Build the documentation for leafcore" OFF)
 option(BUILD_TESTS "Build the test suite" OFF)
 
@@ -38,7 +39,6 @@ include_directories(include)
 include_directories(args)
 include_directories(leafcore/include)
 
-
 if (BUILD_TESTS)
 	enable_testing(true)
 	add_subdirectory(Log/googletest)
@@ -51,23 +51,24 @@ if(BUILD_DOCS)
 	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/docs)
 endif()
 
-set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
-
-add_subdirectory(leafcore)
-
-add_subdirectory(Log)
-include_directories(Log/include)
-
 set (PNAME ${PROJECT_NAME})
 
 file (GLOB_RECURSE CXXSOURCES "src/**.cpp")
 file (GLOB_RECURSE HEADERS "include/**.h")
 
 if (LEAF_STATIC)
-	message("Building a static leaf executable!")
+	message("[Leaf] Building a static leaf executable!")
+	set(LEAF_NONCURSES ON BOOL "Disable ncurses support")
 	set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 	set(BUILD_SHARED_LIBS OFF)
 endif()
+
+set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
+
+add_subdirectory(leafcore)
+
+add_subdirectory(Log)
+include_directories(Log/include)
 
 add_executable(${PNAME} ${HEADERS} ${CXXSOURCES})
 target_link_libraries(${PNAME} PRIVATE leafcore ${LEAF_ADDITIONAL_LIBRARIES})
