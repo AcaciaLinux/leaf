@@ -52,7 +52,7 @@ void Package::fetch(){
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
-	size_t dRes = dl.download(getFetchURL(), outFile);
+	size_t dRes = dl.download(getFetchURL(), outFile, "Downloading " + getFullName());
 	outFile.close();
 
 	//If everything is ok, return
