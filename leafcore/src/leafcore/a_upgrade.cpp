@@ -123,8 +123,6 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 	}
 
 	for (const auto& i : upgradePkgs){
-		LOGU("Downloading package " + i.second->getFullName() + "...");
-
 		i.second->fetch();
 	}
 
