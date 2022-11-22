@@ -34,6 +34,7 @@ namespace LeafUtil
 	}
 
 	namespace Progress{
+		void init();
 		void print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps);
 		void end();
 	} // namespace Progress
