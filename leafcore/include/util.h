@@ -2,6 +2,7 @@
 #define __UTIL_H__
 
 #include <cstddef>
+#include <stdint.h>
 #include <algorithm>
 #include <set>
 #include <deque>
@@ -31,6 +32,12 @@ namespace LeafUtil
 
 		return deque.size();
 	}
+
+	namespace Progress{
+		void print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps);
+		void end();
+	} // namespace Progress
+
 
 } // namespace LeafUtil
 
