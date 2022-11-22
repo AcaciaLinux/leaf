@@ -117,7 +117,7 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 	{//Execute pre-install hooks
 		LOGU("Running pre install hooks...");
 		for (Hook& hook : _hooks){
-			LOGD("Running pre install hook...");
+			LOGD("[Leafcore][a_upgrade] Running pre install hook...");
 			hook.execPre(_config);
 		}
 	}
@@ -149,7 +149,7 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 	{//Execute post-install hooks
 		LOGU("Running post install hooks...");
 		for (Hook& hook : _hooks){
-			LOGD("Running post install hook...");
+			LOGD("[Leafcore][a_upgrade] Running post install hook...");
 			hook.execPost(_config);
 		}
 	}
