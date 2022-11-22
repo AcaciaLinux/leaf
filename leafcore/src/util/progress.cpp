@@ -17,6 +17,7 @@
 #endif
 
 static bool progress_printed = false;
+static bool printed_warning_fallback = false;
 static uint64_t screen_width = 0;
 
 void LeafUtil::Progress::init(){
@@ -24,14 +25,29 @@ void LeafUtil::Progress::init(){
 
 	#ifdef LEAF_NCURSES
 		int col, row;
-		if (initscr() != OK){
-			LOGUE("Failed to determine terminal size, falling back!");
+		std::string term = std::string(getenv("TERM"));
+
+		if (term.length() == 0){
+			if (!printed_warning_fallback){
+				LOGUE("Terminal type is not set (TERM=), falling back!");
+				printed_warning_fallback = true;
+			}
 			screen_width = 0;
 		} else {
-			getmaxyx(stdscr, row, col);
-			refresh();
-			endwin();
-			screen_width = col;
+			if (initscr() == nullptr){
+				refresh();
+				endwin();
+				if (!printed_warning_fallback){
+					LOGUE("Could not determine terminal width, falling back!");
+					printed_warning_fallback = true;
+				}
+				screen_width = 0;
+			} else {
+				getmaxyx(stdscr, row, col);
+				refresh();
+				endwin();
+				screen_width = col;
+			}
 		}
 
 		LOGI("[LeafUtil][Progress][init] Screen width = " + std::to_string(screen_width));
