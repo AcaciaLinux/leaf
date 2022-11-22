@@ -11,13 +11,23 @@
 
 #include "downloader.h"
 
+#include "util.h"
+
 static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 	(*s).write(((char*)ptr), size*nmemb);
 
 	return size*nmemb;
 }
 
-size_t Downloader::download(std::string url, std::ostream& out){
+static int progressFunc(void* ptr, double dltotal, double dlnow, double ultotal, double ulnow){
+	FUN();
+
+	LeafUtil::Progress::print(*((std::string*)ptr), (uint64_t)dltotal, (uint64_t)dlnow, 10);
+
+	return 0;
+}
+
+size_t Downloader::download(std::string url, std::ostream& out, std::string prefix){
 	FUN();
 
 	LEAF_DEBUG_EX("Downloader::download()");
@@ -36,9 +46,13 @@ size_t Downloader::download(std::string url, std::ostream& out){
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);
+	curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, progressFunc);
+	curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, &prefix);
 	curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 
 	curlRes = curl_easy_perform(_curl);
+
+	LeafUtil::Progress::end();
 
 	if (curlRes != CURLE_OK)
 		throw new LeafError(Error::DL_CURL_ERR, curl_easy_strerror(curlRes));

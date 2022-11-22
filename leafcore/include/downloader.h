@@ -22,9 +22,10 @@ public:
 	 * @brief	Downloads from the supplied url to the supplied stream
 	 * @param	url			The URL to download from
 	 * @param	out			The stream to supply the data to
+	 * @param	prefix		The prefix text to the progress bar
 	 * @return	The HTTP response code
 	 */
-	size_t					download(std::string url, std::ostream& out);
+	size_t					download(std::string url, std::ostream& out, std::string prefix = "");
 
 #ifndef FRIEND_DOWNLOADER
 private:
