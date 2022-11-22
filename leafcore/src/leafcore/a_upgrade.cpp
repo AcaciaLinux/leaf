@@ -18,7 +18,6 @@
 #include <filesystem>
 #include <map>
 
-// TODO: Remove files that have been removed between changes
 void Leafcore::a_upgrade(std::deque<std::string> packages){
 	FUN();
 	LEAF_DEBUG_EX("Leafcore::a_upgrade()");
@@ -50,7 +49,12 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 				LOGU("Package " + pkgName + " does not seem to be installed, can not be upgraded");
 			else {
 				LOGD("[Leafcore][a_upgrade] Resolved installed package " + curPkg->getName());
-				installedPkg.push_back(curPkg);
+
+				//Resolve the dependencies of the package recursively
+				if (_config.installDependencies)
+					_installedDB->resolveDependencies(&installedPkg, curPkg);
+				else
+					installedPkg.push_back(curPkg);
 			}
 		}
 	}
@@ -65,6 +69,8 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 			availablePkgs[localPkg] = curPkg;
 		}
 	}
+
+
 
 	std::map<Package*, Package*> upgradePkgs;
 	{	//Compare realversions
