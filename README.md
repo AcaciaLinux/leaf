@@ -17,6 +17,7 @@ leaf currently has to be built from scratch. You will need the following depende
 ```bash
 libcurl
 libarchive
+ncurses
 ```
 
 #### Cloning

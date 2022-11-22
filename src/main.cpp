@@ -13,6 +13,7 @@
 #include "downloader.h"
 #include "pkglistparser.h"
 #include "leafcore.h"
+#include "dist.h"
 
 #include <deque>
 
@@ -33,6 +34,11 @@ int main(int argc, char** argv){
 
 	{
 		FUN();
+
+		LOGU("Leaf - The AcaciaLinux package manager");
+		LOGU("Copyright (c) maxkofler (https://maxkofler.eu/) and the AcaciaLinux developers (https://acacialinux.org/)");
+		LOGU("Version: " LEAFCORE_VERSION " (" LEAFCORE_CODENAME ")");
+		LOGU("");
 
 		Arguments arguments;
 
@@ -63,6 +69,12 @@ int main(int argc, char** argv){
 				leaf.parseInstalled();
 
 				leaf.a_installLocal(lConfig.packages);
+			} else if (lConfig.action == ACTION_UPGRADE){
+				leaf.parsePackageList();
+
+				leaf.parseInstalled();
+
+				leaf.a_upgrade(lConfig.packages);
 			}
 		} catch (LeafError* e){
 			LOGUE("Failed with error code " + std::to_string(e->getErrorCode()) + ": " + e->what());
