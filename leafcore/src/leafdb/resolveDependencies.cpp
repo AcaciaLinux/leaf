@@ -14,11 +14,12 @@
 
 bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package* package){
 	FUN();
-	LOGI("Resolving dependencies for " + package->getName() + "...");
+	LOGI("[LeafDB][resolveDependencies] Resolving dependencies for " + package->getName() + "...");
 
 	{//If this packages is already a dependency, do not resolve dependencies again
 		for (Package* pkg : *all_dependencies){
 			if (pkg->getName() == package->getName()){
+				LOGI("[LeafDB][resolveDependencies] Package " + package->getName() + " is already a dependency, skipping");
 				return true;
 			}
 		}
@@ -39,7 +40,7 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 		bool alreadyAdded = false;
 		for (size_t i = 0; i < all_dependencies->size(); i++){
 			if (all_dependencies->at(i)->getName() == depName){
-				LOGD("Skipping duplicate package " + depName);
+				LOGD("[LeafDB][resolveDependencies] Skipping duplicate package " + depName);
 				alreadyAdded = true;
 				break;
 			}
@@ -51,7 +52,7 @@ bool LeafDB::resolveDependencies(std::deque<Package*>* all_dependencies, Package
 			if (!resolveDependencies(all_dependencies, dependency))
 				return false;
 		} else {
-			LOGD("Skipping scanning for dependencies for duplicate package " + depName);
+			LOGD("[LeafDB][resolveDependencies] Skipping scanning for dependencies for duplicate package " + depName);
 		}
 	}
 
