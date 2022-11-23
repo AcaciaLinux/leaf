@@ -22,8 +22,22 @@
 #endif
 
 int main(int argc, char** argv){
-	hlog = new Log::Log(Log::U);
-	hlog->setFeature(Log::FEATURE_PRINTFUNNAMES, false);
+	hlog = new Log::Log();
+
+	Log::stream_config cout_conf;
+	cout_conf.loglevel = Log::U;
+	cout_conf.print_function_names = false;
+
+	hlog->addStream(std::cout, cout_conf);
+
+	/*
+	std::ofstream logStream;
+	logStream.open("log.txt", std::ios::out);
+	Log::stream_config log_conf;
+	log_conf.loglevel = Log::MEM;
+	log_conf.print_function_names = false;
+	hlog->addStream(logStream, log_conf);
+	*/
 
 	#ifdef LOG_ENABLE_PROFILING
 	std::ofstream* profileStream = new std::ofstream();

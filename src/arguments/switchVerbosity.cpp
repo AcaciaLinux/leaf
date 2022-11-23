@@ -2,31 +2,40 @@
 #include "leafconfig.h"
 #include "arguments.h"
 
+#include <iostream>
+
 bool Arguments::switchVerbosity(uint8_t v){
 	FUN();
+
+	Log::stream_config* conf = hlog->getStreamConf(std::cout);
+
+	if (conf == nullptr){
+		LOGUE("Could not get config! There is a bug in the code, report it!");
+		return false;
+	}
 
 	switch(v){
 	case 0:
 		_config.verbosity = CONFIG_V_DEFAULT;
-		hlog->setLevel(Log::U);
+		conf->loglevel = Log::U;
 		break;
 
 	case 1:
 		_config.verbosity = CONFIG_V_VERBOSE;
 		LOGU("Using verbose logging");
-		hlog->setLevel(Log::I);
+		conf->loglevel = Log::I;
 		break;
 
 	case 2:
 		_config.verbosity = CONFIG_V_SUPERVERBOSE;
 		LOGU("Using superverbose logging");
-		hlog->setLevel(Log::D);
+		conf->loglevel = Log::D;
 		break;
 
 	case 3:
 		_config.verbosity = CONFIG_V_ULTRAVERBOSE;
 		LOGU("Using ultraverbose logging");
-		hlog->setLevel(Log::MEM);
+		conf->loglevel = Log::MEM;
 		break;
 
 	default:

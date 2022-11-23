@@ -75,10 +75,7 @@ void Package::runScript(std::string path){
 
 	LOGI("Running command: \"" + command + "\" in " + getExtractedDir());
 
-	if (hlog->getLevel() < Log::I)
-		res = system(command.c_str());
-	else
-		res = system(command.c_str());
+	res = system(command.c_str());
 
 	if (res != 0){
 		std::filesystem::current_path(oldWorkDir);
