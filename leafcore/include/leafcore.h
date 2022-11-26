@@ -25,6 +25,12 @@ public:
 	Leafcore();
 
 	/**
+	 * @brief	Creates a new leaf instance with the supplied config
+	 * @param	conf			The config to use
+	 */
+	Leafcore(leaf_config_t conf);
+
+	/**
 	 * @brief	The destructor for the leafcore
 	 */
 	~Leafcore();

@@ -20,6 +20,15 @@ Leafcore::Leafcore(){
 	parseConfig();
 }
 
+Leafcore::Leafcore(leaf_config_t conf) : _config(conf){
+	FUN();
+
+	_packageListDB = new LeafDB(this);
+	_installedDB = new LeafDB(this);
+
+	parseConfig();
+}
+
 Leafcore::~Leafcore(){
 	FUN();
 
