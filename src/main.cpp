@@ -63,8 +63,7 @@ int main(int argc, char** argv){
 		leaf_config_t lConfig = arguments.getConfig();
 
 		try {
-			Leafcore leaf;
-			leaf.setConfig(lConfig);
+			Leafcore leaf(lConfig);
 			leaf.parseHooks();
 
 			if (lConfig.action == ACTION_UPDATE){
