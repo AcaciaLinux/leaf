@@ -29,4 +29,7 @@ void Leafcore::parseConfig(){
 	} else {
 		LOGUW("Leafcore: No config file found, using command line config");
 	}
+
+	if (_config.rootDir != "/")
+		LOGU("Directing leaf actions to " + _config.rootDir);
 }
