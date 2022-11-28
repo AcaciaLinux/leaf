@@ -9,7 +9,7 @@
 class Downloader{
 
 public:
-	Downloader();
+	Downloader(bool noProgress = false);
 	~Downloader();
 
 	/**
@@ -33,6 +33,9 @@ private:
 
 	//A curl object to operate with
 	CURL*					_curl = nullptr;
+
+	//Do not display the animated progress bar
+	bool					_noProgress = false;
 };
 
 #endif

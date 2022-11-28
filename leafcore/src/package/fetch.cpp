@@ -37,7 +37,7 @@ void Package::fetch(){
 		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
 	//Create the downloader instance
-	Downloader dl;
+	Downloader dl(_db->getCore()->getConfig().noProgress);
 	dl.init();
 
 	LOGD("Opening destination file " + destination + "...");
@@ -52,6 +52,8 @@ void Package::fetch(){
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
+	if (_db->getCore()->getConfig().noProgress)
+		LOGU("Downloading package " + getFullName() + "...");
 	size_t dRes = dl.download(getFetchURL(), outFile, "Downloading " + getFullName());
 	outFile.close();
 

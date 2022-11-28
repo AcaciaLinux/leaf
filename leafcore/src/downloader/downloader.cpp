@@ -9,7 +9,7 @@
 #include "downloader.h"
 #include "error.h"
 
-Downloader::Downloader(){
+Downloader::Downloader(bool noProgress) : _noProgress(noProgress){
 	FUN();
 }
 

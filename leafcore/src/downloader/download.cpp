@@ -46,15 +46,22 @@ size_t Downloader::download(std::string url, std::ostream& out, std::string pref
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);
-	curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, progressFunc);
-	curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, &prefix);
-	curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 
-	LeafUtil::Progress::init();
+	if (_noProgress){
+		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, true);
+	} else {
+		curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, progressFunc);
+		curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, &prefix);
+		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
+	}
+
+	if (!_noProgress)
+		LeafUtil::Progress::init();
 
 	curlRes = curl_easy_perform(_curl);
 
-	LeafUtil::Progress::end();
+	if (!_noProgress)
+		LeafUtil::Progress::end();
 
 	if (curlRes != CURLE_OK)
 		throw new LeafError(Error::DL_CURL_ERR, curl_easy_strerror(curlRes));
