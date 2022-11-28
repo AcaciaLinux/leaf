@@ -53,6 +53,9 @@ typedef struct leafconfig_struct{
 	//If leaf should keep its package caches after a transaction
 	bool						noClean = false;
 
+	//Disables the display of a beautiful progress bar
+	bool						noProgress = false;
+
 	//If leaf should overwrite existing files at the root
 	bool						forceOverwrite = false;
 
