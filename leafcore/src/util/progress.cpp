@@ -19,6 +19,7 @@
 static bool progress_printed = false;
 static bool printed_warning_fallback = false;
 static uint64_t screen_width = 0;
+static uint64_t last_percentage = 0;
 
 void LeafUtil::Progress::init(){
 	FUN();
@@ -57,6 +58,8 @@ void LeafUtil::Progress::init(){
 
 		LOGI("[LeafUtil][Progress][init] Screen width = " + std::to_string(screen_width));
 	#endif
+
+	last_percentage = 0;
 }
 
 void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps){
@@ -68,11 +71,6 @@ void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t prog
 	if (progress > total)
 		return;
 
-	uint64_t spaces_prefix_progress = 0;
-	if (screen_width != 0){
-		spaces_prefix_progress = screen_width - steps - prefix.size() - 11;
-	}
-
 	uint64_t progress_per_step = total / steps;
 	uint64_t steps_complete = progress / progress_per_step;
     uint64_t steps_missing = steps - steps_complete;
@@ -80,6 +78,14 @@ void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t prog
 
 	if (steps_complete > steps || steps_missing > steps)
 		return;
+
+	if (percentage == last_percentage)
+		return;
+
+	uint64_t spaces_prefix_progress = 0;
+	if (screen_width != 0){
+		spaces_prefix_progress = screen_width - steps - prefix.size() - 11;
+	}
 
 	progress_printed = true;
 
