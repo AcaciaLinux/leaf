@@ -3,7 +3,7 @@
 
 #define LEAFCORE_V_MAYOR 0
 #define LEAFCORE_V_MINOR 2
-#define LEAFCORE_V_PATCH 2
+#define LEAFCORE_V_PATCH 3
 
 #define LEAFCORE_CODENAME "Silver Maple"
 
