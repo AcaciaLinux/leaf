@@ -72,6 +72,7 @@ namespace Error{
 		//PackageListParser
 		PKGPRS_BAD_STREAM,
 		PKGPRS_APPLY_DB,
+		PKGPRS_LIST_N_SUCCESS,
 
 		//Hooks
 		HOOK_REQUIRED_VALUE,

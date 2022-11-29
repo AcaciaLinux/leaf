@@ -66,6 +66,7 @@ std::string errorCodes[] = {
 	//PackageListParser
 	"Package list parser: Bad stream",
 	"Package list parser: Apply to database",
+	"Package list parser: Package list fetch not successfull",
 
 	//Hooks
 	"Hook: Could not find required value",
