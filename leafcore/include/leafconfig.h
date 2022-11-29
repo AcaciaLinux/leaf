@@ -33,7 +33,7 @@ typedef struct leafconfig_struct{
 	std::string					rootDir = "/";
 
 	//The URL for fetching the main package list
-	std::string					pkgListURL = "https://api.acacialinux.org/?get=leafpackagelist";
+	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
 
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
@@ -100,7 +100,7 @@ typedef struct leafconfig_struct{
 
 	//The path to the package list
 	std::string					pkgListPath(){
-		return configDir() + "leaf.pkglist";
+		return configDir() + "pkglist.json";
 	}
 
 	//Set the root directory and append a '/' if needed
