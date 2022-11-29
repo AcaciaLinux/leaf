@@ -9,3 +9,4 @@
 [submodule "json"]
 	path = leafcore/json
 	url = https://github.com/nlohmann/json
+	shallow = true
