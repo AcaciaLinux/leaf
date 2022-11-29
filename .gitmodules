@@ -7,5 +7,5 @@
 	url = https://github.com/Taywee/args
 	shallow = true
 [submodule "json"]
-	path = json
+	path = leafcore/json
 	url = https://github.com/nlohmann/json
