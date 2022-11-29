@@ -68,6 +68,7 @@ endif()
 
 include_directories(include)
 include_directories(../Log/include)
+include_directories(json/single_include)
 
 file (GLOB_RECURSE CXXSOURCES "src/**.cpp")
 file (GLOB_RECURSE HEADERS "include/**.h")
