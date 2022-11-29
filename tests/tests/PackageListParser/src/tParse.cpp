@@ -40,54 +40,11 @@ TEST(PackageListParser, parse_bad_istream){
 	}
 }
 
-//Tests if the parser reacts correctly for invalid block length
-TEST(PackageListParser, parse_invalid_block_len){
-	FUN();
-
-	{	//Check for too many blocks
-		std::istringstream inString("This;are;not;five;blocks;but;way;more;so;this;should;fail!");
-
-		try{
-			
-			PackageListParser parser;
-			parser.parse(inString);
-
-			if (parser._packages.size() != 0){
-				FAIL() << "Parser accepted too many blocks as valid count";
-			}
-
-		} catch (LeafError* e){
-			CHECK_EC(Error::PKGPRS_BAD_STREAM, e);
-		} catch (...){
-			F_WRONGEXCEPTION("LeafError*");
-		}
-	}
-	
-	{	//Check for too few blocks
-		std::istringstream inString("This;are;few;blocks!");
-
-		try{
-			
-			PackageListParser parser;
-			parser.parse(inString);
-
-			if (parser._packages.size() != 0){
-				FAIL() << "Parser accepted too few blocks as valid count";
-			}
-
-		} catch (LeafError* e){
-			CHECK_EC(Error::PKGPRS_BAD_STREAM, e);
-		} catch (...){
-			F_WRONGEXCEPTION("LeafError*");
-		}
-	}
-}
-
 //Checks if the parser parses the provided string correctly
 TEST(PackageListParser, parse_right_parse){
 	FUN();
 
-	std::istringstream inString("Name;2;Version;Description;[Dependency];URL");
+	std::istringstream inString("{\"status\":\"SUCCESS\", \"payload\":[{\"name\":\"Name\", \"real_version\":\"2\", \"version\":\"Version\", \"description\":\"Description\", \"dependencies\":\"[Dependency]\", \"url\":\"URL\"}]}");
 
 	try{
 			PackageListParser parser;
