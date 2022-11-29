@@ -66,6 +66,19 @@ public:
 	bool							resolveDependencies(std::deque<Package*>* dependencies, Package* package);
 
 	/**
+	 * @brief	Resolves the dependers of the provided package
+	 * @param	package				The package to find the dependers of
+	 * @return	Empty vector if there was an error
+	 */
+	std::deque<Package*>			resolveDependers(Package* package);
+	
+	/**
+	 * @brief	Takes an iteration in resolving dependers for all packages
+	 * @param	dependers			A reference to the dependers vector to append to
+	 */
+	void							resolveDependers(std::deque<Package*>& dependers);
+
+	/**
 	 * @brief	Returns the leaf core this database belongs to
 	 */
 	Leafcore*						getCore();
