@@ -79,6 +79,9 @@ namespace Error{
 		//Package list
 		PKGLIST_NOTLOADED,
 
+		//JSON
+		JSON_OUT_OF_RANGE,
+
 		//BranchMaster
 		BRANCHMASTER_ERROR,
 

@@ -73,6 +73,9 @@ std::string errorCodes[] = {
 	//Package list
 	"Package list not loaded",
 
+	//JSON
+	"JSON: Out of range",
+
 	//BranchMaster
 	"Package server error",
 
