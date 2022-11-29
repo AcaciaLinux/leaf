@@ -11,6 +11,8 @@
 #include "leafdebug.h"
 #include "pkglistparser.h"
 
+#include <nlohmann/json.hpp>
+
 void PackageListParser::parse(std::istream& in){
 	FUN();
 
@@ -19,52 +21,41 @@ void PackageListParser::parse(std::istream& in){
 	if (!in.good())
 		throw new LeafError(Error::PKGPRS_BAD_STREAM);
 
-	std::string line;
-	std::deque<std::string> blocks;
-	std::string buf;
+	//Parse, but allow no exceptions
+	nlohmann::json json = nlohmann::json::parse(in, nullptr, false);
 
-	while(getline(in, line)){
-		LOGF("Parsing line \"" + line + "\"");
+	try {
 
-		blocks.clear();
-		buf = "";
+		//Check if the package list has been parsed successfully
+		if (json.at("status") != "SUCCESS"){
+			throw new LeafError(Error::PKGPRS_LIST_N_SUCCESS);
+		}
+
+		//Go over every package
+		for(nlohmann::json json_pkg : json.at("payload")){
+			LOGD("Found package: " + std::string(json_pkg["name"]));
 		
-		//Parse the ';' separated string
-		for (char c : line){
-			if (c == ';'){
-				blocks.push_back(buf);
-				buf = "";
-			}else
-				buf += c;
-		}
+			//Construct the new package
+			Package* newPackage = new Package(json_pkg.at("name"), json_pkg.at("version"));
 
-		//Push the last block
-		blocks.push_back(buf);
+			//Fill the new package
+			newPackage->_realVersion = std::stoi(std::string(json_pkg.at("real_version")));
+			newPackage->_description = json_pkg.at("description");
+			newPackage->_dependencies = parseDependenciesString(json_pkg.at("dependencies"));
 
-		if (blocks.size() != 6){
-			LOGE("Line \"" + line + "\" has invalid block count " + std::to_string(blocks.size()) + "/6");
-			continue;
-		}
-
-		{//Log the result
-			std::string logbuf = "Parsed line:";
-			for (std::string block : blocks){
-				logbuf += " {" + block + "}";
+			//Check for a fetchURL, else it is a collection
+			newPackage->_fetchURL = json_pkg.at("url");
+			if (newPackage->_fetchURL.empty()){
+				LOGI(newPackage->getFullName() + " gets treated as collection");
+				newPackage->setIsCollection(true);
 			}
-			LOGF(logbuf);
+
+			//Add the new package to the database
+			_packages.push_back(newPackage);
+
 		}
 
-		Package* newPackage = new Package(blocks.at(0), blocks.at(2));
-		newPackage->_realVersion = stoi(blocks.at(1));
-		newPackage->_description = blocks.at(3);
-		newPackage->_dependencies = parseDependenciesString(blocks.at(4));
-
-		newPackage->_fetchURL = blocks.at(5);
-		if (newPackage->_fetchURL.empty()){
-			LOGI(newPackage->getFullName() + " gets treated as collection");
-			newPackage->setIsCollection(true);
-		}
-
-		_packages.push_back(newPackage);
+	} catch (nlohmann::json::out_of_range& e){
+		throw new LeafError(Error::JSON_OUT_OF_RANGE, e.what());
 	}
 }
