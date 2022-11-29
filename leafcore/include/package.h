@@ -103,6 +103,13 @@ public:
 	bool						resolveDependentPackages();
 
 	/**
+	 * @brief	Checks if this package depends on the supplied package
+	 * @param	package			The package to check
+	 * @return	true if this package depends on the supplied package
+	 */
+	bool						dependsOn(Package* package);
+
+	/**
 	 * @brief	Returns a reference to the files provided by this package
 	 */
 	std::deque<std::string>&	getProvidedFiles();
