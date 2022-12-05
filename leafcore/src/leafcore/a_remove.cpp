@@ -40,20 +40,26 @@ void Leafcore::a_remove(std::deque<std::string> packages){
 		if (all_packages.size() > 0){
 
 			//Inform the user about depending packages
-			std::string outString = "The following packages depend on the removed package(s):";
+			std::string outString = "The following packages " + std::string(_config.force ? "would " : " ") + "depend on the removed package(s):";
 			for (Package* p : all_packages){
 				outString += "\n\t-> " + p->getFullName() + "";
 			}
-			LOGU(outString);
 
-			//Ask if the depending packages should be removed too
-			bool removeDependers = askUserOK("Do you want to remove them too?", false);
+			if (!_config.force){
+				LOGU(outString);
 
-			//If so, add the depending packages to the remove_packages list
-			if (removeDependers)
-				remove_packages.insert(remove_packages.end(), all_packages.begin(), all_packages.end());
-			else
-				throw new LeafError(Error::USER_DISAGREE, "Removing depending packages");
+				//Ask if the depending packages should be removed too
+				bool removeDependers = askUserOK("Do you want to remove them too?", false);
+
+				//If so, add the depending packages to the remove_packages list
+				if (removeDependers)
+					remove_packages.insert(remove_packages.end(), all_packages.begin(), all_packages.end());
+				else
+					throw new LeafError(Error::USER_DISAGREE, "Removing depending packages");
+			} else {
+				LOGUW("WARNING: Using 'force', leaf does not check for depending packages (you may remove dependencies for other packages)!");
+				LOGU(outString);
+			}
 		}
 	}
 
