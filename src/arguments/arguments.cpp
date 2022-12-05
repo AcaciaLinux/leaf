@@ -13,6 +13,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::Flag f_verbose(parser, "verbose", "Display verbose output", {'v'});
 	args::Flag f_redownload(parser, "redownload", "Redownload the specified package even if it is in the cache", {"redownload"});
 	args::Flag f_redownloadAll(parser, "redownloadAll", "Redownload all the package and dependencies even if they are in the cache", {"redownloadAll"});
+	args::Flag f_force(parser, "force", "Force leaf to ignore certain safety checks (may break the system)", {'f', "force"});
 	args::Flag f_forceOverwrite(parser, "force overwrite", "Force leaf to ignore file conflicts and write anyway", {"forceOverwrite"});
 	args::Flag f_noPreinstall(parser, "skip preinstall", "Do not execute the preinstall script", {"noPreinstall"});
 	args::Flag f_noPostinstall(parser, "skip postnstall", "Do not execute the postinstall script", {"noPostinstall"});
@@ -81,6 +82,11 @@ bool Arguments::parse(int argc, char** argv){
 
 	if (f_noProgress)
 		_config.noProgress = args::get(f_noProgress);
+
+	if (args::get(f_force)){
+		LOGUW("WARNING: You are using --force, this may break the system!");
+		_config.force = true;
+	}
 
 	if (args::get(f_forceOverwrite)){
 		LOGUW("WARNING: You use forceOverwrite, leaf will not check for file conflicts!");
