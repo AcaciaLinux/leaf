@@ -56,6 +56,9 @@ typedef struct leafconfig_struct{
 	//Disables the display of a beautiful progress bar
 	bool						noProgress = false;
 
+	//Forces certain safety features off
+	bool						force = false;
+
 	//If leaf should overwrite existing files at the root
 	bool						forceOverwrite = false;
 
