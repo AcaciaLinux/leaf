@@ -16,7 +16,10 @@ void LeafDB::resolveDependers(std::deque<Package*>& all_dependers){
 	FUN();
 
 	//Iterate over all dependers and resolve their dependers
-	for (Package* curPackage : all_dependers){
+	size_t s_all_dependers = all_dependers.size();
+	Package* curPackage = nullptr;
+	for (size_t i = 0; i < s_all_dependers; i++){
+		curPackage = all_dependers[i];
 
 		//Check for every package in the database if it is dependent on curPackage
 		for (auto& package : _packages){
@@ -31,11 +34,15 @@ void LeafDB::resolveDependers(std::deque<Package*>& all_dependers){
 				}
 
 				//If not, add it to the list of dependers
-				if (!alreadyIn)
+				if (!alreadyIn){
+					LOGD("[LeafDB][resolveDependers] Adding depending package " + package.second->getName());
 					all_dependers.push_back(package.second);
+				}
 
 			}
 		}
+
+		s_all_dependers = all_dependers.size();
 	}
 }
 
