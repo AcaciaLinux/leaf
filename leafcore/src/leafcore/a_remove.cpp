@@ -28,7 +28,34 @@ void Leafcore::a_remove(std::deque<std::string> packages){
 		}
 	}
 
-	//TODO: Check if a package depends on the removed packages
+	//Check if there are packages that depend on the removed package(s)	
+	{
+		std::deque<Package*> all_packages;
+		all_packages.insert(all_packages.end(), remove_packages.begin(), remove_packages.end());
+
+		//Resolve the dependers and remove the packages that are specified, remaining the additional packages
+		_installedDB->resolveDependers(all_packages);
+		all_packages.erase(all_packages.begin(), all_packages.begin() + remove_packages.size());
+
+		if (all_packages.size() > 0){
+
+			//Inform the user about depending packages
+			std::string outString = "The following packages depend on the removed package(s):";
+			for (Package* p : all_packages){
+				outString += "\n\t-> " + p->getFullName() + "";
+			}
+			LOGU(outString);
+
+			//Ask if the depending packages should be removed too
+			bool removeDependers = askUserOK("Do you want to remove them too?", false);
+
+			//If so, add the depending packages to the remove_packages list
+			if (removeDependers)
+				remove_packages.insert(remove_packages.end(), all_packages.begin(), all_packages.end());
+			else
+				throw new LeafError(Error::USER_DISAGREE, "Removing depending packages");
+		}
+	}
 
 	//Inform the user
 	{
