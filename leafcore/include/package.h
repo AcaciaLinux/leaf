@@ -37,7 +37,7 @@ public:
 	void						parseInstalledFile(std::istream& in);
 
 	/**
-	 * @brief	Fetches the package .leafpkg from the server
+	 * @brief	Fetches the package .lfpkg from the server
 	 */
 	void						fetch();
 
@@ -88,7 +88,7 @@ public:
 	void						removeFromRoot();
 
 	/**
-	 * @brief	Removes the cached .leafpkg file if present
+	 * @brief	Removes the cached .lfpkg file if present
 	 */
 	void						removeDownloadCache();
 
