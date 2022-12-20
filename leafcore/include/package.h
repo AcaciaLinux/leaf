@@ -254,6 +254,11 @@ private:
 	std::string					_fetchURL;
 
 	/**
+	 * @brief	The MD5 hash that is expected when fetching the package file
+	 */
+	std::string					_remote_md5;
+
+	/**
 	 * @brief	Whether the package represents a collection of other packages
 	 */
 	bool						_isCollection = false;

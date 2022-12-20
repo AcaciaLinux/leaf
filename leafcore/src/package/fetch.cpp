@@ -37,6 +37,13 @@ void Package::fetch(){
 	if (destination.empty())
 		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
+	//Check if the package has an expected md5 hash
+	if (_remote_md5.length() == 0){
+		if (!_db->getCore()->askUserOK("The package " + getFullName() + " does not have an expected MD5 hash, do you want to continue anyway?", false)){
+			throw new LeafError(Error::USER_DISAGREE, "Continue installing without MD5 checks");
+		}
+	}
+
 	LOGD("Opening destination file " + destination + "...");
 	//Create and open the destination file
 	std::ofstream outFile;
@@ -55,13 +62,21 @@ void Package::fetch(){
 	//Download the package file
 	if (_db->getCore()->getConfig().noProgress)
 		LOGU("Downloading package " + getFullName() + "...");
+
 	size_t dRes = dl.download("Downloading " + getFullName());
+
 	outFile.close();
+
+	//Check the md5 hash
+	if (_remote_md5.length() != 0 && _remote_md5 != dl.getMD5()){
+		if (!_db->getCore()->askUserOK("The package " + getFullName() + " does have an invalid MD5 hash, it might be corrupted, do you want to continue anyway?", false)){
+			throw new LeafError(Error::USER_DISAGREE, "Continue installing a package with invalid MD5 hash");
+		}
+	}
 
 	//If everything is ok, return
 	if (dRes < 400)
 		return;
-
 
 	std::ifstream ecFile(destination, std::ios::in);
 	if (!ecFile.is_open()){
