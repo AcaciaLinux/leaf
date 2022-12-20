@@ -9,8 +9,8 @@ TEST(Downloader, download_debug){
 
 	try{
 
-		Downloader dl;
-		dl.download("noURL", std::cout);
+		Downloader dl("noURL", std::cout, true);
+		dl.download();
 		
 		F_NOTHROW(Error::DEBUG_EXCEPTION);
 	} catch (LeafError* e){
@@ -23,10 +23,10 @@ TEST(Downloader, download_debug){
 TEST(Downloader, download_notInit){
 	FUN();
 
-	Downloader dl;
+	Downloader dl("noURL", std::cout, true);
 
 	try{
-		dl.download("noURL", std::cout);
+		dl.download();
 
 		F_NOTHROW(Error::DL_NOT_INIT);
 	} catch (LeafError* e){
@@ -39,13 +39,13 @@ TEST(Downloader, download_notInit){
 TEST(Downloader, download_bad_stream){
 	FUN();
 
-	Downloader dl;
 	std::ofstream outFile;
 	outFile.setstate(std::ios::badbit);
+	Downloader dl("noURL", outFile, true);
 
 	try{
 		dl.init();
-		dl.download("noURL", outFile);
+		dl.download();
 
 		F_NOTHROW(Error::DL_BAD_STREAM);
 	} catch (LeafError* e){
@@ -58,13 +58,13 @@ TEST(Downloader, download_bad_stream){
 TEST(Downloader, download_noURL){
 	FUN();
 
-	Downloader dl;
 	std::ofstream outFile;
 	outFile.open("DownloaderTestFile.txt", std::ios::out);
+	Downloader dl("", outFile, true);
 
 	try{
 		dl.init();
-		dl.download("", outFile);
+		dl.download();
 
 		F_NOTHROW(Error::DL_CURL_ERR);
 	} catch (LeafError* e){

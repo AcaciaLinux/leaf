@@ -1,12 +1,15 @@
 #include "../t_downloader.h"
 
+#include <fstream>
+
 TEST(Downloader, init_debug){
 	FUN();
 
 	LEAF_DEBUG_SET_FAIL("Downloader::init()");
 
 	try{
-		Downloader dl;
+		std::ofstream outFile;
+		Downloader dl("NoUrl", outFile);
 		dl.init();
 		
 		F_NOTHROW(Error::DEBUG_EXCEPTION);
