@@ -10,8 +10,10 @@
 #include "package.h"
 #include "leafarchive.h"
 #include "leafconfig.h"
+#include "md5.h"
 
 #include <filesystem>
+#include <fstream>
 
 //TODO: Tests
 
@@ -50,6 +52,18 @@ void Package::extract(){
 		std::filesystem::remove_all(extractedDir, errCode);
 		if (errCode)
 			throw new LeafError(Error::REMOVEDIR, extractedDir);
+	}
+
+	{//Generate the hash of the input file
+		std::ifstream inFile;
+		inFile.open(sourcePath, std::ios::binary);
+
+		if (!inFile.is_open())
+			throw new LeafError(Error::OPENFILER, "Package source file for validation " + sourcePath);
+
+		_installed_md5 = md5(inFile);
+
+		inFile.close();
 	}
 
 	//Create the archive instance
