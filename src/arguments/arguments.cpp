@@ -20,6 +20,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::Flag f_noAsk(parser, "noAsk", "Do not ask questions and assume yes every time", {"noAsk"});
 	args::Flag f_noClean(parser, "noClean", "Do not clean the leaf caches after installation", {"noClean"});
 	args::Flag f_noProgress(parser, "noProgress", "Do not display an animated progress bar", {"noProgress"});
+	args::Flag f_checkRemoteHashUpgrade(parser, "checkRemoteHash", "Check the installed hash of a package against the remote one to check for update", {"checkRemoteHash"});
 	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
@@ -82,6 +83,9 @@ bool Arguments::parse(int argc, char** argv){
 
 	if (f_noProgress)
 		_config.noProgress = args::get(f_noProgress);
+
+	if (f_checkRemoteHashUpgrade)
+		_config.checkRemoteHashUpgrade = args::get(f_checkRemoteHashUpgrade);
 
 	if (args::get(f_force)){
 		LOGUW("WARNING: You are using --force, this may break the system!");
