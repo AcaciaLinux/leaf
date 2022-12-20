@@ -194,6 +194,11 @@ public:
 	std::deque<Package*>		getDependentPackages();
 
 	/**
+	 * @brief	Returns the path to the locally installed .lfpkg file
+	 */
+	std::string					getLocalSourcePath();
+
+	/**
 	 * @brief	Checks if the provided file is provided by the package
 	 * @param	filePath		The filepath to the file being checked relative to root (/)
 	 */
