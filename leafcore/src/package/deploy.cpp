@@ -40,7 +40,6 @@ void Package::deploy(){
 		runPreinstall();
 		copyToRoot(overwrite);
 		runPostinstall();
-		_installed_md5 = _local_md5;
 
 	} catch (LeafError* e) {
 		std::error_code ec;
