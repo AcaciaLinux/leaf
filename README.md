@@ -69,3 +69,12 @@ If you want to clear the space, you can do so by removing the leaf directory:
 ```bash
 rm -rf leaf
 ```
+
+# Credits:
+Big thanks to:
+- [Taywee](https://github.com/Taywee) for the args module
+- [nlohmann](https://github.com/nlohmann) for the json library 
+- "RSA Data Security, Inc. MD5 Message-Digest
+Algorithm" and Frank Thilo (thilo@unix-ag.org) for the md5 functions
+
+If we infringed some copyright, please let us know in an issue, we will happily resolve it because everyone deserves credit for his work!
