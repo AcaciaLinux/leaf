@@ -34,19 +34,13 @@ void Package::deploy(){
 		LOGI("Leafinstalled file for package " + getName() + " exists, reinstalling...");
 		overwrite = true;
 	}
-	
-	std::ofstream installedFile;
-	installedFile.open(getInstalledFilePath(), std::ios::trunc);
-
-	if (!installedFile.is_open())
-		throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
 
 	try {
 		
 		runPreinstall();
 		copyToRoot(overwrite);
 		runPostinstall();
-		createInstalledFile(installedFile);
+		_installed_md5 = _local_md5;
 
 	} catch (LeafError* e) {
 		std::error_code ec;
@@ -57,5 +51,15 @@ void Package::deploy(){
 		throw e;
 	}
 
-	installedFile.close();
+	{//Create the .leafinstalled file
+		std::ofstream installedFile;
+		installedFile.open(getInstalledFilePath(), std::ios::trunc);
+
+		if (!installedFile.is_open())
+			throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
+
+		createInstalledFile(installedFile);
+
+		installedFile.close();
+	}
 } 
