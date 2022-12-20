@@ -15,11 +15,13 @@ void Package::createInstalledFile(std::ostream& out){
 	LEAF_DEBUG_EX("Package::createInstalledFile()");
 
 	if (!out.good())
-		throw new LeafError(Error::BAD_ISTREAM, "create installed file for " + getFullName());
+		throw new LeafError(Error::BAD_OSTREAM, "create installed file for " + getFullName());
 
-	out << _name << std::endl;
-	out << _realVersion << std::endl;
-	out << _versionString << std::endl;
+	out << "1" << std::endl; //Version 1
+	out << _name << std::endl; //The name of the package
+	out << _realVersion << std::endl; //The real version number
+	out << _versionString << std::endl; //The version string
+	out << _installed_md5 << std::endl; //The MD5 of the installed package
 	out << std::to_string(_dependencies.size()) << std::endl;
 	out << std::to_string(_provided_files.size() + _provided_directories.size()) << std::endl;
 
