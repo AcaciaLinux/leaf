@@ -84,7 +84,6 @@ void Leafcore::a_installLocal(std::deque<std::string> packages){
 
 	for (Package* package : install_packages){
 		LOGU("Extracting package " + package->getFullName() + "...");
-		
 		package->extract();
 	}
 
