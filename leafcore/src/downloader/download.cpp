@@ -63,6 +63,7 @@ size_t Downloader::download(std::string prefix){
 
 	curlRes = curl_easy_perform(_curl);
 	_md5.finalize();
+	LOGD("[Downloader][download] MD5 of fetched data: " + getMD5());
 
 	if (!_noProgress)
 		LeafUtil::Progress::end();
