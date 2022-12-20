@@ -77,6 +77,10 @@ bool Package::isCollection(){
 	return _isCollection;
 }
 
+std::string Package::getLocalSourcePath(){
+	return _localSourcePath;
+}
+
 std::string Package::getDownloadPath(){
 	//Check if the database is ok
 	if (_db == nullptr)
