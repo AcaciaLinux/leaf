@@ -264,6 +264,11 @@ private:
 	std::string					_local_md5;
 
 	/**
+	 * @brief	The MD5 hash of the currently installed package file (stored in .leafinstalled)
+	 */
+	std::string					_installed_md5;
+
+	/**
 	 * @brief	Whether the package represents a collection of other packages
 	 */
 	bool						_isCollection = false;
