@@ -61,10 +61,6 @@ std::string Package::getFetchURL(){
 	return _fetchURL;
 }
 
-std::deque<Package*> Package::getDependentPackages(){
-	return _dependent_package;
-}
-
 void Package::setDB(LeafDB* db){
 	_db = db;
 }

@@ -213,28 +213,70 @@ public:
 private:
 #endif
 
-	//The default constructor hidden away from the user
+	/**
+	 * @brief	The default constructor
+	 */
 	Package();
 
+	/**
+	 * @brief	A pointer to the database the package belongs to
+	 */
 	LeafDB*						_db = nullptr;
 
+	/**
+	 * @brief	The name of the package
+	 */
 	std::string					_name;
+
+	/**
+	 * @brief	The realversion of the package in u32
+	 */
 	uint32_t					_realVersion;
+
+	/**
+	 * @brief	The version string of the package
+	 */
 	std::string					_versionString;
+
+	/**
+	 * @brief	The description of the package
+	 */
 	std::string					_description;
+
+	/**
+	 * @brief	A deque containing all the dependency names for the package
+	 */
 	std::deque<std::string>		_dependencies;
+
+	/**
+	 * @brief	The URL to fetch the package from
+	 */
 	std::string					_fetchURL;
 
+	/**
+	 * @brief	Whether the package represents a collection of other packages
+	 */
 	bool						_isCollection = false;
 
-	//Information about local files
+	/**
+	 * @brief	Whether the package is a local .lfpkg file
+	 */
 	bool						_isLocal = false;
+
+	/**
+	 * @brief	The path to the local .lfpkg file
+	 */
 	std::string					_localSourcePath;
 	
+	/**
+	 * @brief	List of the provided files
+	 */
 	std::deque<std::string>		_provided_files;
-	std::deque<std::string>		_provided_directories;
 
-	std::deque<Package*>		_dependent_package;
+	/**
+	 * @brief	List of the provided directories
+	 */
+	std::deque<std::string>		_provided_directories;
 };
 
 #endif
