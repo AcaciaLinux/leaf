@@ -43,6 +43,12 @@ void PackageListParser::parse(std::istream& in){
 			newPackage->_description = json_pkg.at("description");
 			newPackage->_dependencies = parseDependenciesString(json_pkg.at("dependencies"));
 
+			//Check for the 'hash' tag
+			if (json_pkg.count("hash") != 0)
+				newPackage->_remote_md5 = json_pkg.at("hash");
+			else
+				LOGD("[PackageListParser][parse] Package " + std::string(json_pkg.at("name")) + " does lack the 'hash' entry");
+
 			//Check for a fetchURL, else it is a collection
 			newPackage->_fetchURL = json_pkg.at("url");
 			if (newPackage->_fetchURL.empty()){
