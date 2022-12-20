@@ -88,17 +88,18 @@ void Package::fetch(){
 		LOGU("Downloading package " + getFullName() + "...");
 
 	size_t dRes = dl.download("Downloading " + getFullName());
+	_local_md5 = dl.getMD5();
 
 	outFile.close();
 
 	//Check the md5 hash
-	if (_remote_md5.length() != 0 && _remote_md5 != dl.getMD5()){
+	if (_remote_md5.length() != 0 && _remote_md5 != _local_md5){
 
 		LOGUE(
 			"The package " + getFullName()  + " has an invalid hash: \n" + 
 			"----------------------------------------\n" +
 			"remote: " + _remote_md5 + "\n" +
-			"local:  " + dl.getMD5() + "\n" +
+			"local:  " + _local_md5 + "\n" +
 			"----------------------------------------");
 
 		if (!_db->getCore()->askUserOK("It might be corrupted, do you want to continue anyway?", false)){

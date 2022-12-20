@@ -259,6 +259,11 @@ private:
 	std::string					_remote_md5;
 
 	/**
+	 * @brief	The MD5 hash of the present package file (local or in cache)
+	 */
+	std::string					_local_md5;
+
+	/**
 	 * @brief	Whether the package represents a collection of other packages
 	 */
 	bool						_isCollection = false;
