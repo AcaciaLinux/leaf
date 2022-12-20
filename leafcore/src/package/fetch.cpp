@@ -9,6 +9,7 @@
 #include "leafdebug.h"
 #include "package.h"
 #include "downloader.h"
+#include "md5.h"
 
 #include <fstream>
 #include <filesystem>
@@ -36,10 +37,6 @@ void Package::fetch(){
 	if (destination.empty())
 		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
-	//Create the downloader instance
-	Downloader dl(_db->getCore()->getConfig().noProgress);
-	dl.init();
-
 	LOGD("Opening destination file " + destination + "...");
 	//Create and open the destination file
 	std::ofstream outFile;
@@ -49,12 +46,16 @@ void Package::fetch(){
 	if (!outFile.is_open())
 		throw new LeafError(Error::OPENFILEW, "Download for " + getFullName() + ": " + destination);
 
+	//Create the downloader instance
+	Downloader dl(getFetchURL(), outFile, _db->getCore()->getConfig().noProgress);
+	dl.init();
+
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
 	if (_db->getCore()->getConfig().noProgress)
 		LOGU("Downloading package " + getFullName() + "...");
-	size_t dRes = dl.download(getFetchURL(), outFile, "Downloading " + getFullName());
+	size_t dRes = dl.download("Downloading " + getFullName());
 	outFile.close();
 
 	//If everything is ok, return
