@@ -141,11 +141,6 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 
 		for (Package* package : install_packages){
-			if (std::filesystem::exists(package->getDownloadPath())){
-				LOGI("Skipping download of package " + package->getFullName());
-				continue;
-			}
-
 			package->fetch();
 		}
 	}
