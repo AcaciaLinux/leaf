@@ -292,6 +292,46 @@ private:
 	 * @brief	List of the provided directories
 	 */
 	std::deque<std::string>		_provided_directories;
+
+	//
+	// The .leafinstalled file is versioned, the functions for the versions
+	//
+
+	/**
+	 * @brief	The parser function for .leafinstalled files in version 0
+	 */
+	void						parseInstalledV0(std::istream& in);
+
+	/**
+	 * @brief	The parser function for .leafinstalled files in version 1
+	 */
+	void						parseInstalledV1(std::istream& in);
+
+	//
+	// Some utility functions for parsing the .leafinstalled file
+	//
+
+	/**
+	 * @brief	Parses a line containing an integer from the in stream
+	 * @param	in				The input stream to parse from
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	size_t						parseInstalledInt(std::istream& in, const std::string& description);
+
+	/**
+	 * @brief	Parses a line containing an string from the in stream
+	 * @param	in				The input stream to parse from
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	std::string					parseInstalledString(std::istream& in, const std::string& desciption);
+
+	/**
+	 * @brief	Parses a deque containing <count> lines of strings
+	 * @param	in				The input stream to parse from
+	 * @param	count			The amount of lines to parse into the deque
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	std::deque<std::string>		parseInstalledList(std::istream& in, size_t count, const std::string& description);
 };
 
 #endif
