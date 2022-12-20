@@ -10,6 +10,7 @@
 #include "package.h"
 #include "downloader.h"
 #include "md5.h"
+#include "leaffs.h"
 
 #include <fstream>
 #include <filesystem>
@@ -43,6 +44,29 @@ void Package::fetch(){
 			throw new LeafError(Error::USER_DISAGREE, "Continue installing without MD5 checks");
 		}
 	}
+
+	if (std::filesystem::exists(getDownloadPath())){
+		bool skip = true;
+
+		std::ifstream inFile;
+		inFile.open(getDownloadPath(), std::ios::binary);
+		if (!inFile.is_open())
+			throw new LeafError(Error::OPENFILER, "Download destination for validation " + getDownloadPath());
+
+		std::string existingHash = md5(inFile);
+
+		if (_remote_md5 != existingHash){
+			LOGI("[Package][fetch] Existing package file at " + getDownloadPath() + " differs from remote, redownloading...");
+			removeFile(getDownloadPath(), true);
+			skip = false;
+		}
+
+		if (skip){
+			LOGI("[Package][fetch] Skipping download of existing validated package file " + getDownloadPath());
+			return;
+		}
+	}
+
 
 	LOGD("Opening destination file " + destination + "...");
 	//Create and open the destination file
