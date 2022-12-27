@@ -36,6 +36,8 @@ std::string LeafError::errorCode(Error::ec e){
 			return "Bad output stream";
 		case REMOVE:
 			return "Could not remove filesystem entry";
+		case FS_EXISTS:
+			return "Could not check if fs entry exists";
 
 		//4x FS - files
 		case CREATEFILE:
@@ -60,6 +62,8 @@ std::string LeafError::errorCode(Error::ec e){
 			return "Path is not a directory";
 		case CHDIR:
 			return "Could not change to directory";
+		case MKDIR:
+			return "Could not create directory";
 
 		//6x Actions
 		case PKG_NOTFOUND:

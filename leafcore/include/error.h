@@ -44,6 +44,7 @@ namespace Error{
 		BAD_ISTREAM = 31,
 		BAD_OSTREAM = 32,
 		REMOVE = 33,
+		FS_EXISTS = 34,
 		
 		//FS - files
 		CREATEFILE = 40,
@@ -58,6 +59,7 @@ namespace Error{
 		OPENDIR = 52,
 		NOTDIR = 53,
 		CHDIR = 54,
+		MKDIR = 55,
 
 		//Actions
 		PKG_NOTFOUND = 60,
