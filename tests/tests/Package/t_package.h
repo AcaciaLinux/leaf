@@ -4,10 +4,12 @@
 #include <gtest/gtest.h>
 #include <stdlib.h>
 
-#define FRIEND_PACKAGE
-#include "package.h"
-#include "leafconfig.h"
 #include "log.h"
 #include "error.h"
+#include "leafdebug.h"
+#include "checks.h"
+
+#define FRIEND_PACKAGE
+#include "package.h"
 
 #endif
