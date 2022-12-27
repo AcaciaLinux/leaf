@@ -29,9 +29,9 @@ void Leafcore::parseConfig(){
 		//If the root is not "/", check for the chroot-cmd config and check for the variables
 		_config.chroot_cmd = _configParser.get("chroot-cmd", _config.chroot_cmd);
 		if (_config.chroot_cmd.find("{ROOTDIR}") == _config.chroot_cmd.npos)
-			throw new LeafError(Error::CONFF_INV_CONF, "Missing {ROOTDIR}");
+			throw new LeafError(Error::CONFF_INV_CONF, "Missing {ROOTDIR} at 'chroot-cmd'");
 		if (_config.chroot_cmd.find("{COMMAND}") == _config.chroot_cmd.npos)
-			throw new LeafError(Error::CONFF_INV_CONF, "Missing {COMMAND}");
+			throw new LeafError(Error::CONFF_INV_CONF, "Missing {COMMAND} at 'chroot-cmd'");
 
 		_config.pkgListURL = _configParser.get("pkgListURL", _config.pkgListURL);
 	} else {
