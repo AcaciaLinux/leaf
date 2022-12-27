@@ -19,9 +19,10 @@
 //	13x		BranchMaster
 //	14x		LeafFS
 //	15x		LeafDB
-//	16x		Debugging
-//	17x		Unimplemented feature
-//	18x		None
+//	16x		Config file
+//	17x		Debugging
+//	18x		Unimplemented feature
+//	19x		None
 
 namespace Error{
 	
@@ -115,13 +116,16 @@ namespace Error{
 		LEAFDB_PKG_DEP_NOTFOUND = 150,
 		LEAFDB_PKG_NOT_FOUND = 151,
 
+		//Config file
+		CONFF_INV_CONF = 160,
+
 		//Debugging exception
-		DEBUG_EXCEPTION = 160,
+		DEBUG_EXCEPTION = 170,
 		
 		//Unimplemented feature
-		FEATURE_NOT_IMPLEMENTED = 170,
+		FEATURE_NOT_IMPLEMENTED = 180,
 
-		NONE = 180
+		NONE = 190
 	};
 
 }

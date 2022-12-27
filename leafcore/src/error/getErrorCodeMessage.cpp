@@ -155,15 +155,19 @@ std::string LeafError::errorCode(Error::ec e){
 		case LEAFDB_PKG_NOT_FOUND:
 			return "LeafDB: Package not found";
 
-		//16x Debugging exception
+		//16x Config file
+		case CONFF_INV_CONF:
+			return "Config file: Invalid configuration";
+
+		//17x Debugging exception
 		case DEBUG_EXCEPTION:
 			return "Debugging exception at function";
 
-		//17x Unimplemented feature
+		//18x Unimplemented feature
 		case FEATURE_NOT_IMPLEMENTED:
 			return "Feature is currently not implemented";
 
-		//18x NONE
+		//19x NONE
 		case NONE:
 			return "No error";
 
