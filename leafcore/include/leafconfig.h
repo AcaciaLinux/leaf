@@ -35,6 +35,9 @@ typedef struct leafconfig_struct{
 	//The URL for fetching the main package list
 	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
 
+	//The chrooting command leaf uses
+	std::string					chroot_cmd = "chroot {ROOTDIR} {COMMAND}";
+
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
 
@@ -89,6 +92,11 @@ typedef struct leafconfig_struct{
 	//Where the leaf configuration lives
 	std::string					configDir(){
 		return rootDir + "etc/leaf/";
+	}
+
+	//Where the leaf configuration file lives
+	std::string					configFile(){
+		return configDir() + "leaf.conf";
 	}
 
 	//The directory leaf stores the installed packages information
