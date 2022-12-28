@@ -77,18 +77,20 @@ void Package::runScript(std::string path){
 
 		//Construct the script
 		outFile << "#!/bin/sh" << std::endl;
+		outFile << "set -e" << std::endl;
 		outFile << "export PKGROOT=" + relExtractedDir << std::endl;
-		outFile << getExtractedDir() + path << std::endl;
+		outFile << relExtractedDir + path << std::endl;
 		outFile << "unset PKGROOT" << std::endl;
 	}
 
+	//A breakpoint for the tests to check the script
 	LEAF_DEBUG_EX("Leafcore::runScript::fileCreated");
 
 	std::string command;
 
 	//If we need to chroot, construct the command
 	if (rootDir == "/"){
-		command = "bash runscript-" + getFullName() + ".sh";
+		command = "bash " + getExtractedDir() + "runscript-" + getFullName() + ".sh";
 	} else {
 		command = _db->getCore()->getConfig().chroot_cmd;
 		command = command.replace(command.find("{ROOTDIR}"), 9, rootDir);

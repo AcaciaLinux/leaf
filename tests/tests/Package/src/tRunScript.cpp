@@ -156,8 +156,9 @@ TEST(Package, runScript_runfile){
 
 		std::string eDir = newPackage->getExtractedDir();
 		std::string origStr = "#!/bin/sh\n";
+		origStr += "set -e\n";
 		origStr += "export PKGROOT=" + eDir.replace(eDir.find(c.rootDir), c.rootDir.length(), "/") + "\n";
-		origStr += newPackage->getExtractedDir() + "test.sh\n";
+		origStr += eDir.replace(eDir.find(c.rootDir), c.rootDir.length(), "/") + "test.sh\n";
 		origStr += "unset PKGROOT\n";
 
 		if (str != origStr)
