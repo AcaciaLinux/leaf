@@ -44,7 +44,8 @@ TEST(Package, runScript_notExtracted){
 
 	//Create a dummy leafcore
 	leaf_config_t c;
-	c.rootDir = "./root";
+	c.rootDir = "./root/";
+	c.noAsk = true;
 	Leafcore core(c);
 	Package* newPackage = new Package("testpkg", "1");
 	core._installedDB->addPackage(newPackage);
