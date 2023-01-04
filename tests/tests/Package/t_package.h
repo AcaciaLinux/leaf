@@ -1,13 +1,7 @@
 #ifndef __T_PACKAGE_H__
 #define __T_PACKAGE_H__
 
-#include <gtest/gtest.h>
-#include <stdlib.h>
-
-#include "log.h"
-#include "error.h"
-#include "leafdebug.h"
-#include "checks.h"
+#include "t_common.h"
 
 #define FRIEND_PACKAGE
 #include "package.h"
