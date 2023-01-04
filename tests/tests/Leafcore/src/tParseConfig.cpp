@@ -9,7 +9,7 @@ TEST(Leafcore, parseConfig){
 	LEAF_DEBUG_SET_FAIL("Leafcore::parseConfig()");
 
 	try{
-		
+
 		Leafcore core;
 
 		F_NOTHROW(Error::DEBUG_EXCEPTION);
