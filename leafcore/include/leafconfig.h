@@ -30,7 +30,12 @@ enum leaf_action{
 typedef struct leafconfig_struct{
 
 	//The root directory leaf should work on (normally "/")
-	std::string					rootDir = "/";
+	//If we are in a testing file, redirect this path to a safe location
+	#ifdef LEAF_TESTING
+		std::string					rootDir = LEAF_TESTING_ROOTDIR;
+	#else
+		std::string					rootDir = "/";
+	#endif
 
 	//The URL for fetching the main package list
 	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
