@@ -205,6 +205,12 @@ public:
 	bool						checkFileProvided(std::string filePath);
 
 	/**
+	 * @brief	Checks the fetched hash against the remote hash
+	 * @param	noThrow			If this function should not throw, return false instead
+	 */
+	bool						checkFetchedHash(bool noThrow = false);
+
+	/**
 	 * @brief	Clears all the contents of this package
 	 */
 	void						clear();
