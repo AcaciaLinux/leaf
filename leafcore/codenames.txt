@@ -1,2 +1,3 @@
 0.2.X		Silver Maple
 0.3.X		Box Elder
+0.4.X		Sugar Maple
