@@ -2,10 +2,10 @@
 #define __DIST_H__
 
 #define LEAFCORE_V_MAYOR 0
-#define LEAFCORE_V_MINOR 3
+#define LEAFCORE_V_MINOR 4
 #define LEAFCORE_V_PATCH 0
 
-#define LEAFCORE_CODENAME "Box Elder"
+#define LEAFCORE_CODENAME "Sugar Maple"
 
 #define STR_(X) #X
 #define STR(X) STR_(X)

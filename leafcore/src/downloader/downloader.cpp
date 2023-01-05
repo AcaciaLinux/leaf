@@ -9,7 +9,7 @@
 #include "downloader.h"
 #include "error.h"
 
-Downloader::Downloader(bool noProgress) : _noProgress(noProgress){
+Downloader::Downloader(std::string url, std::ostream& outStream, bool noProgress) : _url(url), _outStream(outStream), _noProgress(noProgress){
 	FUN();
 }
 

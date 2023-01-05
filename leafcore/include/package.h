@@ -194,10 +194,21 @@ public:
 	std::deque<Package*>		getDependentPackages();
 
 	/**
+	 * @brief	Returns the path to the locally installed .lfpkg file
+	 */
+	std::string					getLocalSourcePath();
+
+	/**
 	 * @brief	Checks if the provided file is provided by the package
 	 * @param	filePath		The filepath to the file being checked relative to root (/)
 	 */
 	bool						checkFileProvided(std::string filePath);
+
+	/**
+	 * @brief	Checks the fetched hash against the remote hash
+	 * @param	noThrow			If this function should not throw, return false instead
+	 */
+	bool						checkFetchedHash(bool noThrow = false);
 
 	/**
 	 * @brief	Clears all the contents of this package
@@ -213,28 +224,125 @@ public:
 private:
 #endif
 
-	//The default constructor hidden away from the user
+	/**
+	 * @brief	The default constructor
+	 */
 	Package();
 
+	/**
+	 * @brief	A pointer to the database the package belongs to
+	 */
 	LeafDB*						_db = nullptr;
 
+	/**
+	 * @brief	The name of the package
+	 */
 	std::string					_name;
+
+	/**
+	 * @brief	The realversion of the package in u32
+	 */
 	uint32_t					_realVersion;
+
+	/**
+	 * @brief	The version string of the package
+	 */
 	std::string					_versionString;
+
+	/**
+	 * @brief	The description of the package
+	 */
 	std::string					_description;
+
+	/**
+	 * @brief	A deque containing all the dependency names for the package
+	 */
 	std::deque<std::string>		_dependencies;
+
+	/**
+	 * @brief	The URL to fetch the package from
+	 */
 	std::string					_fetchURL;
 
+	/**
+	 * @brief	The MD5 hash that is expected when fetching the package file
+	 */
+	std::string					_remote_md5;
+
+	/**
+	 * @brief	The MD5 hash of the present package file (local or in cache)
+	 */
+	std::string					_local_md5;
+
+	/**
+	 * @brief	The MD5 hash of the currently installed package file (stored in .leafinstalled)
+	 */
+	std::string					_installed_md5;
+
+	/**
+	 * @brief	Whether the package represents a collection of other packages
+	 */
 	bool						_isCollection = false;
 
-	//Information about local files
+	/**
+	 * @brief	Whether the package is a local .lfpkg file
+	 */
 	bool						_isLocal = false;
+
+	/**
+	 * @brief	The path to the local .lfpkg file
+	 */
 	std::string					_localSourcePath;
 	
+	/**
+	 * @brief	List of the provided files
+	 */
 	std::deque<std::string>		_provided_files;
+
+	/**
+	 * @brief	List of the provided directories
+	 */
 	std::deque<std::string>		_provided_directories;
 
-	std::deque<Package*>		_dependent_package;
+	//
+	// The .leafinstalled file is versioned, the functions for the versions
+	//
+
+	/**
+	 * @brief	The parser function for .leafinstalled files in version 0
+	 */
+	void						parseInstalledV0(std::istream& in);
+
+	/**
+	 * @brief	The parser function for .leafinstalled files in version 1
+	 */
+	void						parseInstalledV1(std::istream& in);
+
+	//
+	// Some utility functions for parsing the .leafinstalled file
+	//
+
+	/**
+	 * @brief	Parses a line containing an integer from the in stream
+	 * @param	in				The input stream to parse from
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	size_t						parseInstalledInt(std::istream& in, const std::string& description);
+
+	/**
+	 * @brief	Parses a line containing an string from the in stream
+	 * @param	in				The input stream to parse from
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	std::string					parseInstalledString(std::istream& in, const std::string& desciption);
+
+	/**
+	 * @brief	Parses a deque containing <count> lines of strings
+	 * @param	in				The input stream to parse from
+	 * @param	count			The amount of lines to parse into the deque
+	 * @param	description		The name of the entry, for the error if an unexpected EOF is encountered
+	 */
+	std::deque<std::string>		parseInstalledList(std::istream& in, size_t count, const std::string& description);
 };
 
 #endif

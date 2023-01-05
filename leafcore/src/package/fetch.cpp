@@ -9,6 +9,8 @@
 #include "leafdebug.h"
 #include "package.h"
 #include "downloader.h"
+#include "md5.h"
+#include "leaffs.h"
 
 #include <fstream>
 #include <filesystem>
@@ -36,9 +38,35 @@ void Package::fetch(){
 	if (destination.empty())
 		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
-	//Create the downloader instance
-	Downloader dl(_db->getCore()->getConfig().noProgress);
-	dl.init();
+	//Check if the package has an expected md5 hash
+	if (_remote_md5.length() == 0){
+		if (!_db->getCore()->askUserOK("The package " + getFullName() + " does not have an expected MD5 hash, do you want to continue anyway?", false)){
+			throw new LeafError(Error::USER_DISAGREE, "Continue installing without MD5 checks");
+		}
+	}
+
+	if (std::filesystem::exists(getDownloadPath())){
+		bool skip = true;
+
+		std::ifstream inFile;
+		inFile.open(getDownloadPath(), std::ios::binary);
+		if (!inFile.is_open())
+			throw new LeafError(Error::OPENFILER, "Download destination for validation " + getDownloadPath());
+
+		std::string existingHash = md5(inFile);
+
+		if (_remote_md5 != existingHash){
+			LOGI("[Package][fetch] Existing package file at " + getDownloadPath() + " differs from remote, redownloading...");
+			removeFile(getDownloadPath(), true);
+			skip = false;
+		}
+
+		if (skip){
+			LOGI("[Package][fetch] Skipping download of existing validated package file " + getDownloadPath());
+			return;
+		}
+	}
+
 
 	LOGD("Opening destination file " + destination + "...");
 	//Create and open the destination file
@@ -49,18 +77,24 @@ void Package::fetch(){
 	if (!outFile.is_open())
 		throw new LeafError(Error::OPENFILEW, "Download for " + getFullName() + ": " + destination);
 
+	//Create the downloader instance
+	Downloader dl(getFetchURL(), outFile, _db->getCore()->getConfig().noProgress);
+	dl.init();
+
 	LOGI("Downloading package " + getFullName() + " to " + destination);
 	
 	//Download the package file
 	if (_db->getCore()->getConfig().noProgress)
 		LOGU("Downloading package " + getFullName() + "...");
-	size_t dRes = dl.download(getFetchURL(), outFile, "Downloading " + getFullName());
+
+	size_t dRes = dl.download("Downloading " + getFullName());
+	_local_md5 = dl.getMD5();
+
 	outFile.close();
 
 	//If everything is ok, return
 	if (dRes < 400)
 		return;
-
 
 	std::ifstream ecFile(destination, std::ios::in);
 	if (!ecFile.is_open()){

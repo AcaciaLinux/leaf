@@ -13,8 +13,11 @@
 
 #include "util.h"
 
-static size_t writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
-	(*s).write(((char*)ptr), size*nmemb);
+size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
+	Downloader* dl = (Downloader*) s;
+
+	dl->_outStream.write(((char*)ptr), size*nmemb);
+	dl->_md5.update(((char*)ptr), size*nmemb);
 
 	return size*nmemb;
 }
@@ -27,25 +30,25 @@ static int progressFunc(void* ptr, double dltotal, double dlnow, double ultotal,
 	return 0;
 }
 
-size_t Downloader::download(std::string url, std::ostream& out, std::string prefix){
+size_t Downloader::download(std::string prefix){
 	FUN();
 
 	LEAF_DEBUG_EX("Downloader::download()");
 
-	LOGI("[Downloader][download] Downloading from \"" + url + "\"...");
+	LOGI("[Downloader][download] Downloading from \"" + _url + "\"...");
 
 	CURLcode curlRes;
 
 	if (!_curl)
 		throw new LeafError(Error::DL_NOT_INIT);
 
-	if (!out.good())
+	if (!_outStream.good())
 		throw new LeafError(Error::DL_BAD_STREAM);
 
-	curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
+	curl_easy_setopt(_curl, CURLOPT_URL, _url.c_str());
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
-	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &out);
+	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, this);
 
 	if (_noProgress){
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, true);
@@ -59,6 +62,8 @@ size_t Downloader::download(std::string url, std::ostream& out, std::string pref
 		LeafUtil::Progress::init();
 
 	curlRes = curl_easy_perform(_curl);
+	_md5.finalize();
+	LOGD("[Downloader][download] MD5 of fetched data: " + getMD5());
 
 	if (!_noProgress)
 		LeafUtil::Progress::end();

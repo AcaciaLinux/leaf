@@ -71,6 +71,9 @@ typedef struct leafconfig_struct{
 	//If leaf should install dependencies or if it should ignore them and proceed installing the package anyway
 	bool						installDependencies = true;
 
+	//If leaf should check the remote hash against the installed and decide if the package has an upgrade available
+	bool						checkRemoteHashUpgrade = false;
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";
