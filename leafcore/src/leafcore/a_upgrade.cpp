@@ -144,6 +144,10 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 		i.second->fetch();
 	}
 
+	for (const auto& i : upgradePkgs){
+		i.second->checkFetchedHash();
+	}
+
 	//Deploy the new packages
 	for (const auto& i : upgradePkgs){
 		LOGU("Changing package " + i.second->getFullName() + "...");
