@@ -145,15 +145,15 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 	}
 
+	LOGU("Checking package integrity...");
 	for (Package* package : install_packages){
-		LOGU("Extracting package " + package->getFullName() + "...");
-		
-		package->extract();
+		package->checkFetchedHash();
 	}
 
 	for (Package* package : install_packages){
-		LOGU("Deploying package " + package->getFullName() + "...");
+		LOGU("Installing package " + package->getFullName() + "...");
 		
+		package->extract();
 		package->deploy();
 	}
 
