@@ -72,7 +72,8 @@ TEST(Package, runScript_scriptExists){
 
 	//Create a dummy leafcore
 	leaf_config_t c;
-	c.rootDir = "./root";
+	c.rootDir = "./root/";
+	c.noAsk = true;
 	Leafcore core(c);
 	Package* newPackage = new Package("testpkg", "1");
 	core._installedDB->addPackage(newPackage);
@@ -155,11 +156,15 @@ TEST(Package, runScript_runfile){
 
 		std::string str(std::istreambuf_iterator<char>{inFile}, {});
 
-		std::string eDir = newPackage->getExtractedDir();
+		std::string extractedDir = newPackage->getExtractedDir();
+		std::string relativeDir = extractedDir;
+		relativeDir.replace(extractedDir.find(c.rootDir), c.rootDir.length(), "/");
+
+		//This is the expected string
 		std::string origStr = "#!/bin/sh\n";
 		origStr += "set -e\n";
-		origStr += "export PKGROOT=" + eDir.replace(eDir.find(c.rootDir), c.rootDir.length(), "/") + "\n";
-		origStr += eDir.replace(eDir.find(c.rootDir), c.rootDir.length(), "/") + "test.sh\n";
+		origStr += "export PKGROOT=" + relativeDir+ "\n";
+		origStr += relativeDir + "test.sh\n";
 		origStr += "unset PKGROOT\n";
 
 		if (str != origStr)
