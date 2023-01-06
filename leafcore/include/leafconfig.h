@@ -9,13 +9,17 @@ enum config_verbosity{
 	CONFIG_V_DEFAULT = 0,
 	CONFIG_V_VERBOSE = 1,
 	CONFIG_V_SUPERVERBOSE = 2,
-	CONFIG_V_ULTRAVERBOSE = 3
+	CONFIG_V_ULTRAVERBOSE = 3,
+
+	COUNT_CONFIG_V
 };
 
 enum config_redownload{
 	CONFIG_REDOWNLOAD_NONE = 0,
 	CONFIG_REDOWNLOAD_SPECIFIED = 1,
-	CONFIG_REDOWNLOAD_ALL = 2
+	CONFIG_REDOWNLOAD_ALL = 2,
+
+	COUNT_CONFIG_REDOWNLOAD
 };
 
 enum leaf_action{
@@ -24,7 +28,9 @@ enum leaf_action{
 	ACTION_INSTALL = 2,
 	ACTION_REMOVE = 3,
 	ACTION_INSTALLLOCAL = 4,
-	ACTION_UPGRADE = 5
+	ACTION_UPGRADE = 5,
+
+	COUNT_CONFIG_ACTION
 };
 
 typedef struct leafconfig_struct{
@@ -130,7 +136,5 @@ typedef struct leafconfig_struct{
 	}
 
 } leaf_config_t;
-
-//extern leaf_config_t lConfig;
 
 #endif
