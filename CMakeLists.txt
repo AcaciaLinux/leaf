@@ -66,6 +66,8 @@ endif()
 set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
 
 add_subdirectory(leafcore)
+add_subdirectory(cleaf)
+add_subdirectory(pyleaf)
 
 add_subdirectory(Log)
 include_directories(Log/include)
