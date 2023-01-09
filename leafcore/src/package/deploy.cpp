@@ -29,24 +29,17 @@ void Package::deploy(){
 
 	_db->getCore()->createConfigDirs();
 
-	bool overwrite = _db->getCore()->getConfig().forceOverwrite;
+	bool overwrite = _db->getCore()->getConfig().forceOverwrite || _db->getCore()->getConfig().force;
 	if (std::filesystem::exists(getInstalledFilePath())){
 		LOGI("Leafinstalled file for package " + getName() + " exists, reinstalling...");
 		overwrite = true;
 	}
-	
-	std::ofstream installedFile;
-	installedFile.open(getInstalledFilePath(), std::ios::trunc);
-
-	if (!installedFile.is_open())
-		throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
 
 	try {
 		
 		runPreinstall();
 		copyToRoot(overwrite);
 		runPostinstall();
-		createInstalledFile(installedFile);
 
 	} catch (LeafError* e) {
 		std::error_code ec;
@@ -57,5 +50,15 @@ void Package::deploy(){
 		throw e;
 	}
 
-	installedFile.close();
+	{//Create the .leafinstalled file
+		std::ofstream installedFile;
+		installedFile.open(getInstalledFilePath(), std::ios::trunc);
+
+		if (!installedFile.is_open())
+			throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
+
+		createInstalledFile(installedFile);
+
+		installedFile.close();
+	}
 } 

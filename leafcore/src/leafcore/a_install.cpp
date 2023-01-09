@@ -141,24 +141,19 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 
 		for (Package* package : install_packages){
-			if (std::filesystem::exists(package->getDownloadPath())){
-				LOGI("Skipping download of package " + package->getFullName());
-				continue;
-			}
-
 			package->fetch();
 		}
 	}
 
+	LOGU("Checking package integrity...");
 	for (Package* package : install_packages){
-		LOGU("Extracting package " + package->getFullName() + "...");
-		
-		package->extract();
+		package->checkFetchedHash();
 	}
 
 	for (Package* package : install_packages){
-		LOGU("Deploying package " + package->getFullName() + "...");
+		LOGU("Installing package " + package->getFullName() + "...");
 		
+		package->extract();
 		package->deploy();
 	}
 

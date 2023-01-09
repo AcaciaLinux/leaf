@@ -70,17 +70,35 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 		}
 	}
 
-
-
 	std::map<Package*, Package*> upgradePkgs;
 	{	//Compare realversions
 		for (const auto &i : availablePkgs){
 			bool changePkg = i.first->getRealVersion() != i.second->getRealVersion();
 
-			LOGI(	"[Leafcore][a_upgrade] Checking change of " + i.first->getName() + 
-					": " + i.first->getVersion() + " (" + std::to_string(i.first->getRealVersion()) + ") " + 
-					"-> " + i.second->getVersion() + " (" + std::to_string(i.second->getRealVersion()) + "): " + 
+			LOGI(	"[Leafcore][a_upgrade] Checking for change of " + i.first->getName() + ": " +
+					i.first->getVersion() + " (" + std::to_string(i.first->getRealVersion()) + ") -> " + 
+					i.second->getVersion() + " (" + std::to_string(i.second->getRealVersion()) + "): " + 
 					(changePkg?"Yes, staging for change...":"No"));
+
+			//If no change is found by comparing realversion, if desired, check the remote and local hashes
+			if (!changePkg && _config.checkRemoteHashUpgrade){
+				if (i.first->_installed_md5.length() == 0) {
+					LOGW("[Leafcore][a_upgrade] Installed package " + i.first->getName() + " does not have _installed_md5 set, can not check for hash change");
+					continue;
+				}
+
+				if (i.second->_remote_md5.length() == 0) {
+					LOGW("[Leafcore][a_upgrade] Remote package " + i.second->getName() + " does not have _remote_md5 set, can not check for hash change");
+					continue;
+				}
+
+				changePkg = i.first->_installed_md5 != i.second->_remote_md5;
+
+				LOGI(	"[Leafcore][a_upgrade] Checking for change of " + i.first->getName() + " by hash: " + 
+						i.first->getVersion() + " (" + i.first->_installed_md5 + ") -> " + 
+						i.second->getVersion() + " (" + i.second->_remote_md5 + "): " + 
+						(changePkg?"Yes, staging for change...":"No"));
+			}
 
 			if (changePkg){
 				upgradePkgs[i.first] = i.second;
@@ -124,6 +142,10 @@ void Leafcore::a_upgrade(std::deque<std::string> packages){
 
 	for (const auto& i : upgradePkgs){
 		i.second->fetch();
+	}
+
+	for (const auto& i : upgradePkgs){
+		i.second->checkFetchedHash();
 	}
 
 	//Deploy the new packages

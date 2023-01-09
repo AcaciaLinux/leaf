@@ -61,10 +61,6 @@ std::string Package::getFetchURL(){
 	return _fetchURL;
 }
 
-std::deque<Package*> Package::getDependentPackages(){
-	return _dependent_package;
-}
-
 void Package::setDB(LeafDB* db){
 	_db = db;
 }
@@ -81,12 +77,16 @@ bool Package::isCollection(){
 	return _isCollection;
 }
 
+std::string Package::getLocalSourcePath(){
+	return _localSourcePath;
+}
+
 std::string Package::getDownloadPath(){
 	//Check if the database is ok
 	if (_db == nullptr)
 		throw new LeafError(Error::NODB);
 	
-	return _db->getCore()->getConfig().cacheDir() + "downloads/" + getFullName() + ".leafpkg";
+	return _db->getCore()->getConfig().cacheDir() + "downloads/" + getFullName() + ".lfpkg";
 }
 
 std::string Package::getExtractedDir(){

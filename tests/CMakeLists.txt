@@ -14,6 +14,8 @@ add_subdirectory(test_main)
 
 add_subdirectory(tests/Sanity)
 
+add_subdirectory(tests/MD5)
+
 add_subdirectory(tests/Downloader)
 add_subdirectory(tests/LeafArchive)
 add_subdirectory(tests/PackageListParser)

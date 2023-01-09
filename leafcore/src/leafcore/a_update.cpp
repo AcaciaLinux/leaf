@@ -32,9 +32,9 @@ void Leafcore::a_update(){
 	}
 
 	//Create the downloader instance and download the file
-	Downloader dl(_config.noProgress);
+	Downloader dl(_config.pkgListURL, outFile, _config.noProgress);
 	dl.init();
-	size_t dRes = dl.download(_config.pkgListURL, outFile);
+	size_t dRes = dl.download();
 	outFile.close();
 
 	//If everything is ok, return
