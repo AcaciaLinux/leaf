@@ -120,7 +120,9 @@ public:
 	 */
 	leaf_config_t&				getConfig();
 
+#ifndef FRIEND_LEAFCORE
 private:
+#endif
 
 	//Where the currently loaded package list file is
 	bool						_loadedPkgList = false;

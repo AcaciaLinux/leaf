@@ -30,10 +30,18 @@ enum leaf_action{
 typedef struct leafconfig_struct{
 
 	//The root directory leaf should work on (normally "/")
-	std::string					rootDir = "/";
+	//If we are in a testing file, redirect this path to a safe location
+	#ifdef LEAF_TESTING
+		std::string					rootDir = LEAF_TESTING_ROOTDIR;
+	#else
+		std::string					rootDir = "/";
+	#endif
 
 	//The URL for fetching the main package list
 	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
+
+	//The chrooting command leaf uses
+	std::string					chroot_cmd = "chroot {ROOTDIR} {COMMAND}";
 
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
@@ -92,6 +100,11 @@ typedef struct leafconfig_struct{
 	//Where the leaf configuration lives
 	std::string					configDir(){
 		return rootDir + "etc/leaf/";
+	}
+
+	//Where the leaf configuration file lives
+	std::string					configFile(){
+		return configDir() + "leaf.conf";
 	}
 
 	//The directory leaf stores the installed packages information

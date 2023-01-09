@@ -1,11 +1,11 @@
-#include "../t_xxx.h"
+#include "../t_.h"
 
 #include <fstream>
 
-TEST(XXX, xxx_debug){
+TEST(, _debug){
 	FUN();
 
-	LEAF_DEBUG_SET_FAIL("XXX::xxx()");
+	LEAF_DEBUG_SET_FAIL("::()");
 
 	try{
 		

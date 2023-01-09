@@ -10,7 +10,10 @@
 #include "package.h"
 #include "leafconfig.h"
 
+#include "leaffs.h"
+
 #include <filesystem>
+#include <fstream>
 
 void Package::runPreinstall(){
 	FUN();
@@ -52,35 +55,62 @@ void Package::runScript(std::string path){
 
 	_db->getCore()->createCacheDirs();
 
-	if (!std::filesystem::exists(getExtractedDir()))
+	if (!LeafFS::exists(getExtractedDir()))
 		throw new LeafError(Error::PKG_NOTEXTRACTED);
 
-	if (!std::filesystem::exists(getExtractedDir() + path)){
+	if (!LeafFS::exists(getExtractedDir() + path)){
 		LOGI("Script " + getExtractedDir() + path + " does not exist, skipping");
 		return;
 	}
 
-	std::string oldWorkDir = std::filesystem::current_path();
+	//Cache the root directory
+	std::string rootDir = this->_db->getCore()->getConfig().rootDir;
 
-	std::filesystem::current_path(getExtractedDir());
+	//The extracted directory relative to the chroot environment
+	std::string relExtractedDir = this->getExtractedDir();
+	relExtractedDir = relExtractedDir.replace(relExtractedDir.find(rootDir), rootDir.length(), "/");
 
-	int res = 0;
+	{//Create the executed script
+		std::ofstream outFile(getExtractedDir() + "runscript-" + getFullName() + ".sh");
+		if (!outFile.is_open())
+			throw new LeafError(Error::OPENFILEW, "RunScript file for package " + getFullName());
 
-	std::string envs = "";
+		//Construct the script
+		outFile << "#!/bin/sh" << std::endl;
+		outFile << "set -e" << std::endl;
+		outFile << "export PKGROOT=" + relExtractedDir << std::endl;
+		outFile << relExtractedDir + path << std::endl;
+		outFile << "unset PKGROOT" << std::endl;
+	}
 
-	envs += " ROOTDIR=" + _db->getCore()->getConfig().rootDir;
-	envs += " PKGROOT=" + this->getExtractedDir();
+	//A breakpoint for the tests to check the script
+	LEAF_DEBUG_EX("Leafcore::runScript::fileCreated");
 
-	std::string command = "bash -c \"" + envs + " ./" + path + "\"";
+	std::string command;
+
+	//If we need to chroot, construct the command
+	if (rootDir == "/"){
+		command = "bash " + getExtractedDir() + "runscript-" + getFullName() + ".sh";
+	} else {
+		command = _db->getCore()->getConfig().chroot_cmd;
+		command = command.replace(command.find("{ROOTDIR}"), 9, rootDir);
+		command = command.replace(command.find("{COMMAND}"), 9, "/bin/sh " + relExtractedDir + "runscript-" + getFullName() + ".sh");
+	}
 
 	LOGI("Running command: \"" + command + "\" in " + getExtractedDir());
 
-	res = system(command.c_str());
+	int res = 0;
+	{//Switch the workdir, execute the command and switch back
+		std::string oldWorkDir = std::filesystem::current_path();
+		std::filesystem::current_path(getExtractedDir());
 
-	if (res != 0){
+		res = system(command.c_str());
+
 		std::filesystem::current_path(oldWorkDir);
-		throw new LeafError(Error::PACKAGE_SCRIPT_FAILED, path);
 	}
 
-	std::filesystem::current_path(oldWorkDir);
+	//Check the return code
+	if (res != 0)
+		throw new LeafError(Error::PACKAGE_SCRIPT_FAILED, path);
+
 }
