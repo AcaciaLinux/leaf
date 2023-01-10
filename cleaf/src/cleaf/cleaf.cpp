@@ -193,8 +193,8 @@ extern "C" {
         return _ss_cache.str().c_str();
     }
 
-    void cleaf_cleaf_log(){
-        _ss_cache.clear();
+    void cleaf_clear_log(){
+        _ss_cache.str("");
     }
 }
 
