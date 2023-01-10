@@ -38,19 +38,19 @@ std::stringstream _ss_cache;
 
 extern "C" {
 
-    unsigned int cleaf_get_leafcore_major(){
+    uint32_t cleaf_get_leafcore_major(){
         FUN();
         LEAF_DEBUG_EX("cleaf_get_leafcore_major()");
         return LEAFCORE_V_MAJOR;
     }
 
-    unsigned int cleaf_get_leafcore_minor(){
+    uint32_t cleaf_get_leafcore_minor(){
         FUN();
         LEAF_DEBUG_EX("cleaf_get_leafcore_minor()");
         return LEAFCORE_V_MINOR;
     }
 
-    unsigned int cleaf_get_leafcore_patch(){
+    uint32_t cleaf_get_leafcore_patch(){
         FUN();
         LEAF_DEBUG_EX("cleaf_get_leafcore_patch()");
         return LEAFCORE_V_PATCH;

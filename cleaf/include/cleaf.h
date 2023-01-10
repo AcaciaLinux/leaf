@@ -19,17 +19,17 @@ extern "C" {
     /**
      * @brief   Reports the major version of leafcore
      */
-    unsigned int                cleaf_get_leafcore_major();
+    uint32_t                    cleaf_get_leafcore_major();
 
     /**
      * @brief   Reports the minor version of leafcore
      */
-    unsigned int                cleaf_get_leafcore_minor();
+    uint32_t                    cleaf_get_leafcore_minor();
 
     /**
      * @brief   Reports the patch version of leafcore
      */
-    unsigned int                cleaf_get_leafcore_patch();
+    uint32_t                    cleaf_get_leafcore_patch();
 
     /**
      * @brie    Initializes the cleaf runtime with some leaf dependencies such as the Log module
