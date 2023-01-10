@@ -44,6 +44,18 @@ extern "C" {
     void                        cleaf_finalize();
 
     /**
+     * @brief   Returns if cleaf is initialized and ready
+     * @return  uint8_t         == 0 -> false, == 1 (!= 0) -> true
+     */
+    uint8_t                     cleaf_is_initialized();
+
+    /**
+     * @brief   Returns if cleaf owns the log instance and will delete it on cleaf_finalize()
+     * @return  uint8_t         == 0 -> false, == 1 (!= 0) -> true
+     */
+    uint8_t                     cleaf_owns_log();
+
+    /**
      * @brief   Applies the supplied loglevel to the Log module
      * @param   level           The loglevel to use
      */

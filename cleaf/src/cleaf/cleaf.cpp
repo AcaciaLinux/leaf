@@ -149,6 +149,16 @@ extern "C" {
         _cleaf_initialized = false;
     }
 
+    uint8_t cleaf_is_initialized(){
+        FUN();
+        return _cleaf_initialized;
+    }
+
+    uint8_t cleaf_owns_log(){
+        FUN();
+        return _cleaf_owns_hlog;
+    }
+
     void cleaf_setLogLevel(enum loglevel level){
         LEAF_DEBUG_EX("cleaf_setLogLevel()");
 

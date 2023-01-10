@@ -106,3 +106,23 @@ TEST(Cleaf, cleaf_init_claim_hlog){
 
     ASSERT_TRUE(owned) << "cleaf does not claim ownership of non exising Log module";
 }
+
+TEST(Cleaf, cleaf_is_initialized){
+    FUN();
+
+    _cleaf_initialized = true;
+    ASSERT_TRUE(cleaf_is_initialized());
+
+    _cleaf_initialized = false;
+    ASSERT_FALSE(cleaf_is_initialized());
+}
+
+TEST(Cleaf, cleaf_owns_log){
+    FUN();
+
+    _cleaf_owns_hlog = true;
+    ASSERT_TRUE(cleaf_owns_log());
+
+    _cleaf_owns_hlog = false;
+    ASSERT_FALSE(cleaf_owns_log());
+}
