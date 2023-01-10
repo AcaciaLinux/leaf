@@ -168,3 +168,16 @@ extern "C" {
         _ss_cache.clear();
     }
 }
+
+//This is a guard that checks if cleaf has been uninitialized once the program finishes
+class CleafInitGuard{
+public:
+    ~CleafInitGuard(){
+        if (_cleaf_initialized){
+            if (hlog != nullptr){
+                LOGW("[cleaf] Cleaf is still initialized on program shutdown! (This is a message for the developer)");
+            }
+        }
+    }
+};
+static CleafInitGuard __cleaf_init_guard__;
