@@ -43,6 +43,7 @@ if (BUILD_TESTS)
 	enable_testing(true)
 	add_subdirectory(Log/googletest)
 	add_subdirectory(tests)
+	add_subdirectory(cleaf/tests)
 	add_definitions(-DDEBUG)
 endif()
 
