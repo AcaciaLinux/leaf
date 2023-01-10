@@ -10,6 +10,7 @@
 #include <fstream>
 
 extern bool _cleaf_initialized;
+extern bool _cleaf_owns_hlog;
 
 TEST(Cleaf, cleaf_init_debug){
     FUN();
@@ -58,6 +59,7 @@ TEST(Cleaf, cleaf_init_existing_log){
         FAIL() << "cleaf_init() does not handle an existing Log instance correctly";
     } catch (LeafError* e){
         CHECK_EC(Error::DEBUG_EXCEPTION, e);
+        ASSERT_FALSE(_cleaf_owns_hlog) << "cleaf_init() claimed ownership of Log instance wrongly";
     } catch (...){
         F_WRONGEXCEPTION("LeafError*");
     }
@@ -79,4 +81,28 @@ TEST(Cleaf, cleaf_init_set_initialized){
     hlog = log;
 
     ASSERT_TRUE(_cleaf_initialized) << "_cleaf_initialized does not get set";
+}
+
+//Tests if cleaf claims the ownership of the Log instance correctly
+TEST(Cleaf, cleaf_init_claim_hlog){
+    FUN();
+
+    //Store the old Log instance aside
+    Log::Log* oldLog = hlog;
+    hlog = nullptr;
+
+    //Init cleaf to claim Log instance
+    _cleaf_initialized = false;
+    cleaf_init(LOGLEVEL_A);
+
+    //Save the state for later checking
+    bool owned = _cleaf_owns_hlog;
+
+    //Finalize to clean up
+    cleaf_finalize();
+
+    //Restore Log instance
+    hlog = oldLog;
+
+    ASSERT_TRUE(owned) << "cleaf does not claim ownership of non exising Log module";
 }

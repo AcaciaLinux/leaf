@@ -20,6 +20,11 @@
 bool _cleaf_initialized = false;
 
 /**
+ * @brief   If the cleaf instance owns the Log instance and if it should delete it
+ */
+bool _cleaf_owns_hlog = false;
+
+/**
  * @brief   A stringstream for caching the leaf output to read it later
  */
 std::stringstream _ss_cache;
@@ -69,6 +74,7 @@ extern "C" {
             FUN();
             LOGUW("[cleaf] There seems to already be a Log instance, skipping setup!");
             _cleaf_initialized = true;
+            _cleaf_owns_hlog = false;
 
             //A debugging checkpoint to check if the above switch worked
             LEAF_DEBUG_EX("cleaf_init::hlog_nullptr");
@@ -77,6 +83,7 @@ extern "C" {
         }
 
         hlog = new Log::Log();
+        _cleaf_owns_hlog = true;
         FUN();
 
         {//Setup the stdout stream
@@ -104,6 +111,18 @@ extern "C" {
 
             //A debugging checkpoint to check this behaviour
             LEAF_DEBUG_EX("cleaf_finalize::init_check");
+
+            return;
+        }
+
+        if (!_cleaf_owns_hlog){
+            LOGD("[cleaf] Cleaf does not own hlog instance, skipping removal");
+
+            _cleaf_initialized = false;
+            _cleaf_owns_hlog = false;
+
+            //A debugging checkpoint to check this behaviour
+            LEAF_DEBUG_EX("cleaf_finalize::hlog_not_owned");
 
             return;
         }

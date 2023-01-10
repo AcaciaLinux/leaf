@@ -10,6 +10,7 @@
 #include <fstream>
 
 extern bool _cleaf_initialized;
+extern bool _cleaf_owns_hlog;
 
 TEST(Cleaf, cleaf_finalize_debug){
     FUN();
@@ -63,6 +64,28 @@ TEST(Cleaf, cleaf_finalize_check_initialized){
     }
 }
 
+//Checks if the check for the ownership of the Log module works
+TEST(Cleaf, cleaf_finalize_owns_hlog){
+    FUN();
+
+    LEAF_DEBUG_SET_FAIL("cleaf_finalize::hlog_not_owned");
+
+    try {
+
+        //Set the parameters correctly
+        _cleaf_initialized = true;
+        _cleaf_owns_hlog = false;
+
+        cleaf_finalize();
+
+        FAIL() << "cleaf_finalize() does not check if cleaf owns the Log instance";
+    } catch (LeafError* e){
+        CHECK_EC(Error::DEBUG_EXCEPTION, e);
+    } catch (...){
+        F_WRONGEXCEPTION("LeafError*");
+    }
+}
+
 //Checks if the check for a nullptr hlog is made (does not check for real)
 TEST(Cleaf, cleaf_finalize_check_hlog_nullptr){
     FUN();
@@ -74,10 +97,11 @@ TEST(Cleaf, cleaf_finalize_check_hlog_nullptr){
     try {
         LEAF_DEBUG_SET_FAIL("cleaf_finalize::pre_delete");
 
-        //Prevent the first check from engaging
+        //Prevent the first checks from engaging
         _cleaf_initialized = true;
+        _cleaf_owns_hlog = true;
 
-        //This should trigger the second check
+        //This should trigger the nullptr check
         hlog = nullptr;
 
         //Assert death by using the hlog instance
@@ -102,6 +126,7 @@ TEST(Cleaf, cleaf_finalize){
 
     //Assert that all the checks pass
     _cleaf_initialized = true;
+    _cleaf_owns_hlog = true;
 
     //Backup the hlog instance
     Log::Log* oldLog = hlog;
