@@ -38,6 +38,12 @@ extern "C" {
     void                        cleaf_init(enum loglevel level);
 
     /**
+     * @brief   Cleanly finalizes the cleaf wrapper
+     * @warning Calling ANY function provided by this library after this will result in undefined behaviour!
+     */
+    void                        cleaf_finalize();
+
+    /**
      * @brief   Applies the supplied loglevel to the Log module
      * @param   level           The loglevel to use
      */

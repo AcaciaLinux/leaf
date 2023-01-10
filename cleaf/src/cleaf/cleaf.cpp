@@ -96,6 +96,40 @@ extern "C" {
         _cleaf_initialized = true;
     }
 
+    void cleaf_finalize(){
+        LEAF_DEBUG_EX("cleaf_finalize()");
+
+        if (!_cleaf_initialized){
+            LOGW("[cleaf] cleaf_init() does not seem to have been called, nothing to do here");
+
+            //A debugging checkpoint to check this behaviour
+            LEAF_DEBUG_EX("cleaf_finalize::init_check");
+
+            return;
+        }
+
+        if (hlog == nullptr){
+            std::cerr <<"[cleaf] cleaf_init() seems to have been called but Log instance is absent? (This is a bug)" << std::endl;
+
+            //A debugging checkpoint to check this behaviour
+            LEAF_DEBUG_EX("cleaf_finalize::hlog_nullptr");
+
+            return;
+        }
+
+        //Ability to break this function befor deleting
+        LEAF_DEBUG_EX("cleaf_finalize::pre_delete");
+
+        //Delete the instance
+        delete hlog;
+
+        //Make the pointer safe
+        hlog = nullptr;
+
+        //And make cleaf unininizialized
+        _cleaf_initialized = false;
+    }
+
     void cleaf_setLogLevel(enum loglevel level){
         LEAF_DEBUG_EX("cleaf_setLogLevel()");
 
