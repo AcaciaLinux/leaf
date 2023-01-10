@@ -9,6 +9,8 @@
 
 #include <fstream>
 
+extern bool _cleaf_initialized;
+
 TEST(Cleaf, cleaf_init_debug){
     FUN();
 
@@ -19,6 +21,9 @@ TEST(Cleaf, cleaf_init_debug){
 
     try{
         cleaf_init(LOGLEVEL_U);
+
+        //And finalize cleaf to not leak any memory
+        cleaf_finalize();
 
         //Restore the Log instance
         hlog = log;
@@ -37,13 +42,33 @@ TEST(Cleaf, cleaf_init_debug){
     }
 }
 
-extern bool _cleaf_initialized;
+//Tests if cleaf_init() handles the case, where there is already a log module in existance
+TEST(Cleaf, cleaf_init_existing_log){
+    FUN();
+
+    LEAF_DEBUG_SET_FAIL("cleaf_init::hlog_nullptr");
+
+    try {
+
+        //Prevent the first check in cleaf_init() from engaging
+        _cleaf_initialized = false;
+
+        cleaf_init(LOGLEVEL_A);
+
+        FAIL() << "cleaf_init() does not handle an existing Log instance correctly";
+    } catch (LeafError* e){
+        CHECK_EC(Error::DEBUG_EXCEPTION, e);
+    } catch (...){
+        F_WRONGEXCEPTION("LeafError*");
+    }
+}
 
 //This test checks if _cleaf_initialized gets set
 TEST(Cleaf, cleaf_init_set_initialized){
     FUN();
 
-    ASSERT_FALSE(_cleaf_initialized) << "_cleaf_initialized is set to true as default!";
+    _cleaf_initialized = false;
+    ASSERT_FALSE(_cleaf_initialized) << "_cleaf_initialized has not been set to false";
 
     //Save the Log instance, there is a new one created in cleaf_init
     Log::Log* log = hlog;
@@ -53,5 +78,5 @@ TEST(Cleaf, cleaf_init_set_initialized){
     //Restore the Log instance
     hlog = log;
 
-    ASSERT_TRUE(_cleaf_initialized) << "_cleaf_initialized does not get set!";
+    ASSERT_TRUE(_cleaf_initialized) << "_cleaf_initialized does not get set";
 }

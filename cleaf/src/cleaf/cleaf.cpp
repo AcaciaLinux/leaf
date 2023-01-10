@@ -53,6 +53,29 @@ extern "C" {
 
     void cleaf_init(enum loglevel level){
         LEAF_DEBUG_EX("cleaf_init()");
+
+        //Check if cleaf isn't already initialized
+        if (_cleaf_initialized){
+            LOGAPI("[cleaf] Cleaf is already initialized!");
+
+            //A debugging checkpoint to check the above switch
+            LEAF_DEBUG_EX("cleaf_init::check_initialized");
+
+            return;
+        }
+
+        //Check if we already have a log instance
+        if (hlog != nullptr){
+            FUN();
+            LOGUW("[cleaf] There seems to already be a Log instance, skipping setup!");
+            _cleaf_initialized = true;
+
+            //A debugging checkpoint to check if the above switch worked
+            LEAF_DEBUG_EX("cleaf_init::hlog_nullptr");
+
+            return;
+        }
+
         hlog = new Log::Log();
         FUN();
 
@@ -73,7 +96,6 @@ extern "C" {
         _cleaf_initialized = true;
     }
 
-    #warning Tests for loglevel, add dummy cleaf_init() function that doesn't mess with the hlog instance
     void cleaf_setLogLevel(enum loglevel level){
         LEAF_DEBUG_EX("cleaf_setLogLevel()");
 
