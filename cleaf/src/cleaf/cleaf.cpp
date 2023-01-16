@@ -7,6 +7,7 @@
 
 #include "log.h"
 #include "cleaf.h"
+#include "cleaf_check.h"
 
 #include "leafdebug.h"
 #include "dist.h"
@@ -28,13 +29,6 @@ bool _cleaf_owns_hlog = false;
  * @brief   A stringstream for caching the leaf output to read it later
  */
 std::stringstream _ss_cache;
-
-#define CHECK_CLEAF_INIT(fn) { \
-    if (!_cleaf_initialized){ \
-        std::cerr << "[cleaf] cleaf is not initialized! Unable to perform " << fn << std::endl; \
-        return; \
-    } \
-} \
 
 extern "C" {
 
