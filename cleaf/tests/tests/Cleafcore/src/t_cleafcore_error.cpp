@@ -7,12 +7,15 @@
 
 #include "../t_cleafcore.h"
 
+#include "cleafdebug.h"
+
 //
 // cleafcore_getError()
 //
 
 TEST(Cleafcore, cleafcore_getError_debug){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     LEAF_DEBUG_SET_FAIL("cleafcore_getError()");
 
@@ -31,8 +34,18 @@ TEST(Cleafcore, cleafcore_getError_debug){
     }
 }
 
+TEST(Cleafcore, claefcore_getError_notInit){
+    FUN();
+    CLEAF_INIT_DUMMY(0);
+
+    struct cleafcore c;
+
+    ASSERT_EQ(UINT16_MAX, cleafcore_getError(&c)) << "cleaf_getError() does not check for initialized cleaf";
+}
+
 TEST(Cleafcore, cleafcore_getError){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     struct cleafcore c;
     c.core = NULL;
@@ -53,6 +66,7 @@ TEST(Cleafcore, cleafcore_getError){
 
 TEST(Cleafcore, cleafcore_getErrorString_debug){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     LEAF_DEBUG_SET_FAIL("cleafcore_getErrorString()");
 
@@ -71,8 +85,18 @@ TEST(Cleafcore, cleafcore_getErrorString_debug){
     }
 }
 
+TEST(Cleafcore, claefcore_getErrorString_notInit){
+    FUN();
+    CLEAF_INIT_DUMMY(0);
+
+    struct cleafcore c;
+
+    ASSERT_EQ(NULL, cleafcore_getErrorString(&c)) << "cleaf_getErrorString() does not check for initialized cleaf";
+}
+
 TEST(Cleafcore, cleafcore_getErrorString){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     struct cleafcore c;
     c.core = NULL;
@@ -93,6 +117,7 @@ TEST(Cleafcore, cleafcore_getErrorString){
 
 TEST(Cleafcore, cleafcore_clear_error_debug){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     LEAF_DEBUG_SET_FAIL("cleafcore_clear_error()");
 
@@ -111,9 +136,30 @@ TEST(Cleafcore, cleafcore_clear_error_debug){
     }
 }
 
+TEST(Cleafcore, claefcore_clear_error_notInit){
+    FUN();
+    CLEAF_INIT_DUMMY(0);
+
+    LEAF_DEBUG_SET_FAIL("cleafcore_clear_error()");
+
+    try{
+        struct cleafcore c;
+        c.core = NULL;
+        c.error = NULL;
+
+        cleafcore_clear_error(&c);
+
+    } catch (LeafError* e){
+        FAIL() << "cleafcore_clear_error() does not check for initialized cleaf";
+    } catch (...){
+        F_WRONGEXCEPTION("LeafError*");
+    }
+}
+
 //Checks if the cleafcore_clear_error() function calls the LeafError destructor
 TEST(Cleafcore, cleafcore_clear_error_delete){
     FUN();
+    CLEAF_INIT_DUMMY(true);
 
     LEAF_DEBUG_SET_FAIL("LeafError::~LeafError()");
 
