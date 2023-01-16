@@ -21,6 +21,24 @@ extern "C" {
 #endif
 
     /**
+     * @brief   Creates a new Leafcore instance
+     * @return  A pointer to a new struct describing the instance
+     */
+    struct cleafcore*           cleafcore_new();
+
+    /**
+     * @brief   Deletes the passed Leafcore instance. DO NOT USE IT afterwards!
+     * @param   core            The instance to delete
+     */
+    void                        cleafcore_delete(struct cleafcore* core);
+
+    /**
+     * @brief   Returns the error code of the last Leafcore operation (0 if no error)
+     * @param   core            The Leafcore instance to check
+     */
+    uint16_t                    cleafcore_getError(struct cleafcore* core);
+
+    /**
      * @brief   Returns a string describing the error of the last Leafcore operation ('No error' if no error)
      * @param   core            The Leafcore instance to check
      * @return  const char*     The pointer to the string, DELETE IT AFTER USAGE!
