@@ -10,12 +10,12 @@
 
 extern bool _cleaf_initialized;
 
-CLeafInitDebugDummy::CLeafInitDebugDummy(){
+CLeafInitDebugDummy::CLeafInitDebugDummy(bool state){
     FUN();
-    LOGD("Setting up cleaf debugging initialization from " + std::to_string(_cleaf_initialized) + " to 1");
+    LOGD("Setting up cleaf debugging initialization from " + std::to_string(_cleaf_initialized) + " to " + std::to_string(state));
 
     _prevState = _cleaf_initialized;
-    _cleaf_initialized = true;
+    _cleaf_initialized = state;
 }
 
 CLeafInitDebugDummy::~CLeafInitDebugDummy(){

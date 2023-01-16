@@ -18,14 +18,14 @@
     class CLeafInitDebugDummy{
 
     public:
-        CLeafInitDebugDummy();
+        CLeafInitDebugDummy(bool state);
         ~CLeafInitDebugDummy();
 
     private:
         bool		_prevState = false;
     };
 
-    #define CLEAF_INIT_DUMMY CLeafInitDebugDummy cleafInitDebugDummy
+    #define CLEAF_INIT_DUMMY(state) CLeafInitDebugDummy cleafInitDebugDummy(state)
 
 #else
     #define CLEAF_INIT_DUMMY
