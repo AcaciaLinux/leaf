@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "cleaf_check.h"
 
 #include "leafdebug.h"
 #include "error.h"
@@ -18,6 +19,7 @@
 extern "C" {
 
     uint16_t cleafcore_getError(struct cleafcore* c){
+        CHECK_CLEAF_INIT_RET("cleafcore_getError()", UINT16_MAX);
         FUN();
         LEAF_DEBUG_EX("cleafcore_getError()");
 
@@ -28,6 +30,7 @@ extern "C" {
     }
 
     const char* cleafcore_getErrorString(struct cleafcore* c){
+        CHECK_CLEAF_INIT_RET("cleafcore_getErrorString()", NULL);
         FUN();
         LEAF_DEBUG_EX("cleafcore_getErrorString()");
 
@@ -44,6 +47,7 @@ extern "C" {
     }
 
     void cleafcore_clear_error(struct cleafcore* c){
+        CHECK_CLEAF_INIT("cleafcore_clear_error()");
         FUN();
         LEAF_DEBUG_EX("cleafcore_clear_error()");
 
