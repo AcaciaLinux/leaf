@@ -28,7 +28,7 @@ uint8_t cleafconfig_setBoolConfig(struct cleafcore* core, cleaf_bool_config conf
         return CLEAFCONFIG_NOCORE;
 
     //Get a reference to the leafconfig struct in the core
-    leaf_config_t leafconfig = ((Leafcore*)core->core)->getConfig();
+    leaf_config_t& leafconfig = ((Leafcore*)core->core)->getConfig();
 
     //Check if the value is bigger than 0 => true
     bool state = value > 0;

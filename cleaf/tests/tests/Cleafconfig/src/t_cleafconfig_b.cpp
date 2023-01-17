@@ -8,8 +8,28 @@
 #include "../t_cleafconfig.h"
 
 #include "cleafdebug.h"
+#include "leafcore.h"
 
 #include <assert.h>
+
+#define STR_(X) #X
+#define STR(X) STR_(X)
+
+//Sets the config to true and false using the cleafconfig method and checks the result
+#define CLEAFCONFIG_B_SET_CHECK(core, cleafconfig_name, leafconfig_name) { \
+        cleafconfig_setBoolConfig(core, cleafconfig_name, CLEAFCONFIG_B_FALSE); \
+        EXPECT_FALSE(leafconfig_name) << "Setting " << STR(cleafconfig_name) << " does not work correctly"; \
+        cleafconfig_setBoolConfig(core, cleafconfig_name, CLEAFCONFIG_B_TRUE); \
+        EXPECT_TRUE(leafconfig_name) << "Setting " << STR(cleafconfig_name) << " does not work correctly"; \
+}
+
+//Sets the config to true and false and checks the result
+#define CLEAFCONFIG_B_GET_CHECK(core, cleafconfig_name, leafconfig_name) { \
+        leafconfig_name = CLEAFCONFIG_B_FALSE;  \
+        EXPECT_FALSE(cleafconfig_getBoolConfig(core, cleafconfig_name)) << "Getting " << STR(cleafconfig_name) << " does not work correctly"; \
+        leafconfig_name = CLEAFCONFIG_B_TRUE;  \
+        EXPECT_TRUE(cleafconfig_getBoolConfig(core, cleafconfig_name)) << "Getting " << STR(cleafconfig_name) << " does not work correctly"; \
+}
 
 static_assert(COUNT_CLEAF_BOOL_CONFIG == 9, "Amount of CLEAF_BOOL cofigs changed");
 
@@ -78,6 +98,28 @@ TEST(Cleafcore, cleafconfig_setBoolConfig_inv_conf){
     cleafcore_delete(core);
 }
 
+TEST(Cleafcore, cleafconfig_setBoolConfig){
+    FUN();
+    CLEAF_INIT_DUMMY(true);
+
+    struct cleafcore* core = cleafcore_new();
+    leaf_config_t& conf = ((Leafcore*)core->core)->getConfig();
+
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_NOASK, conf.noAsk);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_NOCLEAN, conf.noClean);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_NOPROGRESS, conf.noProgress);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_FORCE, conf.force);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_FORCEOVERWRITE, conf.forceOverwrite);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_RUNPREINSTALL, conf.runPreinstall);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_RUNPOSTINSTALL, conf.runPostinstall);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_INSTALLDEPS, conf.installDependencies);
+    CLEAFCONFIG_B_SET_CHECK(core, CLEAF_B_CONFIG_CHECKREMOTEHASHUPGRADE, conf.checkRemoteHashUpgrade);
+
+    static_assert(COUNT_CLEAF_BOOL_CONFIG == 9, "Adjust this");
+
+    cleafcore_delete(core);
+}
+
 //
 // cleafconfig_getBoolConfig()
 //
@@ -139,6 +181,28 @@ TEST(Cleafcore, cleafconfig_getBoolConfig_inv_conf){
     struct cleafcore* core = cleafcore_new();
 
     ASSERT_EQ(CLEAFCONFIG_INV_CONF, cleafconfig_getBoolConfig(core, COUNT_CLEAF_BOOL_CONFIG)) << "cleafconfig_getBoolConfig() does not handle an invalid (unknown) config correctly";
+
+    cleafcore_delete(core);
+}
+
+TEST(Cleafcore, cleafconfig_getBoolConfig){
+    FUN();
+    CLEAF_INIT_DUMMY(true);
+
+    struct cleafcore* core = cleafcore_new();
+    leaf_config_t& conf = ((Leafcore*)core->core)->getConfig();
+
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_NOASK, conf.noAsk);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_NOCLEAN, conf.noClean);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_NOPROGRESS, conf.noProgress);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_FORCE, conf.force);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_FORCEOVERWRITE, conf.forceOverwrite);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_RUNPREINSTALL, conf.runPreinstall);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_RUNPOSTINSTALL, conf.runPostinstall);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_INSTALLDEPS, conf.installDependencies);
+    CLEAFCONFIG_B_GET_CHECK(core, CLEAF_B_CONFIG_CHECKREMOTEHASHUPGRADE, conf.checkRemoteHashUpgrade);
+
+    static_assert(COUNT_CLEAF_BOOL_CONFIG == 9, "Adjust this");
 
     cleafcore_delete(core);
 }
