@@ -14,3 +14,4 @@ include_directories(
 
 add_subdirectory(tests/Cleaf)
 add_subdirectory(tests/Cleafcore)
+add_subdirectory(tests/Cleafconfig)
