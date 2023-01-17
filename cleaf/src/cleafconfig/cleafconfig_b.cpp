@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "leafdebug.h"
 
 #include "cleafconfig.h"
 
@@ -20,6 +21,7 @@ static_assert(COUNT_CLEAF_BOOL_CONFIG == 9, "Amount of CLEAF_BOOL cofigs changed
 uint8_t cleafconfig_setBoolConfig(struct cleafcore* core, cleaf_bool_config config, uint8_t value){
     CHECK_CLEAF_INIT_RET("cleafconfig_setBoolConfig()", CLEAFCONFIG_NOTINIT);
     FUN();
+    LEAF_DEBUG_EX("cleafconfig_setBoolConfig()");
 
     //Check if the core is invalid
     if (core == NULL || core->core == NULL)
@@ -89,6 +91,7 @@ uint8_t cleafconfig_setBoolConfig(struct cleafcore* core, cleaf_bool_config conf
 uint8_t cleafconfig_getBoolConfig(struct cleafcore* core, cleaf_bool_config config){
     CHECK_CLEAF_INIT_RET("cleafconfig_getBoolConfig()", CLEAFCONFIG_NOTINIT);
     FUN();
+    LEAF_DEBUG_EX("cleafconfig_getBoolConfig()");
 
     //Check if the core is invalid
     if (core == NULL || core->core == NULL)
