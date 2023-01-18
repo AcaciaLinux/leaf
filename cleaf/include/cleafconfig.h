@@ -96,6 +96,14 @@ extern "C" {
      */
     const char*                 cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_config config);
 
+    /**
+     * @brief   Sets the leafcore redownload behaviour
+     * @param   core            The cleafcore instance to adjust
+     * @param   mode            The mode to use
+     * @return  uint8_t         CLEAFCONFIG_OK, else an error code defined above
+     */
+    uint8_t                     cleafconfig_setRedownload(struct cleafcore* core, cleaf_config_redownload mode);
+
 #ifdef __cplusplus
 }
 #endif
