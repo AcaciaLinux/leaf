@@ -6,6 +6,7 @@
  */
 
 #include "log.h"
+#include "leafdebug.h"
 
 #include "cleafconfig.h"
 
@@ -21,13 +22,14 @@ static_assert(COUNT_CLEAF_STRING_CONFIG == 9, "Amount of CLEAF_STRING cofigs cha
 uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config config, const char* val_c){
     CHECK_CLEAF_INIT_RET("cleafconfig_setStringConfig()", CLEAFCONFIG_NOTINIT);
     FUN();
+    LEAF_DEBUG_EX("cleafconfig_setStringConfig()");
 
     //Check if the core is invalid
     if (core == NULL || core->core == NULL)
         return CLEAFCONFIG_NOCORE;
 
     //Get a reference to the leafconfig struct in the core
-    leaf_config_t leafconfig = ((Leafcore*)core->core)->getConfig();
+    leaf_config_t& leafconfig = ((Leafcore*)core->core)->getConfig();
 
     //Create a c++ string of the value
     std::string value = std::string(val_c);
@@ -65,6 +67,7 @@ uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config 
 const char* cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_config config){
     CHECK_CLEAF_INIT_RET("cleafconfig_getBoolConfig()", NULL);
     FUN();
+    LEAF_DEBUG_EX("cleafconfig_getStringConfig()");
 
     //Check if the core is invalid
     if (core == NULL || core->core == NULL)
