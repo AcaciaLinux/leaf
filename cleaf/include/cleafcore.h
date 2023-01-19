@@ -8,6 +8,13 @@
 #ifndef __CLEAFCORE_H__
 #define __CLEAFCORE_H__
 
+#include <stdint.h>
+
+#define CLEAFCORE_OK 0
+#define CLEAFCORE_NOTINIT -1
+#define CLEAFCORE_NOCORE -2
+#define CLAEFCORE_LEAFERROR -3
+
 /**
  * @brief   A structure holding a Leafcore and LeafError object
  */
@@ -50,6 +57,13 @@ extern "C" {
      * @param   core            The instance to process
      */
     void                        cleafcore_clear_error(struct cleafcore* core);
+
+    /**
+     * @brief   Calls Leafcore::a_update()
+     * @param   core            The core instance to use
+     * @return  int8_t          CLEAFCORE_OK, else an other error code
+     */
+    int8_t                      cleafcore_a_update(struct cleafcore* core);
 
 #ifdef __cplusplus
 }
