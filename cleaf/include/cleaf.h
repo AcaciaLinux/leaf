@@ -75,4 +75,17 @@ extern "C" {
 }
 #endif
 
+#ifdef __cplusplus
+    #include <deque>
+    #include <string>
+
+    /**
+     * @brief   Converts the C representation of a list of packages to a C++ std::deque<std::string>
+     * @param   len_pkgs        The amount of packages supplied
+     * @param   pkgs            An array of const char* strings
+     * @return  std::deque<std::string> The C++ representation of the list
+     */
+    std::deque<std::string>     cleaf_pkgs_to_v(uint32_t len_pkgs, const char* pkgs[]);
+#endif
+
 #endif
