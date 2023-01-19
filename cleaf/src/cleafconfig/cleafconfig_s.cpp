@@ -17,7 +17,7 @@
 #include <assert.h>
 #include <cstring>
 
-static_assert(COUNT_CLEAF_STRING_CONFIG == 9, "Amount of CLEAF_STRING cofigs changed");
+static_assert(COUNT_CLEAF_STRING_CONFIG == 10, "Amount of CLEAF_STRING cofigs changed");
 
 uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config config, const char* val_c){
     CHECK_CLEAF_INIT_RET("cleafconfig_setStringConfig()", CLEAFCONFIG_NOTINIT);
@@ -44,6 +44,11 @@ uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config 
         case CLEAF_S_CONFIG_PKGLISTURL:
             LOGAPI("[cleafconfig] Setting CLEAF_S_CONFIG_PKGLISTURL to '" + value + "'");
             leafconfig.pkgListURL = value;
+            break;
+
+        case CLEAF_S_CONFIG_CHROOTCMD:
+            LOGAPI("[cleafconfig] Setting CLEAF_S_CONFIG_CHROOTCMD to '" + value + "'");
+            leafconfig.chroot_cmd = value;
             break;
 
         case CLEAF_S_CONFIG_CACHEDIR:
@@ -124,6 +129,11 @@ const char* cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_con
         case CLEAF_S_CONFIG_PKGLISTPATH:
             res = leafconfig.pkgListPath();
             LOGAPI("[cleafconfig] Getting CLEAF_S_CONFIG_PKGLISTPATH: " + res);
+            break;
+
+        case CLEAF_S_CONFIG_CHROOTCMD:
+            res = leafconfig.chroot_cmd;
+            LOGAPI("[cleafconfig] Getting CLEAF_S_CONFIG_CROOTCMD: " + res);
             break;
 
         default:
