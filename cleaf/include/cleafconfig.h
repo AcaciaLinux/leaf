@@ -70,7 +70,7 @@ extern "C" {
      * @param   value           The value to set (CLEAFCONFIG_B_FALSE/TRUE)
      * @return  uint8_t         CLEAFCONFIG_OK, else an error code defined above
      */
-    uint8_t                     cleafconfig_setBoolConfig(struct cleafcore* core, cleaf_bool_config conf, uint8_t value);
+    uint8_t                     cleafconfig_setBoolConfig(struct cleafcore* core, enum cleaf_bool_config conf, uint8_t value);
 
     /**
      * @brief   Gets a boolean cleaf config
@@ -78,7 +78,7 @@ extern "C" {
      * @param   conf            The config to get
      * @return  uint8_t         CLEAFCONFIG_B_FALSE / CLEAFCONFIG_B_TRUE, else an error code defined above
      */
-    uint8_t                     cleafconfig_getBoolConfig(struct cleafcore* core, cleaf_bool_config conf);
+    uint8_t                     cleafconfig_getBoolConfig(struct cleafcore* core, enum cleaf_bool_config conf);
 
     /**
      * @brief   Sets a string cleaf config
@@ -87,7 +87,7 @@ extern "C" {
      * @param   value           The value to set (does not take ownership)
      * @return  uint8_t         CLEAFCONFIG_OK, else an error code defined above
      */
-    uint8_t                     cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config config, const char* value);
+    uint8_t                     cleafconfig_setStringConfig(struct cleafcore* core, enum cleaf_string_config config, const char* value);
 
     /**
      * @brief   Gets a string cleaf config
@@ -95,7 +95,7 @@ extern "C" {
      * @param   conf            The config to get
      * @return  const char*     A c string you have to delete or NULL on error
      */
-    const char*                 cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_config config);
+    const char*                 cleafconfig_getStringConfig(struct cleafcore* core, enum cleaf_string_config config);
 
     /**
      * @brief   Sets the leafcore redownload behaviour
@@ -103,7 +103,7 @@ extern "C" {
      * @param   mode            The mode to use
      * @return  uint8_t         CLEAFCONFIG_OK, else an error code defined above
      */
-    uint8_t                     cleafconfig_setRedownload(struct cleafcore* core, cleaf_config_redownload mode);
+    uint8_t                     cleafconfig_setRedownload(struct cleafcore* core, enum cleaf_config_redownload mode);
 
 #ifdef __cplusplus
 }
