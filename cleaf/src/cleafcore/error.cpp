@@ -29,7 +29,7 @@ extern "C" {
             return ((LeafError*)c->error)->getErrorCode();
     }
 
-    const char* cleafcore_getErrorString(struct cleafcore* c){
+    char* cleafcore_getErrorString(struct cleafcore* c){
         CHECK_CLEAF_INIT_RET("cleafcore_getErrorString()", NULL);
         FUN();
         LEAF_DEBUG_EX("cleafcore_getErrorString()");

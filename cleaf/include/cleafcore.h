@@ -48,9 +48,9 @@ extern "C" {
     /**
      * @brief   Returns a string describing the error of the last Leafcore operation ('No error' if no error)
      * @param   core            The Leafcore instance to check
-     * @return  const char*     The pointer to the string, DELETE IT AFTER USAGE!
+     * @return  char*           The pointer to the string, DELETE IT AFTER USAGE!
      */
-    const char*                 cleafcore_getErrorString(struct cleafcore* core);
+    char*                       cleafcore_getErrorString(struct cleafcore* core);
 
     /**
      * @brief   Clears the last error of the Leafcore object
