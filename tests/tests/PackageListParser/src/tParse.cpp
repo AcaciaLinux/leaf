@@ -44,7 +44,7 @@ TEST(PackageListParser, parse_bad_istream){
 TEST(PackageListParser, parse_right_parse){
 	FUN();
 
-	std::istringstream inString("{\"status\":\"SUCCESS\", \"payload\":[{\"name\":\"Name\", \"real_version\":\"2\", \"version\":\"Version\", \"description\":\"Description\", \"dependencies\":\"[Dependency]\", \"url\":\"URL\"}]}");
+	std::istringstream inString("{\"status\":\"SUCCESS\", \"payload\":[{\"name\":\"Name\", \"real_version\":\"2\", \"version\":\"Version\", \"description\":\"Description\", \"dependencies\":[\"Dependency\"], \"url\":\"URL\"}]}");
 
 	try{
 			PackageListParser parser;
