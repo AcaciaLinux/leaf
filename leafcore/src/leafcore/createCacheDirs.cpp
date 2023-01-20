@@ -20,4 +20,5 @@ void Leafcore::createCacheDirs(){
 
 	LeafFS::create_directories(_config.downloadDir());
 	LeafFS::create_directories(_config.packagesDir());
+	LeafFS::create_directories(_config.runScriptsDir());
 }
