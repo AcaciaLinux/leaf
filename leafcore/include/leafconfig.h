@@ -5,6 +5,10 @@
 #include <deque>
 #include <stdint.h>
 
+#ifndef LEAF_DEFAULT_NOASK
+	#define LEAF_DEFAULT_NOASK false
+#endif
+
 enum config_verbosity{
 	CONFIG_V_DEFAULT = 0,
 	CONFIG_V_VERBOSE = 1,
@@ -62,7 +66,7 @@ typedef struct leafconfig_struct{
 	config_redownload			redownload = CONFIG_REDOWNLOAD_NONE;
 
 	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
-	bool						noAsk = false;
+	bool						noAsk = LEAF_DEFAULT_NOASK;
 
 	//If leaf should keep its package caches after a transaction
 	bool						noClean = false;
