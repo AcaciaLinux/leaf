@@ -64,9 +64,19 @@ TEST(Cleafcore, cleafcore_a_update_call){
     FUN();
     CLEAF_INIT_DUMMY(true);
 
-    struct cleafcore* core = cleafcore_new();
-
     LEAF_DEBUG_SET_FAIL("Leafcore::a_update()");
 
-    ASSERT_EQ(CLAEFCORE_LEAFERROR, cleafcore_a_update(core)) << "cleafcore_a_update() does not call Leafcore::a_update()";
+    struct cleafcore* core = cleafcore_new();
+
+    try{
+        cleafcore_a_update(core);
+
+        F_NOTHROW(Error::DEBUG_EXCEPTION);
+    } catch (LeafError* e){
+        CHECK_EC(Error::DEBUG_EXCEPTION, e);
+    } catch (...){
+        F_WRONGEXCEPTION("LeafError*");
+    }
+
+    cleafcore_delete(core);
 }
