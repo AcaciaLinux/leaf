@@ -38,6 +38,7 @@ int8_t cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char
     leafconfig.action = ACTION_UPDATE;
 
     try {
+        leafcore->parseHooks();
         leafcore->parsePackageList();
         leafcore->parseInstalled();
         leafcore->a_install(cleaf_pkgs_to_v(len_pkgs, pkgs));

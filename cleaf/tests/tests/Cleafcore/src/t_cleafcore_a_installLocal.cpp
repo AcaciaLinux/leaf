@@ -59,11 +59,27 @@ TEST(Cleafcore, cleafcore_a_installLocal_noCore){
     delete core;
 }
 
-//Tests if the function call the appropriate leafcore function
-TEST(Cleafcore, cleafcore_a_installLocal_call){
+TEST(Cleafcore, cleafcore_a_installLocal_call_parseHooks){
     FUN();
     CLEAF_INIT_DUMMY(true);
+
+    LEAF_DEBUG_SET_FAIL("Leafcore::parseHooks()");
+
+    struct cleafcore* core = cleafcore_new();
+
+    try{
+        cleafcore_a_installLocal(core, 0, NULL);
+
+        F_NOTHROW(Error::DEBUG_EXCEPTION);
+    } catch (LeafError* e){
+        CHECK_EC(Error::DEBUG_EXCEPTION, e);
+    } catch (...){
+        F_WRONGEXCEPTION("LeafError*");
+    }
+
+    cleafcore_delete(core);
 }
+
 TEST(Cleafcore, cleafcore_a_installLocal_call_parseInstalled){
     FUN();
     CLEAF_INIT_DUMMY(true);
