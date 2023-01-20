@@ -66,6 +66,7 @@ TEST(Cleafcore, cleafcore_a_upgrade_call_parseHooks){
     LEAF_DEBUG_SET_FAIL("Leafcore::parseHooks()");
 
     struct cleafcore* core = cleafcore_new();
+    cleafcore_a_update(core);
 
     try{
         cleafcore_a_upgrade(core, 0, NULL);
@@ -87,6 +88,7 @@ TEST(Cleafcore, cleafcore_a_upgrade_call_parseInstalled){
     LEAF_DEBUG_SET_FAIL("Leafcore::parseInstalled()");
 
     struct cleafcore* core = cleafcore_new();
+    cleafcore_a_update(core);
 
     try{
         cleafcore_a_upgrade(core, 0, NULL);
@@ -108,6 +110,7 @@ TEST(Cleafcore, cleafcore_a_upgrade_call_parsePackageList){
     LEAF_DEBUG_SET_FAIL("Leafcore::parsePackageList()");
 
     struct cleafcore* core = cleafcore_new();
+    cleafcore_a_update(core);
 
     try{
         cleafcore_a_upgrade(core, 0, NULL);
@@ -129,6 +132,7 @@ TEST(Cleafcore, cleafcore_a_upgrade_call_a_upgrade){
     LEAF_DEBUG_SET_FAIL("Leafcore::a_upgrade()");
 
     struct cleafcore* core = cleafcore_new();
+    cleafcore_a_update(core);
 
     try{
         cleafcore_a_upgrade(core, 0, NULL);
