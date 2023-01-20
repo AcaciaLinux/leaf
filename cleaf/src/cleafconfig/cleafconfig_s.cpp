@@ -17,7 +17,7 @@
 #include <assert.h>
 #include <cstring>
 
-static_assert(COUNT_CLEAF_STRING_CONFIG == 10, "Amount of CLEAF_STRING cofigs changed");
+static_assert(COUNT_CLEAF_STRING_CONFIG == 11, "Amount of CLEAF_STRING cofigs changed");
 
 uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config config, const char* val_c){
     CHECK_CLEAF_INIT_RET("cleafconfig_setStringConfig()", CLEAFCONFIG_NOTINIT);
@@ -58,6 +58,7 @@ uint8_t cleafconfig_setStringConfig(struct cleafcore* core, cleaf_string_config 
         case CLEAF_S_CONFIG_INSTALLEDDIR:
         case CLEAF_S_CONFIG_HOOKSDIR:
         case CLEAF_S_CONFIG_PKGLISTPATH:
+        case CLEAF_S_CONFIG_RUNSCRIPTSDIR:
             LOGAPI("[cleafconfig] The config " + std::to_string(config) + " is read-only");
             return CLEAFCONFIG_RO_CONF;
 
@@ -134,6 +135,11 @@ const char* cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_con
         case CLEAF_S_CONFIG_CHROOTCMD:
             res = leafconfig.chroot_cmd;
             LOGAPI("[cleafconfig] Getting CLEAF_S_CONFIG_CROOTCMD: " + res);
+            break;
+
+        case CLEAF_S_CONFIG_RUNSCRIPTSDIR:
+            res = leafconfig.runScriptsDir();
+            LOGAPI("[cleafconfig] Getting CLEAF_S_CONFIG_RUNSCRIPTSDIR: " + res);
             break;
 
         default:

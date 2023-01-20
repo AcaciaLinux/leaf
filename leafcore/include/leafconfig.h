@@ -107,6 +107,10 @@ typedef struct leafconfig_struct{
 		return cacheDir() + "packages/";
 	}
 
+	std::string					runScriptsDir(){
+		return cacheDir() + "runScripts/";
+	}
+
 	//Where the leaf configuration lives
 	std::string					configDir(){
 		return rootDir + "etc/leaf/";
