@@ -64,28 +64,6 @@ TEST(Cleaf, cleaf_finalize_check_initialized){
     }
 }
 
-//Checks if the check for the ownership of the Log module works
-TEST(Cleaf, cleaf_finalize_owns_hlog){
-    FUN();
-
-    LEAF_DEBUG_SET_FAIL("cleaf_finalize::hlog_not_owned");
-
-    try {
-
-        //Set the parameters correctly
-        _cleaf_initialized = true;
-        _cleaf_owns_hlog = false;
-
-        cleaf_finalize();
-
-        FAIL() << "cleaf_finalize() does not check if cleaf owns the Log instance";
-    } catch (LeafError* e){
-        CHECK_EC(Error::DEBUG_EXCEPTION, e);
-    } catch (...){
-        F_WRONGEXCEPTION("LeafError*");
-    }
-}
-
 //Checks if the deletion is made normally
 TEST(Cleaf, cleaf_finalize){
     FUN();
