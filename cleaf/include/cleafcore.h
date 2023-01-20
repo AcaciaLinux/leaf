@@ -65,6 +65,15 @@ extern "C" {
      */
     int8_t                      cleafcore_a_update(struct cleafcore* core);
 
+    /**
+     * @brief   Calls Leafcore::a_install()
+     * @param   core            The core instance to use
+     * @param   len_pkgs        The amount of packages to install
+     * @param   pkgs            An array of const char* strings with the package names
+     * @return  int8_t          CLEAFCORE_OK, else an other error code
+     */
+    int8_t                      cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+
 #ifdef __cplusplus
 }
 #endif
