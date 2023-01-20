@@ -83,6 +83,15 @@ extern "C" {
      */
     int8_t                      cleafcore_a_installLocal(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
 
+    /**
+     * @brief   Calls Leafcore::a_upgrade()
+     * @param   core            The core instance to use
+     * @param   len_pkgs        The amount of packages to process
+     * @param   pkgs            An array of const char* strings with the package names
+     * @return  int8_t          CLEAFCORE_OK, else an other error code
+     */
+    int8_t                      cleafcore_a_upgrade(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+
 #ifdef __cplusplus
 }
 #endif
