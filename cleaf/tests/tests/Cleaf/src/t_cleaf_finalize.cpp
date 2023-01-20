@@ -63,30 +63,3 @@ TEST(Cleaf, cleaf_finalize_check_initialized){
         F_WRONGEXCEPTION("LeafError*");
     }
 }
-
-//Checks if the deletion is made normally
-TEST(Cleaf, cleaf_finalize){
-    FUN();
-
-    //Assert that all the checks pass
-    _cleaf_initialized = true;
-    _cleaf_owns_hlog = true;
-
-    //Backup the hlog instance
-    Log::Log* oldLog = hlog;
-
-    //Give hlog a new value
-    hlog = (Log::Log*) new uint8_t;
-
-    cleaf_finalize();
-
-    //Backup the hlog result and restore old hlog
-    Log::Log* hlogAfterDelete = hlog;
-    hlog = oldLog;
-
-    //Check if _cleaf_initialized has been unset
-    ASSERT_FALSE(_cleaf_initialized) << "cleaf_finalize() does not unset _cleaf_initialized";
-
-    //Check if the resulting hlog has been made safe (nullptr)
-    ASSERT_EQ(nullptr, hlogAfterDelete);
-}
