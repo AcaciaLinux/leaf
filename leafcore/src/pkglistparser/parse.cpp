@@ -41,7 +41,9 @@ void PackageListParser::parse(std::istream& in){
 			//Fill the new package
 			newPackage->_realVersion = std::stoi(std::string(json_pkg.at("real_version")));
 			newPackage->_description = json_pkg.at("description");
-			newPackage->_dependencies = parseDependenciesString(json_pkg.at("dependencies"));
+			for (nlohmann::json json_dep : json_pkg.at("dependencies")){
+				newPackage->_dependencies.push_back(std::string(json_dep));
+			}
 
 			//Check for the 'hash' tag
 			if (json_pkg.count("hash") != 0)
