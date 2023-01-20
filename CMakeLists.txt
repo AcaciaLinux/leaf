@@ -44,7 +44,7 @@ if (BUILD_TESTS)
 	add_subdirectory(Log/googletest)
 	add_subdirectory(tests)
 	add_subdirectory(cleaf/tests)
-	add_definitions(-DDEBUG)
+	add_definitions(-DDEBUG -DLEAF_TESTING -DLEAF_TESTING_ROOTDIR="./leaftestroot/" -DLEAF_DEFAULT_NOASK="true")
 endif()
 
 if(BUILD_DOCS)
