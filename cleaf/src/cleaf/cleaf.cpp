@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <cstring>
 
 /**
  * @brief   If cleaf has been initialized
@@ -183,8 +184,14 @@ extern "C" {
         }
     }
 
-    const char* cleaf_get_log(){
-        return _ss_cache.str().c_str();
+    char* cleaf_get_log(){
+        std::string cache = _ss_cache.str();
+
+        char* res = new char[cache.size()+1];
+
+        std::strcpy(res, cache.c_str());
+
+        return res;
     }
 
     void cleaf_clear_log(){

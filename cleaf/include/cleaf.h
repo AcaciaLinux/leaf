@@ -62,9 +62,9 @@ extern "C" {
     void                        cleaf_setLogLevel(enum loglevel level);
 
     /**
-     * @brief   Returns a const char* to the leaf log, do NOT delete this pointer!
+     * @brief   Returns a char* to the leaf log. DELETE it after usage!
      */
-    const char*                 cleaf_get_log();
+    char*                       cleaf_get_log();
 
     /**
      * @brief   Clears the internal log stringstream
