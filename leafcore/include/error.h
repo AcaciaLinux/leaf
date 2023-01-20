@@ -135,45 +135,19 @@ namespace Error{
 class LeafError{
 
 public:
-	LeafError(Error::ec errorCode){
-		_errorCode = errorCode;
-	}
+	LeafError(const Error::ec& errorCode);
+	LeafError(const Error::ec& errorCode, const std::string& additional);
+	LeafError(const Error::ec& errorCode, const std::error_code& stdErrorCode);
+	LeafError(const Error::ec& errorCode, const std::string& additional, const std::error_code& stdErrorCode);
+	~LeafError() noexcept(false);
 
-	LeafError(Error::ec errorCode, std::string additional){
-		_errorCode = errorCode;
-		_additional = additional;
-	}
+	Error::ec getErrorCode() const;
 
-	LeafError(Error::ec errorCode, std::error_code stdErrorCode){
-		_errorCode = errorCode;
-		_stdErrorCode = stdErrorCode;
-	}
+	std::string getErrorCodeMessage() const;
 
-	LeafError(Error::ec errorCode, std::string additional, std::error_code stdErrorCode){
-		_errorCode = errorCode;
-		_additional = additional;
-		_stdErrorCode = stdErrorCode;
-	}
+	std::string what() const;
 
-	std::string getErrorCodeMessage();
-
-	static std::string errorCode(Error::ec e);
-
-	std::string what(){
-		std::string ret = getErrorCodeMessage();
-
-		if (!_additional.empty())
-			ret += ": " + _additional;
-
-		if (_stdErrorCode)
-			ret += ": " + _stdErrorCode.message();
-
-		return ret;
-	}
-
-	Error::ec getErrorCode(){
-		return _errorCode;
-	}
+	static std::string errorCodeToString(Error::ec e);
 
 private:
 	Error::ec			_errorCode;

@@ -43,7 +43,8 @@ if (BUILD_TESTS)
 	enable_testing(true)
 	add_subdirectory(Log/googletest)
 	add_subdirectory(tests)
-	add_definitions(-DDEBUG)
+	add_subdirectory(cleaf/tests)
+	add_definitions(-DDEBUG -DLEAF_TESTING -DLEAF_TESTING_ROOTDIR="./leaftestroot/" -DLEAF_DEFAULT_NOASK="true")
 endif()
 
 if(BUILD_DOCS)
@@ -66,6 +67,7 @@ endif()
 set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
 
 add_subdirectory(leafcore)
+add_subdirectory(cleaf)
 
 add_subdirectory(Log)
 include_directories(Log/include)

@@ -1,10 +1,10 @@
 #include "error.h"
 
-std::string LeafError::getErrorCodeMessage(){
-	return errorCode(_errorCode);
+std::string LeafError::getErrorCodeMessage() const{
+	return errorCodeToString(_errorCode);
 }
 
-std::string LeafError::errorCode(Error::ec e){
+std::string LeafError::errorCodeToString(Error::ec e){
 	using namespace Error;
 
 	switch(e){
