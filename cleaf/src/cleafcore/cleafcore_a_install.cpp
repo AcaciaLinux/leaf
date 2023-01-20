@@ -43,15 +43,13 @@ int8_t cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char
         leafcore->parseInstalled();
         leafcore->a_install(cleaf_pkgs_to_v(len_pkgs, pkgs));
     } catch (LeafError* e){
-
         #ifdef DEBUG
-        //When debugging, rethrow DEBUG_EXCEPTION
-        if (e->getErrorCode() == Error::DEBUG_EXCEPTION)
+        //When debugging, rethrow all LeafErrors
             throw e;
+        #else
+            core->error = e;
+            return CLAEFCORE_LEAFERROR;
         #endif
-
-        core->error = e;
-        return CLAEFCORE_LEAFERROR;
     }
 
     return 0;

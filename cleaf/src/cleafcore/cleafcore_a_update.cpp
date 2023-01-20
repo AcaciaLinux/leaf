@@ -39,8 +39,13 @@ int8_t cleafcore_a_update(struct cleafcore* core){
     try {
         leafcore->a_update();
     } catch (LeafError* e){
-        core->error = e;
-        return CLAEFCORE_LEAFERROR;
+        #ifdef DEBUG
+        //When debugging, rethrow all LeafErrors
+            throw e;
+        #else
+            core->error = e;
+            return CLAEFCORE_LEAFERROR;
+        #endif
     }
 
     return 0;
