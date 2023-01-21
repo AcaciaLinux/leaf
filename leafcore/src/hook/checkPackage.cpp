@@ -18,9 +18,13 @@ bool Hook::checkPackage(std::string& packageName){
 	bool engage = false;
 
 	for (std::string& hookPackage : _packages){
-		if (std::regex_match(packageName, std::regex(hookPackage))){
-			engage = true;
-			break;
+		try {
+			if (std::regex_match(packageName, std::regex(hookPackage))){
+				engage = true;
+				break;
+			}
+		} catch (std::regex_error& e) {
+			LOGUW("WARNING: Regex error when trying to evaluate hook match '" + hookPackage + "': " + std::string(e.what()));
 		}
 	}
 

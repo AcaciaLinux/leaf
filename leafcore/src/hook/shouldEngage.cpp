@@ -16,9 +16,8 @@ bool Hook::shouldEngage(leaf_config_t& config){
 	bool actionMatch = false;
 	bool packageMatch = false;
 
-	for (std::string hook_package : _packages){
-		for (std::string conf_package : config.packages)
-			if (hook_package == conf_package){
+	for (std::string conf_package : config.packages){
+			if (checkPackage(conf_package)){
 				packageMatch = true;
 				break;
 			}
