@@ -40,12 +40,18 @@ int Leafcore::runCommand(const std::string& command, const std::filesystem::path
 
     int res = 0;
     {//Switch the workdir, execute the command and switch back
-        std::string oldWorkDir = LeafFS::get_workdir();
-        LeafFS::change_workdir(execWorkdir);
+        std::string oldWorkDir;
+        if (!shouldChroot){
+            oldWorkDir = LeafFS::get_workdir();
+            LeafFS::change_workdir(execWorkdir);
+        } else {
+            LOGI("[Leafcore][runCommand] Skipping workdir change when chrooting");
+        }
 
         res = system(execCMD.c_str());
 
-        LeafFS::change_workdir(oldWorkDir);
+        if (!shouldChroot)
+            LeafFS::change_workdir(oldWorkDir);
     }
 
     return res;
