@@ -1,6 +1,9 @@
 #ifndef __HOOK_H__
 #define __HOOK_H__
 
+class Hook;
+
+#include "leafcore.h"
 #include "leafconfig.h"
 #include "parser.h"
 
@@ -42,27 +45,28 @@ public:
 	 * @brief	Returns if the hook should engage, excluding if it should launch pre or post
 	 * @param	config			The leaf config to check packages, actions...
 	 */
-	bool						shouldEngage(leaf_config_t& config);
+	bool						shouldEngage(const leaf_config_t& config);
 
 	/**
 	 * @brief	Executes the hook executable
+	 * @param	leafcore		The core to use to execute the hook
 	 * @return	int				The result code of the command
 	 */
-	int							exec();
+	int							exec(const Leafcore& leafcore);
 
 	/**
 	 * @brief	Checks if this hook should engage at the "pre" step and executes if so
-	 * @param	config			The leaf config to check packages, actions...
+	 * @param	leafcore		The core to look up the configuration and execute the hook if needed
 	 * @return	int				The result code of the command, 0 if not executed
 	 */
-	int							execPre(leaf_config_t& config);
+	int							execPre(const Leafcore& leafcore);
 
 	/**
 	 * @brief	Checks if this hook should engage at the "post" step and executes if so
-	 * @param	config			The leaf config to check packages, actions...
+	 * @param	leafcore		The core to look up the configuration and execute the hook if needed
 	 * @return	int				The result code of the command, 0 if not executed
 	 */
-	int							execPost(leaf_config_t& config);
+	int							execPost(const Leafcore& leafcore);
 
 #ifndef FRIEND_HOOK
 private:

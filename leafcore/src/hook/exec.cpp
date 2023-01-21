@@ -10,8 +10,8 @@
 
 #include "hook.h"
 
-int Hook::exec(){
+int Hook::exec(const Leafcore& core){
 	FUN();
 
-	return system(_exec.c_str());
+	return core.runCommand(_exec, core.getConfigC().rootDir);
 }

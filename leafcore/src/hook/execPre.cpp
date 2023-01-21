@@ -10,12 +10,12 @@
 
 #include "hook.h"
 
-int Hook::execPre(leaf_config_t& config){
+int Hook::execPre(const Leafcore& core){
 	FUN();
 
 	if (_execTime == HOOK_EXEC_PRE)
-		if (shouldEngage(config))
-			return exec();
+		if (shouldEngage(core.getConfigC()))
+			return exec(core);
 
 	return 0;
 }

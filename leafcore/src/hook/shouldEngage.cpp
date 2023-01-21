@@ -10,7 +10,7 @@
 
 #include "hook.h"
 
-bool Hook::shouldEngage(leaf_config_t& config){
+bool Hook::shouldEngage(const leaf_config_t& config){
 	FUN();
 
 	bool actionMatch = false;
