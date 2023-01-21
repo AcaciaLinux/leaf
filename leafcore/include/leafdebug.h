@@ -37,7 +37,7 @@
 #else
 	#define LEAF_DEBUG(funName)
 	#define LEAF_DEBUG_EX(funName)
-	#define LEAF_DEBUG_EX_ADD(funName)
+	#define LEAF_DEBUG_EX_ADD(funName, add)
 	#define LEAF_DEBUG_SET_FAIL(funName)
 #endif
 
