@@ -147,6 +147,8 @@ public:
 
 	std::string getErrorCodeMessage() const;
 
+	std::string getAdditional() const;
+
 	std::string what() const;
 
 	static std::string errorCodeToString(Error::ec e);

@@ -59,3 +59,6 @@ Error::ec LeafError::getErrorCode() const{
     return _errorCode;
 }
 
+std::string LeafError::getAdditional() const{
+    return _additional;
+}
