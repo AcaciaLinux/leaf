@@ -1,7 +1,3 @@
-[submodule "Log"]
-	path = Log
-	url = https://github.com/maxkofler/Log
-	shallow = true
 [submodule "args"]
 	path = args
 	url = https://github.com/Taywee/args
@@ -9,4 +5,8 @@
 [submodule "json"]
 	path = leafcore/json
 	url = https://github.com/nlohmann/json
+	shallow = true
+[submodule "Log"]
+	path = Log
+	url = https://github.com/maxkofler/Log
 	shallow = true
