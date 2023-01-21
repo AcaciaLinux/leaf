@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <iostream>
 
-bool Leafcore::askUserOK(std::string question, bool defaultOption){
+bool Leafcore::askUserOK(std::string question, bool defaultOption) const{
 	FUN();
 	LEAF_DEBUG("Leafcore::askUserOK()");
 

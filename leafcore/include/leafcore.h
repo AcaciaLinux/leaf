@@ -107,7 +107,7 @@ public:
 	 * @param	question		The question to ask
 	 * @param	defaultOption	If agreeing option should be checked or the negating option
 	 */
-	bool						askUserOK(std::string question, bool defaultOption = true);
+	bool						askUserOK(std::string question, bool defaultOption = true) const;
 
 	/**
 	 * @brief	Sets the config this Leafcore instance will use
@@ -117,9 +117,15 @@ public:
 
 	/**
 	 * @brief	Get a reference to the current leaf config
-	 * @return	leaf_config_t
+	 * @return	leaf_config_t&
 	 */
 	leaf_config_t&				getConfig();
+
+	/**
+	 * @brief	Returns a copy of the currently loaded configuration
+	 * @return	leaf_config_t
+	 */
+	leaf_config_t				getConfigC() const;
 
 	/**
 	 * @brief	Executes a command, chroots into another root if necessary
