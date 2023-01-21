@@ -81,6 +81,22 @@ public:
 	 */
 	static bool					create_directories(const std::filesystem::path& path, bool canThrow = true);
 
+	/**
+	 * @brief	A wrapper for std::filesystem::current_path(), throws an error or returns an empty string
+	 * @param	path			The path to change to
+	 * @param	canThrow		If this should throw an exception, else an error returns an empty string
+	 * @return	The return value of the call
+	 */
+	static std::string			get_workdir(bool canThrow = true);
+
+	/**
+	 * @brief	A wrapper for std::filesystem::current_path(path), throws an error or returns false
+	 * @param	path			The path to change to
+	 * @param	canThrow		If this should throw an exception, else an error returns false
+	 * @return	The return value of the call
+	 */
+	static bool					change_workdir(const std::filesystem::path& path, bool canThrow = true);
+
 private:
 
 	//The currently selected directory

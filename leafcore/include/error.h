@@ -45,6 +45,8 @@ namespace Error{
 		BAD_OSTREAM = 32,
 		REMOVE = 33,
 		FS_EXISTS = 34,
+		FS_GETWDIR = 35,
+		FS_CHWDIR = 36,
 		
 		//FS - files
 		CREATEFILE = 40,

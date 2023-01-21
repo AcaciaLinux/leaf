@@ -38,6 +38,10 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "Could not remove filesystem entry";
 		case FS_EXISTS:
 			return "Could not check if fs entry exists";
+		case FS_GETWDIR:
+			return "Could not get the current workdirectory";
+		case FS_CHWDIR:
+			return "Could not change the working directory";
 
 		//4x FS - files
 		case CREATEFILE:
