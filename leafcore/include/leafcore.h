@@ -6,6 +6,7 @@ class Leafcore;
 #include <string>
 #include <list>
 #include <deque>
+#include <filesystem>
 
 #include "leafdb.h"
 #include "parser.h"
@@ -119,6 +120,14 @@ public:
 	 * @return	leaf_config_t
 	 */
 	leaf_config_t&				getConfig();
+
+	/**
+	 * @brief	Executes a command, chroots into another root if necessary
+	 * @param	command			The command to execute
+	 * @param	workdir			The directory the command should be executed in
+	 * @return	The commands return value
+	 */
+	int							runCommand(const std::string& command, const std::filesystem::path& workdir) const;
 
 #ifndef FRIEND_LEAFCORE
 private:
