@@ -67,8 +67,7 @@ void Package::runScript(std::string path){
 	std::string rootDir = this->_db->getCore()->getConfig().rootDir;
 
 	//The extracted directory relative to the chroot environment
-	std::string relExtractedDir = this->getExtractedDir();
-	relExtractedDir = relExtractedDir.replace(relExtractedDir.find(rootDir), rootDir.length(), "/");
+	std::string relExtractedDir = "/" + std::string(std::filesystem::relative(this->getExtractedDir(), rootDir)) + "/";
 
 	{//Create the executed script
 		std::ofstream outFile(getExtractedDir() + "runscript-" + getFullName() + ".sh");
@@ -86,28 +85,9 @@ void Package::runScript(std::string path){
 	//A breakpoint for the tests to check the script
 	LEAF_DEBUG_EX("Leafcore::runScript::fileCreated");
 
-	std::string command;
+	std::string command = "bash " + relExtractedDir + "runscript-" + getFullName() + ".sh";
 
-	//If we need to chroot, construct the command
-	if (rootDir == "/"){
-		command = "bash " + getExtractedDir() + "runscript-" + getFullName() + ".sh";
-	} else {
-		command = _db->getCore()->getConfig().chroot_cmd;
-		command = command.replace(command.find("{ROOTDIR}"), 9, rootDir);
-		command = command.replace(command.find("{COMMAND}"), 9, "/bin/sh " + relExtractedDir + "runscript-" + getFullName() + ".sh");
-	}
-
-	LOGI("Running command: \"" + command + "\" in " + getExtractedDir());
-
-	int res = 0;
-	{//Switch the workdir, execute the command and switch back
-		std::string oldWorkDir = std::filesystem::current_path();
-		std::filesystem::current_path(getExtractedDir());
-
-		res = system(command.c_str());
-
-		std::filesystem::current_path(oldWorkDir);
-	}
+	int res = _db->getCore()->runCommand(command, getExtractedDir());
 
 	//Check the return code
 	if (res != 0)
