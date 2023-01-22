@@ -22,7 +22,7 @@ size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream 
 	return size*nmemb;
 }
 
-static int progressFunc(void* ptr, double dltotal, double dlnow, double ultotal, double ulnow){
+static int progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow){
 	FUN();
 
 	LeafUtil::Progress::print(*((std::string*)ptr), (uint64_t)dltotal, (uint64_t)dlnow, 50);
@@ -53,8 +53,8 @@ size_t Downloader::download(std::string prefix){
 	if (_noProgress){
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, true);
 	} else {
-		curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, progressFunc);
-		curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, &prefix);
+		curl_easy_setopt(_curl, CURLOPT_XFERINFOFUNCTION, progressFunc);
+		curl_easy_setopt(_curl, CURLOPT_XFERINFODATA, &prefix);
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 	}
 

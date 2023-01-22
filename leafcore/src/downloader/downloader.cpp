@@ -18,6 +18,6 @@ Downloader::~Downloader(){
 
 	if (_curl){
 		curl_easy_cleanup(_curl);
-		LOGD("Cleaned up libcurl");
+		LOGD("[Downloader] Cleaned up libcurl");
 	}
 }

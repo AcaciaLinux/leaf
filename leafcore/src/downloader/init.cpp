@@ -22,5 +22,5 @@ void Downloader::init(){
 		throw new LeafError(Error::DL_INIT);
 	}
 
-	LOGD("Initialized libcurl");
+	LOGD("[Downloader] Initialized libcurl");
 }
