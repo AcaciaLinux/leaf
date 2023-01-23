@@ -25,7 +25,14 @@ size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream 
 static int progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow){
 	FUN();
 
-	LeafUtil::Progress::print(*((std::string*)ptr), (uint64_t)dltotal, (uint64_t)dlnow, 50);
+	std::string outputString = *((std::string*)ptr);
+	std::string preProgress;
+
+	if (dltotal > 0){
+		preProgress = "(" + LeafUtil::bytesToHuman(dlnow) + " / " + LeafUtil::bytesToHuman(dltotal) + ")";
+	}
+
+	LeafUtil::Progress::print(outputString, (uint64_t)dltotal, (uint64_t)dlnow, 50, preProgress);
 
 	return 0;
 }
