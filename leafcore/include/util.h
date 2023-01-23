@@ -33,6 +33,13 @@ namespace LeafUtil
 		return deque.size();
 	}
 
+	/**
+	 * @brief	Converts the supplied byte count to a human readable count (KB, MB...)
+	 * @param	byteCount			The count to convert
+	 * @return	std::string
+	 */
+	std::string						bytesToHuman(uint64_t byteCount);
+
 	namespace Progress{
 		void init();
 		void print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps, std::string preProgress = "");
