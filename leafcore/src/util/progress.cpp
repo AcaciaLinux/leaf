@@ -62,7 +62,7 @@ void LeafUtil::Progress::init(){
 	last_percentage = 0;
 }
 
-void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps){
+void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps, std::string preProgress){
 	FUN();
 
 	if (total == 0)
@@ -84,12 +84,12 @@ void LeafUtil::Progress::print(std::string prefix, uint64_t total, uint64_t prog
 
 	uint64_t spaces_prefix_progress = 0;
 	if (screen_width != 0){
-		spaces_prefix_progress = screen_width - steps - prefix.size() - 11;
+		spaces_prefix_progress = screen_width - steps - prefix.size() - 11 - preProgress.length();
 	}
 
 	progress_printed = true;
 
-	std::cout << "\033[2K  " << prefix << std::string(spaces_prefix_progress, ' ') << " [" << std::string(steps_complete, '#') << std::string(steps_missing, ' ') << "] " << percentage << "%\r";
+	std::cout << "\033[2K  " << prefix << std::string(spaces_prefix_progress, ' ') << preProgress << " [" << std::string(steps_complete, '#') << std::string(steps_missing, ' ') << "] " << percentage << "%\r";
 	std::cout.flush();
 }
 
