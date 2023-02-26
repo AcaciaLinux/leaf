@@ -31,13 +31,8 @@ void PackageListParser::parse(std::istream& in){
 
 	try {
 
-		//Check if the package list has been parsed successfully
-		if (json.at("status") != "SUCCESS"){
-			throw new LeafError(Error::PKGPRS_LIST_N_SUCCESS);
-		}
-
 		//Go over every package
-		for(nlohmann::json json_pkg : json.at("payload")){
+		for(nlohmann::json json_pkg : json){
 			LOGD("Found package: " + std::string(json_pkg["name"]));
 		
 			//Construct the new package
@@ -70,5 +65,7 @@ void PackageListParser::parse(std::istream& in){
 
 	} catch (nlohmann::json::out_of_range& e){
 		throw new LeafError(Error::JSON_OUT_OF_RANGE, e.what());
+	}  catch (nlohmann::json::exception& e) {
+		throw new LeafError(Error::JSON_PARSE, e.what());
 	}
 }
