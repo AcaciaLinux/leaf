@@ -32,7 +32,7 @@
     EXPECT_EQ(config_expected, s) << STR(config_name) << " does not match expected " << config_expected; \
 }
 
-static_assert(COUNT_CLEAF_STRING_CONFIG == 11, "Amount of CLEAF_STRING cofigs changed");
+static_assert(COUNT_CLEAF_STRING_CONFIG == 12, "Amount of CLEAF_STRING cofigs changed");
 
 //
 // cleafconfig_getStringConfig()
@@ -115,6 +115,7 @@ TEST(Cleafcore, cleafconfig_setStringConfig){
     CLEAFCONFIG_S_CHECK_RW(core, CLEAF_S_CONFIG_ROOTDIR);
     CLEAFCONFIG_S_CHECK_RW(core, CLEAF_S_CONFIG_PKGLISTURL);
     CLEAFCONFIG_S_CHECK_RW(core, CLEAF_S_CONFIG_CHROOTCMD);
+    CLEAFCONFIG_S_CHECK_RW(core, CLEAF_S_CONFIG_DOWNLOADCACHE);
 
     CLEAFCONFIG_S_CHECK_RO(core, CLEAF_S_CONFIG_CACHEDIR);
     CLEAFCONFIG_S_CHECK_RO(core, CLEAF_S_CONFIG_DOWNLOADDIR);
@@ -125,7 +126,7 @@ TEST(Cleafcore, cleafconfig_setStringConfig){
     CLEAFCONFIG_S_CHECK_RO(core, CLEAF_S_CONFIG_PKGLISTPATH);
     CLEAFCONFIG_S_CHECK_RO(core, CLEAF_S_CONFIG_RUNSCRIPTSDIR);
 
-    static_assert(COUNT_CLEAF_STRING_CONFIG == 11, "Adjust this");
+    static_assert(COUNT_CLEAF_STRING_CONFIG == 12, "Adjust this");
 
     cleafcore_delete(core);
 }
@@ -217,8 +218,9 @@ TEST(Cleafcore, cleafconfig_getStringConfig){
     CLEAFCONFIG_S_CHECK(core, CLEAF_S_CONFIG_PKGLISTPATH, conf.pkgListPath());
     CLEAFCONFIG_S_CHECK(core, CLEAF_S_CONFIG_CHROOTCMD, conf.chroot_cmd);
     CLEAFCONFIG_S_CHECK(core, CLEAF_S_CONFIG_RUNSCRIPTSDIR, conf.runScriptsDir());
+    CLEAFCONFIG_S_CHECK(core, CLEAF_S_CONFIG_DOWNLOADCACHE, conf.extDownloadCache);
 
-    static_assert(COUNT_CLEAF_STRING_CONFIG == 11, "Adjust this");
+    static_assert(COUNT_CLEAF_STRING_CONFIG == 12, "Adjust this");
 
     cleafcore_delete(core);
 }
