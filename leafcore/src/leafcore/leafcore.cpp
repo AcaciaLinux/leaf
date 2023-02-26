@@ -8,8 +8,11 @@
 #include "log.h"
 #include "leafconfig.h"
 #include "leafcore.h"
+#include "globals.h"
 
 #include <fstream>
+
+bool proceed = true;
 
 Leafcore::Leafcore(){
 	FUN();
