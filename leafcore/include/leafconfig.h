@@ -92,6 +92,9 @@ typedef struct leafconfig_struct{
 	//If leaf should check the remote hash against the installed and decide if the package has an upgrade available
 	bool						checkRemoteHashUpgrade = false;
 
+	//The download cache directory leaf should use if not cacheDir() + "downloads()"
+	std::string					extDownloadCache = "";
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";
@@ -99,7 +102,10 @@ typedef struct leafconfig_struct{
 
 	//The directory packages get downloaded to
 	std::string					downloadDir(){
-		return cacheDir() + "downloads/";
+		if (extDownloadCache == "")
+			return cacheDir() + "downloads/";
+		else
+			return extDownloadCache + "/";
 	}
 
 	//The directory extracted packages live in
