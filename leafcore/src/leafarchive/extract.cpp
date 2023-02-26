@@ -87,6 +87,8 @@ void LeafArchive::extract(std::string destination){
 				throw new LeafError(Error::ARCH_WARN, archive_error_string(ext));
 			}
 		}
+	} catch (LeafError* e) {
+		throw e;
 	} catch (...){
 		throw new LeafError(Error::ARCH_FATAL);
 	}
