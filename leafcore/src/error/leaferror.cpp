@@ -62,3 +62,11 @@ Error::ec LeafError::getErrorCode() const{
 std::string LeafError::getAdditional() const{
     return _additional;
 }
+
+void LeafError::prepend(const std::string& str){
+    _additional = str + _additional;
+}
+
+void LeafError::append(const std::string& str){
+    _additional += str;
+}

@@ -152,6 +152,18 @@ public:
 
 	std::string what() const;
 
+	/**
+	 * @brief	Prepend the supplied strig to the additional part of the error
+	 * @param	str		The string to prepend
+	 */
+	void				prepend(const std::string& str);
+
+	/**
+	 * @brief	Append the supplied strig to the additional part of the error
+	 * @param	str		The string to append
+	 */
+	void				append(const std::string& str);
+
 	static std::string errorCodeToString(Error::ec e);
 
 private:
