@@ -47,6 +47,7 @@ namespace Error{
 		FS_EXISTS = 34,
 		FS_GETWDIR = 35,
 		FS_CHWDIR = 36,
+		FS_CHECK_TYPE = 37,
 		
 		//FS - files
 		CREATEFILE = 40,

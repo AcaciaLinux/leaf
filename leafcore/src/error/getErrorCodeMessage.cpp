@@ -42,6 +42,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "Could not get the current workdirectory";
 		case FS_CHWDIR:
 			return "Could not change the working directory";
+		case FS_CHECK_TYPE:
+			return "Could not check type of filesystem entry";
 
 		//4x FS - files
 		case CREATEFILE:
