@@ -112,6 +112,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "Downloader has encountered a bad stream";
 		case DL_CURL_ERR:
 			return "Libcurl had an error";
+		case DL_BAD_RESPONSE:
+			return "Downloader has received a bad response code";
 
 		//9x Package
 		case PACKAGE_UNEXPECTED_EOF:

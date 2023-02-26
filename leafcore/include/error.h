@@ -87,6 +87,7 @@ namespace Error{
 		DL_NOT_INIT = 81,
 		DL_BAD_STREAM = 82,
 		DL_CURL_ERR = 83,
+		DL_BAD_RESPONSE = 84,
 
 		//Package
 		PACKAGE_UNEXPECTED_EOF = 90,
