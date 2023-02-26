@@ -43,7 +43,16 @@ void Leafcore::parsePackageList(std::string path){
 	PackageListParser parser;
 
 	//Try parsing the file
-	parser.parse(file);
+	try {
+		parser.parse(file);
+	} catch (LeafError* e){
+		//Inform the user about a possible fix (leaf update)
+		LOGUW("Failed to parse package list, you could try 'leaf update' to fix this.");
+
+		//Add additional information to the error
+		e->prepend("When parsing package list at " + path + ": ");
+		throw e;
+	}
 
 	file.close();
 
