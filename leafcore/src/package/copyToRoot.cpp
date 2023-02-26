@@ -9,6 +9,7 @@
 #include "leafdebug.h"
 #include "package.h"
 #include "leafconfig.h"
+#include "globals.h"
 
 #include "leaffs.h"
 
@@ -71,8 +72,21 @@ void Package::copyToRoot(bool forceOverwrite){
 
 	LOGI("Copying files...");
 
+	std::deque<std::string> copied_files;
 	//Now copy all the files
 	for (std::string file : _provided_files){
+		if (!proceed){
+			LOGUW("Copy for package " + getFullName() + " aborted, rolling back...");
+			_provided_files = copied_files;
+
+			try {
+				removeFromRoot();
+			} catch (LeafError* e) {
+				e->prepend("When rolling back copy for package " + getFullName() + ": ");
+			}
+
+			throw new LeafError(Error::ABORT);
+		}
 
 		//If leaf should overwrite the files, delete the old files
 		if (forceOverwrite){
@@ -81,7 +95,8 @@ void Package::copyToRoot(bool forceOverwrite){
 
 		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
 		fs::copy(dataDir + file, destDir + file, options, ec);
-		
+		copied_files.push_back(file);
+
 		if (ec)
 			throw new LeafError(Error::COPYFILE, dataDir + file, ec);
 	}
