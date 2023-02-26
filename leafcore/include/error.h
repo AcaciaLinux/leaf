@@ -106,6 +106,7 @@ namespace Error{
 
 		//JSON
 		JSON_OUT_OF_RANGE = 120,
+		JSON_PARSE = 121,
 
 		//BranchMaster
 		BRANCHMASTER_ERROR = 130,

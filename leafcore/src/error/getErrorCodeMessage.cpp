@@ -142,6 +142,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 		//12x JSON
 		case JSON_OUT_OF_RANGE:
 			return "JSON: Out of range";
+		case JSON_PARSE:
+			return "JSON: Failed to parse";
 
 		//13x BranchMaster
 		case BRANCHMASTER_ERROR:
