@@ -35,6 +35,7 @@ namespace Error{
 		NOCACHE = 13,
 		NOPACKAGE = 14,
 		NULLPARAMETER = 15,
+		ABORT = 16,
 
 		//User answers
 		USER_DISAGREE = 20,

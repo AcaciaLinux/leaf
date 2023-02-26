@@ -22,6 +22,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "No packages have been supplied for processing";
 		case NULLPARAMETER:
 			return "An argument has been a nullptr (THIS IS A BUG!!!)";
+		case ABORT:
+			return "The current action was aborted";
 
 		//2x User answers
 		case USER_DISAGREE:
