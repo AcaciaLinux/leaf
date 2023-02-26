@@ -40,14 +40,10 @@ void Package::copyToRoot(bool forceOverwrite){
 	if (!forceOverwrite){
 		//Got through every entry
 		for (std::string file : _provided_files){
-			
-			//Directories can be overwritten
-			if (!std::filesystem::is_directory(rootDir + file)){
 
-				//If the file exists, error out
-				if (std::filesystem::exists(rootDir + file))
-					throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
-			}
+			//If the entry exists and is not a directory, error out
+			if (LeafFS::exists(rootDir + file) && !LeafFS::is(rootDir + file, LEAFFS_DIR))
+				throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
 		}
 	}
 
@@ -65,10 +61,12 @@ void Package::copyToRoot(bool forceOverwrite){
 	for (std::string dir : _provided_directories){
 		LOGF("Creating directory " + destDir + dir);
 
-		std::filesystem::create_directories(destDir + dir, ec);
+		if (LeafFS::exists(destDir + dir) && LeafFS::is(destDir + dir, LEAFFS_SYMLINK)){
+			LOGI("[Package::copyToRoot] Skipping creation of directory that is a symlink");
+			continue;
+		}
 
-		if (ec)
-			throw new LeafError(Error::CREATEDIR, destDir + dir, ec);
+		LeafFS::create_directories(destDir + dir);
 	}
 
 	LOGI("Copying files...");
