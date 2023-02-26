@@ -34,6 +34,7 @@ void Leafcore::parseConfig(){
 			throw new LeafError(Error::CONFF_INV_CONF, "Missing {COMMAND} at 'chroot-cmd'");
 
 		_config.pkgListURL = _configParser.get("pkgListURL", _config.pkgListURL);
+		_config.extDownloadCache = _configParser.get("downloadCache", _config.extDownloadCache);
 	} else {
 		LOGUW("Leafcore: No config file found, using command line config");
 	}
