@@ -86,7 +86,7 @@ std::string Package::getDownloadPath(){
 	if (_db == nullptr)
 		throw new LeafError(Error::NODB);
 	
-	return _db->getCore()->getConfig().cacheDir() + "downloads/" + getFullName() + ".lfpkg";
+	return _db->getCore()->getConfig().downloadDir() + getFullName() + ".lfpkg";
 }
 
 std::string Package::getExtractedDir(){
