@@ -12,6 +12,7 @@
 #include "downloader.h"
 
 #include "util.h"
+#include "globals.h"
 
 size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 	Downloader* dl = (Downloader*) s;
@@ -19,7 +20,10 @@ size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream 
 	dl->_outStream.write(((char*)ptr), size*nmemb);
 	dl->_md5.update(((char*)ptr), size*nmemb);
 
-	return size*nmemb;
+	if (proceed)
+		return size*nmemb;
+	else
+		return 0;
 }
 
 static int progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow){
@@ -76,7 +80,10 @@ size_t Downloader::download(std::string prefix){
 		LeafUtil::Progress::end();
 
 	if (curlRes != CURLE_OK)
-		throw new LeafError(Error::DL_CURL_ERR, curl_easy_strerror(curlRes));
+		if (proceed)
+			throw new LeafError(Error::DL_CURL_ERR, std::string(curl_easy_strerror(curlRes)));
+		else
+			throw new LeafError(Error::ABORT);
 
 	size_t httpRes = 0;
 	curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &httpRes);
