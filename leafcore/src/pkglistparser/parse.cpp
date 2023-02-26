@@ -21,8 +21,13 @@ void PackageListParser::parse(std::istream& in){
 	if (!in.good())
 		throw new LeafError(Error::PKGPRS_BAD_STREAM);
 
-	//Parse, but allow no exceptions
-	nlohmann::json json = nlohmann::json::parse(in, nullptr, false);
+	//Parse the json data and throw an error if parsing failed
+	nlohmann::json json;
+	try {
+		json = nlohmann::json::parse(in, nullptr, true);
+	} catch (nlohmann::json::parse_error& e) {
+		throw new LeafError(Error::JSON_PARSE, e.what());
+	}
 
 	try {
 
