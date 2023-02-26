@@ -14,15 +14,24 @@
 #include "pkglistparser.h"
 #include "leafcore.h"
 #include "dist.h"
+#include "globals.h"
 
 #include <deque>
+#include <signal.h>
 
 #ifdef LOG_ENABLE_PROFILING
 #include <fstream>
 #endif
 
+void sigHandler(int sig){
+	proceed = false;
+	signal(sig, sigHandler);
+}
+
 int main(int argc, char** argv){
 	hlog = new Log::Log();
+
+	signal(SIGINT, sigHandler);
 
 	Log::stream_config cout_conf;
 	cout_conf.loglevel = Log::U;
