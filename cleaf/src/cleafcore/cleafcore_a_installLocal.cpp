@@ -48,7 +48,7 @@ int8_t cleafcore_a_installLocal(struct cleafcore* core, uint32_t len_pkgs, const
             throw e;
         #else
             core->error = e;
-            return CLAEFCORE_LEAFERROR;
+            return CLEAFCORE_LEAFERROR;
         #endif
     }
 

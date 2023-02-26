@@ -13,7 +13,7 @@
 #define CLEAFCORE_OK 0
 #define CLEAFCORE_NOTINIT -1
 #define CLEAFCORE_NOCORE -2
-#define CLAEFCORE_LEAFERROR -3
+#define CLEAFCORE_LEAFERROR -3
 
 /**
  * @brief   A structure holding a Leafcore and LeafError object

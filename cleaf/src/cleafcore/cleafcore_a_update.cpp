@@ -44,7 +44,7 @@ int8_t cleafcore_a_update(struct cleafcore* core){
             throw e;
         #else
             core->error = e;
-            return CLAEFCORE_LEAFERROR;
+            return CLEAFCORE_LEAFERROR;
         #endif
     }
 
