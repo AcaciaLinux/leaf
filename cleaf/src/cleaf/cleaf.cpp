@@ -11,10 +11,12 @@
 
 #include "leafdebug.h"
 #include "dist.h"
+#include "globals.h"
 
 #include <iostream>
 #include <sstream>
 #include <cstring>
+#include <signal.h>
 
 /**
  * @brief   If cleaf has been initialized
@@ -30,6 +32,11 @@ bool _cleaf_owns_hlog = false;
  * @brief   A stringstream for caching the leaf output to read it later
  */
 std::stringstream _ss_cache;
+
+void sigHandler(int sig){
+    proceed = false;
+    signal(sig, sigHandler);
+}
 
 extern "C" {
 
@@ -94,6 +101,8 @@ extern "C" {
             c.print_function_names = false;
             hlog->addStream(_ss_cache, c);
         }
+
+        signal(SIGINT, sigHandler);
 
         _cleaf_initialized = true;
     }
