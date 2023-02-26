@@ -9,7 +9,7 @@
 
 //Assert some things in the leaf_config_t, so cleaf doesn't get out of date accidentally
 
-static_assert(sizeof(leaf_config_t) == 208, "[cleaf] Size of leaf_config_t changed, adjust cleafconfig!");
+static_assert(sizeof(leaf_config_t) == 240, "[cleaf] Size of leaf_config_t changed, adjust cleafconfig!");
 static_assert(COUNT_CONFIG_V == 4, "[cleaf] Verbosity options changes, adjust cleafconfig!");
 static_assert(COUNT_CONFIG_REDOWNLOAD == 3, "[cleaf] Redownload options changed, adjust cleafconfig!");
 static_assert(COUNT_CONFIG_ACTION == 6, "[cleaf] Action options changed, adjust cleafconfig!");
