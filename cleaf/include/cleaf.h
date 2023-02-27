@@ -38,6 +38,11 @@ extern "C" {
     void                        cleaf_init(enum loglevel level);
 
     /**
+     * @brief   Aborts all the leaf actions currently in progress by setting proceed to false
+     */
+    void                        cleaf_abort();
+
+    /**
      * @brief   Cleanly finalizes the cleaf wrapper
      * @warning Calling ANY function provided by this library after this will result in undefined behaviour!
      */

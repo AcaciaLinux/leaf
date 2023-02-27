@@ -107,6 +107,13 @@ extern "C" {
         _cleaf_initialized = true;
     }
 
+    void cleaf_abort(){
+        LEAF_DEBUG_EX("cleaf_abort()");
+
+        LOGW("[cleaf] cleaf_abort() called! This will abort all running leaf operations!");
+        proceed = false;
+    }
+
     void cleaf_finalize(){
         LEAF_DEBUG_EX("cleaf_finalize()");
 
