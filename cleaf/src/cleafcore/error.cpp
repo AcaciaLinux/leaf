@@ -18,7 +18,7 @@
 
 extern "C" {
 
-    uint16_t cleafcore_getError(struct cleafcore* c){
+    uint16_t cleafcore_getError(const struct cleafcore* c){
         CHECK_CLEAF_INIT_RET("cleafcore_getError()", UINT16_MAX);
         FUN();
         LEAF_DEBUG_EX("cleafcore_getError()");
@@ -29,7 +29,7 @@ extern "C" {
             return ((LeafError*)c->error)->getErrorCode();
     }
 
-    char* cleafcore_getErrorString(struct cleafcore* c){
+    char* cleafcore_getErrorString(const struct cleafcore* c){
         CHECK_CLEAF_INIT_RET("cleafcore_getErrorString()", NULL);
         FUN();
         LEAF_DEBUG_EX("cleafcore_getErrorString()");

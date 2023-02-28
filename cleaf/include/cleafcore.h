@@ -43,14 +43,14 @@ extern "C" {
      * @brief   Returns the error code of the last Leafcore operation (0 if no error)
      * @param   core            The Leafcore instance to check
      */
-    uint16_t                    cleafcore_getError(struct cleafcore* core);
+    uint16_t                    cleafcore_getError(const struct cleafcore* core);
 
     /**
      * @brief   Returns a string describing the error of the last Leafcore operation ('No error' if no error)
      * @param   core            The Leafcore instance to check
      * @return  char*           The pointer to the string, DELETE IT AFTER USAGE!
      */
-    char*                       cleafcore_getErrorString(struct cleafcore* core);
+    char*                       cleafcore_getErrorString(const struct cleafcore* core);
 
     /**
      * @brief   Clears the last error of the Leafcore object
