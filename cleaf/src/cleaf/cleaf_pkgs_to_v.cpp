@@ -9,7 +9,7 @@
 
 #include "cleaf.h"
 
-std::deque<std::string> cleaf_pkgs_to_v(uint32_t len_pkgs, const char* pkgs[]){
+std::deque<std::string> cleaf_pkgs_to_v(uint32_t len_pkgs, const char * const pkgs[]){
     std::deque<std::string> res;
 
     for (uint32_t i = 0; i < len_pkgs; i++){

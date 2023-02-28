@@ -90,7 +90,7 @@ extern "C" {
      * @param   pkgs            An array of const char* strings
      * @return  std::deque<std::string> The C++ representation of the list
      */
-    std::deque<std::string>     cleaf_pkgs_to_v(uint32_t len_pkgs, const char* pkgs[]);
+    std::deque<std::string>     cleaf_pkgs_to_v(uint32_t len_pkgs, const char * const pkgs[]);
 #endif
 
 #endif
