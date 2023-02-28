@@ -17,7 +17,7 @@
 #include "leafconfig.h"
 #include "error.h"
 
-int8_t cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]){
+int8_t cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]){
     CHECK_CLEAF_INIT_RET("cleafcore_a_install()", CLEAFCORE_NOTINIT);
     FUN();
     LEAF_DEBUG_EX("cleafcore_a_install()");

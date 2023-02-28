@@ -72,7 +72,7 @@ extern "C" {
      * @param   pkgs            An array of const char* strings with the package names
      * @return  int8_t          CLEAFCORE_OK, else an other error code
      */
-    int8_t                      cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+    int8_t                      cleafcore_a_install(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]);
 
     /**
      * @brief   Calls Leafcore::a_installLocal()
@@ -81,7 +81,7 @@ extern "C" {
      * @param   pkgs            An array of const char* strings with the package paths
      * @return  int8_t          CLEAFCORE_OK, else an other error code
      */
-    int8_t                      cleafcore_a_installLocal(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+    int8_t                      cleafcore_a_installLocal(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]);
 
     /**
      * @brief   Calls Leafcore::a_upgrade()
@@ -90,7 +90,7 @@ extern "C" {
      * @param   pkgs            An array of const char* strings with the package names
      * @return  int8_t          CLEAFCORE_OK, else an other error code
      */
-    int8_t                      cleafcore_a_upgrade(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+    int8_t                      cleafcore_a_upgrade(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]);
 
     /**
      * @brief   Calls Leafcore::a_remove()
@@ -99,7 +99,7 @@ extern "C" {
      * @param   pkgs            An array of const char* strings with the package names
      * @return  int8_t          CLEAFCORE_OK, else an other error code
      */
-    int8_t                      cleafcore_a_remove(struct cleafcore* core, uint32_t len_pkgs, const char* pkgs[]);
+    int8_t                      cleafcore_a_remove(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]);
 
 #ifdef __cplusplus
 }
