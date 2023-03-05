@@ -80,7 +80,7 @@ extern "C" {
      * @param   conf            The config to get
      * @return  uint8_t         CLEAFCONFIG_B_FALSE / CLEAFCONFIG_B_TRUE, else an error code defined above
      */
-    uint8_t                     cleafconfig_getBoolConfig(struct cleafcore* core, enum cleaf_bool_config conf);
+    uint8_t                     cleafconfig_getBoolConfig(const struct cleafcore * const core, enum cleaf_bool_config conf);
 
     /**
      * @brief   Sets a string cleaf config
@@ -97,7 +97,7 @@ extern "C" {
      * @param   conf            The config to get
      * @return  const char*     A c string you have to delete or NULL on error
      */
-    const char*                 cleafconfig_getStringConfig(struct cleafcore* core, enum cleaf_string_config config);
+    const char*                 cleafconfig_getStringConfig(const struct cleafcore * const core, enum cleaf_string_config config);
 
     /**
      * @brief   Sets the leafcore redownload behaviour

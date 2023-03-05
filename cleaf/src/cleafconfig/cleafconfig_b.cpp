@@ -90,7 +90,7 @@ extern "C" {
         return CLEAFCONFIG_OK;
     }
 
-    uint8_t cleafconfig_getBoolConfig(struct cleafcore* core, cleaf_bool_config config){
+    uint8_t cleafconfig_getBoolConfig(const struct cleafcore * const core, cleaf_bool_config config){
         CHECK_CLEAF_INIT_RET("cleafconfig_getBoolConfig()", CLEAFCONFIG_NOTINIT);
         FUN();
         LEAF_DEBUG_EX("cleafconfig_getBoolConfig()");

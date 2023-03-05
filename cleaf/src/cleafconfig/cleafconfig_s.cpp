@@ -77,7 +77,7 @@ extern "C" {
         return CLEAFCONFIG_OK;
     }
 
-    const char* cleafconfig_getStringConfig(struct cleafcore* core, cleaf_string_config config){
+    const char* cleafconfig_getStringConfig(const struct cleafcore * const core, cleaf_string_config config){
         CHECK_CLEAF_INIT_RET("cleafconfig_getBoolConfig()", NULL);
         FUN();
         LEAF_DEBUG_EX("cleafconfig_getStringConfig()");
