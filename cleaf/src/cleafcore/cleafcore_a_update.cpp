@@ -16,37 +16,41 @@
 #include "leafconfig.h"
 #include "error.h"
 
-int8_t cleafcore_a_update(struct cleafcore* core){
-    CHECK_CLEAF_INIT_RET("cleafcore_a_update()", CLEAFCORE_NOTINIT);
-    FUN();
-    LEAF_DEBUG_EX("cleafcore_a_update()");
+extern "C" {
 
-    //Check if the core is invalid
-    if (core == NULL || core->core == NULL)
-        return CLEAFCORE_NOCORE;
+    int8_t cleafcore_a_update(struct cleafcore* core){
+        CHECK_CLEAF_INIT_RET("cleafcore_a_update()", CLEAFCORE_NOTINIT);
+        FUN();
+        LEAF_DEBUG_EX("cleafcore_a_update()");
 
-    //Clear the error
-    cleafcore_clear_error(core);
+        //Check if the core is invalid
+        if (core == NULL || core->core == NULL)
+            return CLEAFCORE_NOCORE;
 
-    //Get the Leafcore pointer
-    Leafcore* leafcore = (Leafcore*)core->core;
+        //Clear the error
+        cleafcore_clear_error(core);
 
-    //Get a reference to the leafconfig struct in the core
-    leaf_config_t& leafconfig = leafcore->getConfig();
+        //Get the Leafcore pointer
+        Leafcore* leafcore = (Leafcore*)core->core;
 
-    leafconfig.action = ACTION_UPDATE;
+        //Get a reference to the leafconfig struct in the core
+        leaf_config_t& leafconfig = leafcore->getConfig();
 
-    try {
-        leafcore->a_update();
-    } catch (LeafError* e){
-        #ifdef DEBUG
-        //When debugging, rethrow all LeafErrors
-            throw e;
-        #else
-            core->error = e;
-            return CLEAFCORE_LEAFERROR;
-        #endif
+        leafconfig.action = ACTION_UPDATE;
+
+        try {
+            leafcore->a_update();
+        } catch (LeafError* e){
+            #ifdef DEBUG
+            //When debugging, rethrow all LeafErrors
+                throw e;
+            #else
+                core->error = e;
+                return CLEAFCORE_LEAFERROR;
+            #endif
+        }
+
+        return 0;
     }
 
-    return 0;
 }
