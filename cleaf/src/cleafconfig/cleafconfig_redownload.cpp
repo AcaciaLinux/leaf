@@ -20,20 +20,24 @@
 static_assert(COUNT_CLEAF_REDOWNLOAD == 3, "Amount of CLEAF_STRING cofigs changed");
 static_assert((int)COUNT_CONFIG_REDOWNLOAD == (int)COUNT_CLEAF_REDOWNLOAD, "CLEAF and LEAF redownload options do not match");
 
-uint8_t cleafconfig_setRedownload(struct cleafcore* core, cleaf_config_redownload mode){
-    CHECK_CLEAF_INIT_RET("cleafconfig_setRedownload()", CLEAFCONFIG_NOTINIT);
-    FUN();
-    LEAF_DEBUG_EX("cleafconfig_setRedownload()");
+extern "C" {
 
-    //Check if the core is invalid
-    if (core == NULL || core->core == NULL)
-        return CLEAFCONFIG_NOCORE;
+    uint8_t cleafconfig_setRedownload(struct cleafcore* core, cleaf_config_redownload mode){
+        CHECK_CLEAF_INIT_RET("cleafconfig_setRedownload()", CLEAFCONFIG_NOTINIT);
+        FUN();
+        LEAF_DEBUG_EX("cleafconfig_setRedownload()");
 
-    //Get a reference to the leafconfig struct in the core
-    leaf_config_t& leafconfig = ((Leafcore*)core->core)->getConfig();
+        //Check if the core is invalid
+        if (core == NULL || core->core == NULL)
+            return CLEAFCONFIG_NOCORE;
 
-    //Set the config
-    leafconfig.redownload = (config_redownload) mode;
+        //Get a reference to the leafconfig struct in the core
+        leaf_config_t& leafconfig = ((Leafcore*)core->core)->getConfig();
 
-    return CLEAFCONFIG_OK;
+        //Set the config
+        leafconfig.redownload = (config_redownload) mode;
+
+        return CLEAFCONFIG_OK;
+    }
+
 }
