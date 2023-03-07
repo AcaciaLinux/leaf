@@ -11,10 +11,7 @@
 #include "util.h"
 
 #include <iostream>
-
-#ifdef LEAF_NCURSES
-	#include <curses.h>
-#endif
+#include <sys/ioctl.h>
 
 static bool progress_printed = false;
 static bool printed_warning_fallback = false;
@@ -24,40 +21,14 @@ static uint64_t last_percentage = 0;
 void LeafUtil::Progress::init(){
 	FUN();
 
-	#ifdef LEAF_NCURSES
-		int col, row;
-		char* cTerm = getenv("TERM");
-
-		std::string term;
-		if (cTerm != NULL){
-			term = std::string(cTerm);
-		}
-
-		if (term.length() == 0){
-			if (!printed_warning_fallback){
-				LOGUE("Terminal type is not set (TERM=), falling back!");
-				printed_warning_fallback = true;
-			}
-			screen_width = 0;
-		} else {
-			if (initscr() == nullptr){
-				refresh();
-				endwin();
-				if (!printed_warning_fallback){
-					LOGUE("Could not determine terminal width, falling back!");
-					printed_warning_fallback = true;
-				}
-				screen_width = 0;
-			} else {
-				getmaxyx(stdscr, row, col);
-				refresh();
-				endwin();
-				screen_width = col;
-			}
-		}
-
+	struct winsize w;
+    if (ioctl(0, TIOCGWINSZ, &w) != 0) {
+		LOGW("Failed to determine terminal size!");
+		screen_width = 0;
+	} else {
+		screen_width = w.ws_col;
 		LOGI("[LeafUtil][Progress][init] Screen width = " + std::to_string(screen_width));
-	#endif
+	}
 
 	last_percentage = 0;
 }
