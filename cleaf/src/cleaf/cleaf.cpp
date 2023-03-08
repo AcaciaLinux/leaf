@@ -33,11 +33,6 @@ bool _cleaf_owns_hlog = false;
  */
 std::stringstream _ss_cache;
 
-void sigHandler(int sig){
-    proceed = false;
-    signal(sig, sigHandler);
-}
-
 extern "C" {
 
     uint32_t cleaf_get_leafcore_major(){
@@ -101,8 +96,6 @@ extern "C" {
             c.print_function_names = false;
             hlog->addStream(_ss_cache, c);
         }
-
-        signal(SIGINT, sigHandler);
 
         _cleaf_initialized = true;
     }
