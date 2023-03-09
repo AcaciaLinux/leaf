@@ -129,8 +129,8 @@ int main(int argc, char** argv){
 			}
 		} catch (LeafError* e){
 			LOGUE("Failed with error code " + std::to_string(e->getErrorCode()) + ": " + e->what());
-		} catch (std::exception* e){
-			LOGUE("Failed with fatal exception: " + std::string(e->what()));
+		} catch (std::exception& e){
+			LOGUE("Failed with fatal exception: " + std::string(e.what()));
 		} catch (...){
 			LOGUE("Failed with unknown fatal exception");
 		}
