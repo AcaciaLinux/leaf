@@ -18,13 +18,39 @@
 
 #include <deque>
 #include <signal.h>
+#include <sys/ioctl.h>
 
 #ifdef LOG_ENABLE_PROFILING
 #include <fstream>
 #endif
 
+/**
+ * @brief	Updates the terminal width that gets determined by a ioctl()
+ */
+void update_term_width(){
+	struct winsize w;
+	if (ioctl(0, TIOCGWINSZ, &w) != 0) {
+		LOGW("Failed to determine terminal size!");
+		hlog->setTerminalWidth(0);
+	} else {
+		hlog->setTerminalWidth(w.ws_col);
+		LOGI("[LeafUtil][Progress][init] Screen width = " + std::to_string(hlog->getTerminalWidth()));
+	}
+}
+
+/**
+ * @brief	A signal handler for UNIX signals
+ * @param	sig		The signal emitted
+ */
 void sigHandler(int sig){
-	proceed = false;
+	switch (sig){
+	case SIGINT:
+		proceed = false;
+		break;
+	case SIGWINCH:
+		update_term_width();
+		break;
+	}
 	signal(sig, sigHandler);
 }
 
@@ -32,6 +58,8 @@ int main(int argc, char** argv){
 	hlog = new Log::Log();
 
 	signal(SIGINT, sigHandler);
+	signal(SIGWINCH, sigHandler);
+	update_term_width();
 
 	Log::stream_config cout_conf;
 	cout_conf.loglevel = Log::U;
