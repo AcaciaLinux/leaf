@@ -13,6 +13,7 @@
 
 #include "util.h"
 #include "globals.h"
+#include "progress.h"
 
 size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s){
 	Downloader* dl = (Downloader*) s;
@@ -26,17 +27,23 @@ size_t Downloader::writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream 
 		return 0;
 }
 
-static int progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow){
+int Downloader::progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow){
 	FUN();
 
-	std::string outputString = *((std::string*)ptr);
+	Downloader* self = (Downloader*)ptr;
 	std::string preProgress;
 
+	//If there is size information available, display it before the bar
 	if (dltotal > 0){
 		preProgress = "(" + LeafUtil::bytesToHuman(dlnow) + " / " + LeafUtil::bytesToHuman(dltotal) + ")";
 	}
 
-	LeafUtil::Progress::print(outputString, (uint64_t)dltotal, (uint64_t)dlnow, 50, preProgress);
+	//If we haven't any size information yet, set the size to 0 to display an empty bar
+	if (dltotal == 0)
+		dltotal = 1;
+
+	Log::Progress* progress = (Log::Progress*)(self->_progress.get());
+	progress->update(dltotal, dlnow, preProgress);
 
 	return 0;
 }
@@ -56,6 +63,12 @@ size_t Downloader::download(std::string prefix){
 	if (!_outStream.good())
 		throw new LeafError(Error::DL_BAD_STREAM);
 
+	//When the download starts, create the Progress instance
+	Log::conf_Progress conf;
+	conf.maxSteps = 50;
+	conf.prefix = prefix;
+	_progress = hlog->createProgress(conf);
+
 	curl_easy_setopt(_curl, CURLOPT_URL, _url.c_str());
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
@@ -67,7 +80,7 @@ size_t Downloader::download(std::string prefix){
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, true);
 	} else {
 		curl_easy_setopt(_curl, CURLOPT_XFERINFOFUNCTION, progressFunc);
-		curl_easy_setopt(_curl, CURLOPT_XFERINFODATA, &prefix);
+		curl_easy_setopt(_curl, CURLOPT_XFERINFODATA, this);
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
 	}
 

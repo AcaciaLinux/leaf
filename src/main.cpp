@@ -36,6 +36,7 @@ int main(int argc, char** argv){
 	Log::stream_config cout_conf;
 	cout_conf.loglevel = Log::U;
 	cout_conf.print_function_names = false;
+	cout_conf.enable_progress = true;
 
 	hlog->addStream(std::cout, cout_conf);
 

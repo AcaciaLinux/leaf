@@ -5,6 +5,7 @@
 
 #include <string>
 #include <ostream>
+#include <memory>
 
 #include "md5.h"
 
@@ -71,10 +72,18 @@ private:
 	 */
 	MD5						_md5;
 
+	/// @brief	The Log::Progress instance for this Downloader
+	std::shared_ptr<void>	_progress;
+
 	/**
 	 * @brief	The function that gets called to write data
 	 */
 	static size_t			writeFunc(void* ptr, size_t size, size_t nmemb, std::ostream *s);
+
+	/**
+	 * @brief	The progress function libcurl calls for progress information
+	 */
+	static int				progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
 };
 
 #endif

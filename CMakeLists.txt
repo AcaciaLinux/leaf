@@ -15,7 +15,7 @@ option(BUILD_TESTS "Build the test suite" OFF)
 
 set(LOG_MAXLEVEL 15 CACHE STRING "Set the maximum log level")
 set(LOG_NOCHECK ON CACHE BOOL "Disable Log checks")
-set(LOG_NOMUTEX ON CACHE BOOL "Disable Log mutexes")
+set(LOG_NOMUTEX OFF CACHE BOOL "Enable Log mutexes")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
