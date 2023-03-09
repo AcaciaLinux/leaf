@@ -60,6 +60,8 @@ size_t Downloader::download(std::string prefix){
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
 	curl_easy_setopt(_curl, CURLOPT_WRITEDATA, this);
+	curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, 1000);
+	curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, 10);
 
 	if (_noProgress){
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, true);
