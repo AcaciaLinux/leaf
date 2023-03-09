@@ -30,7 +30,7 @@ void Leafcore::a_update(){
 	//Create the downloader instance and download the file
 	Downloader dl(_config.pkgListURL, ss_pkglist, _config.noProgress);
 	dl.init();
-	size_t dRes = dl.download();
+	size_t dRes = dl.download("Downloading package list from "  + _config.pkgListURL);
 
 	//Handle the HTTP response code
 	if (dRes >= 400){
