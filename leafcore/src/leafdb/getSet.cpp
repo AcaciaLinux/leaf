@@ -14,3 +14,7 @@ Leafcore* LeafDB::getCore(){
 std::string LeafDB::getError(){
 	return _error;
 }
+
+const std::unordered_map<std::string, Package*>& LeafDB::getPackages(){
+	return _packages;
+}

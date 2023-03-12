@@ -46,6 +46,11 @@ public:
 	Package*						getPackage(std::string name, bool throwOnNotFound);
 
 	/**
+	 * @brief	Returns a const reference to the internal list of packages
+	 */
+	const std::unordered_map<std::string, Package*>& getPackages();
+
+	/**
 	 * @brief	Returns a vector of all packages providing a file
 	 * @param	filepath			The file path to search for
 	 */
