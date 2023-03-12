@@ -88,6 +88,11 @@ public:
 	void						a_remove(std::deque<std::string> packages);
 
 	/**
+	 * @brief	Lists back the installed packages
+	 */
+	void						a_listInstalled();
+
+	/**
 	 * @brief	Checks the leaf directories and prompts the user if something is wrong
 	 */
 	void						checkDirectories();
