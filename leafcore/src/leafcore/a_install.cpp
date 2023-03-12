@@ -33,7 +33,7 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		LOGU(msg);
 	}
 
-	std::deque<Package*> install_packages;
+	std::deque<Package*> pkgs_install;
 	
 	if (_config.installDependencies)
 		LOGU("Resolving dependencies...");
@@ -46,16 +46,16 @@ void Leafcore::a_install(std::deque<std::string> packages){
 
 		//Resolve the dependencies of the package recursively
 		if (_config.installDependencies)
-			_packageListDB->resolveDependencies(&install_packages, package);
+			_packageListDB->resolveDependencies(&pkgs_install, package);
 	}
 
 	{	//Go through every package and see if it is already installed
 		LOGI("Checking for already installed dependencies...");
-		size_t len_packages = install_packages.size();
+		size_t len_packages = pkgs_install.size();
 		for (size_t i = 0; i < len_packages; i++){
 
 			//Get the package to check
-			Package* p_check = install_packages.at(i);
+			Package* p_check = pkgs_install.at(i);
 			LOGD("Checking if " + p_check->getName() + " is already installed...");
 
 			//Find it in the installed db
@@ -64,7 +64,7 @@ void Leafcore::a_install(std::deque<std::string> packages){
 			//If the package is already installed, skip its installation
 			if (p != nullptr){
 				LOGI(p_check->getName() + " is already installed: YES");
-				install_packages.erase(install_packages.begin() + i);
+				pkgs_install.erase(pkgs_install.begin() + i);
 				i--;
 				len_packages--;
 			} else {
@@ -76,14 +76,14 @@ void Leafcore::a_install(std::deque<std::string> packages){
 	LOGI("Done resolving dependencies");
 
 	//If there is nothing to do, exit this function
-	if (install_packages.size() == 0){
+	if (pkgs_install.size() == 0){
 		LOGU("There is nothing to do");
 		return;
 	}
 
 	{//Inform the user about the packages to install
 		std::string msg = "Following packages will be installed:";
-		for (Package* pkg : install_packages)
+		for (Package* pkg : pkgs_install)
 			msg += " " + pkg->getFullName();
 		LOGU(msg);
 	}
@@ -91,7 +91,7 @@ void Leafcore::a_install(std::deque<std::string> packages){
 	{//Ask the user for permission
 		if (!askUserOK("Do you want to continue?", true)){
 			std::string msg = "Installing packages:";
-			for (Package* pkg : install_packages)
+			for (Package* pkg : pkgs_install)
 				msg += " " + pkg->getFullName();
 			throw new LeafError(Error::USER_DISAGREE, msg);
 		}
@@ -121,7 +121,7 @@ void Leafcore::a_install(std::deque<std::string> packages){
 
 	if (!_config.noClean){
 		LOGU("Cleaning up package caches...");
-		for (Package* package : install_packages){
+		for (Package* package : pkgs_install){
 			package->clearCache();
 		}
 	}
