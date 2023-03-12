@@ -35,7 +35,7 @@ int Downloader::progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, cu
 
 	//If there is size information available, display it before the bar
 	if (dltotal > 0){
-		preProgress = "(" + LeafUtil::bytesToHuman(dlnow) + " / " + LeafUtil::bytesToHuman(dltotal) + ")";
+		preProgress = LeafUtil::bytesToHuman(dlnow) + " / " + LeafUtil::bytesToHuman(dltotal);
 	}
 
 	//If we haven't any size information yet, set the size to 0 to display an empty bar
