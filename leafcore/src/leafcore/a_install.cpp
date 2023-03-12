@@ -105,57 +105,11 @@ void Leafcore::a_install(std::deque<std::string> packages){
 		}
 	}
 
-	{//Check for the redownload config and delete cached downloads if neccesary
+	download_packages(pkgs_install);
 
-		LOGI("Checking for redownloads...");
-		switch(_config.redownload){
-			//If the redownload of the specified files is wanted
-			case CONFIG_REDOWNLOAD_SPECIFIED:
-				LOGU("Removing download cache of specified packages...");
-				for (std::string package : packages){
-					
-					//Search for the package
-					for (Package* search : install_packages){
-						//If it is to be installed, remove its cache
-						if (search->getName() == package){
-							search->removeDownloadCache();
-							break;
-						}
-					}
-				}
-				break;
+	check_pkg_hashes(pkgs_install);
 
-			//If the redownload of all packages and dependencies is wanted
-			case CONFIG_REDOWNLOAD_ALL:{
-				LOGU("Removing download cache of all packages and dependencies...");
-
-				for (Package* package : install_packages)
-					package->removeDownloadCache();
-				
-				break;
-			}
-
-			//Skip if there is nothing to remove
-			default:
-				break;
-		}
-
-		for (Package* package : install_packages){
-			package->fetch();
-		}
-	}
-
-	LOGU("Checking package integrity...");
-	for (Package* package : install_packages){
-		package->checkFetchedHash();
-	}
-
-	for (Package* package : install_packages){
-		LOGU("Installing package " + package->getFullName() + "...");
-		
-		package->extract();
-		package->deploy();
-	}
+	install_packages(pkgs_install);
 
 	{//Execute post-install hooks
 		LOGU("Running post install hooks...");
