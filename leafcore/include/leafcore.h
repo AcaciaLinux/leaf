@@ -156,6 +156,29 @@ private:
 
 	//The current leaf config to use
 	leaf_config_t				_config;
+
+	///
+	///	Some utility functions
+	///
+
+	/**
+	 * @brief	Downlads the supplied list of packages into the download cache
+	 * @param	packages		The packages to process
+	 */
+	void						download_packages(const std::deque<Package*>& packages);
+
+	/**
+	 * @brief	Checks the supplied list of packages for their validity using the MD5 hash
+	 * @param	packages		The packages to check
+	 */
+	void						check_pkg_hashes(const std::deque<Package*>& packages);
+
+	/**
+	 * @brief	Installs the supplied list of packages into the system
+	 * @param	packages		The packages to install
+	 */
+	void						install_packages(const std::deque<Package*>& packages);
+
 };
 
 #endif
