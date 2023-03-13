@@ -126,6 +126,10 @@ int main(int argc, char** argv){
 				leaf.parseInstalled();
 
 				leaf.a_upgrade(lConfig.packages);
+			} else if (lConfig.action == ACTION_LISTINSTALLED){
+				leaf.parseInstalled();
+
+				leaf.a_listInstalled();
 			}
 		} catch (LeafError* e){
 			LOGUE("Failed with error code " + std::to_string(e->getErrorCode()) + ": " + e->what());

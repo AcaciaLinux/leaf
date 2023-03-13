@@ -17,6 +17,8 @@ bool Arguments::setAction(std::string a){
 		_config.action = ACTION_INSTALLLOCAL;
 	else if (a == "upgrade")
 		_config.action = ACTION_UPGRADE;
+	else if (a == "listInstalled")
+		_config.action = ACTION_LISTINSTALLED;
 	else
 		return false;
 
