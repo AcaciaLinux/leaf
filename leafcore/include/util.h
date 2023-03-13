@@ -40,12 +40,6 @@ namespace LeafUtil
 	 */
 	std::string						bytesToHuman(uint64_t byteCount);
 
-	namespace Progress{
-		void init();
-		void print(std::string prefix, uint64_t total, uint64_t progress, uint64_t steps, std::string preProgress = "");
-		void end();
-	} // namespace Progress
-
 
 } // namespace LeafUtil
 

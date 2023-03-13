@@ -63,12 +63,6 @@ size_t Downloader::download(std::string prefix){
 	if (!_outStream.good())
 		throw new LeafError(Error::DL_BAD_STREAM);
 
-	//When the download starts, create the Progress instance
-	Log::conf_Progress conf;
-	conf.maxSteps = 50;
-	conf.prefix = prefix;
-	_progress = hlog->createProgress(conf);
-
 	curl_easy_setopt(_curl, CURLOPT_URL, _url.c_str());
 	curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, writeFunc);
@@ -82,17 +76,16 @@ size_t Downloader::download(std::string prefix){
 		curl_easy_setopt(_curl, CURLOPT_XFERINFOFUNCTION, progressFunc);
 		curl_easy_setopt(_curl, CURLOPT_XFERINFODATA, this);
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
-	}
 
-	if (!_noProgress)
-		LeafUtil::Progress::init();
+		Log::conf_Progress conf;
+		conf.maxSteps = 50;
+		conf.prefix = prefix;
+		_progress = hlog->createProgress(conf);
+	}
 
 	curlRes = curl_easy_perform(_curl);
 	_md5.finalize();
 	LOGD("[Downloader][download] MD5 of fetched data: " + getMD5());
-
-	if (!_noProgress)
-		LeafUtil::Progress::end();
 
 	if (curlRes != CURLE_OK)
 		if (proceed)
