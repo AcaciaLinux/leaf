@@ -101,6 +101,13 @@ extern "C" {
      */
     int8_t                      cleafcore_a_remove(struct cleafcore* core, uint32_t len_pkgs, const char * const pkgs[]);
 
+    /**
+     * @brief   Calls Leafcore::a_listInstalled()
+     * @param   core            The core instance to use
+     * @return  int8_t          CLEAFCORE_OK, else an other error code
+     */
+    int8_t                      cleafcore_a_listInstalled(struct cleafcore * const core);
+
 #ifdef __cplusplus
 }
 #endif
