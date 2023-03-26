@@ -9,6 +9,7 @@
 #include "leafdebug.h"
 #include "package.h"
 #include "leafconfig.h"
+#include "globals.h"
 
 #include "leaffs.h"
 
@@ -40,14 +41,10 @@ void Package::copyToRoot(bool forceOverwrite){
 	if (!forceOverwrite){
 		//Got through every entry
 		for (std::string file : _provided_files){
-			
-			//Directories can be overwritten
-			if (!std::filesystem::is_directory(rootDir + file)){
 
-				//If the file exists, error out
-				if (std::filesystem::exists(rootDir + file))
-					throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
-			}
+			//If the entry exists and is not a directory, error out
+			if (LeafFS::exists(rootDir + file) && !LeafFS::is(rootDir + file, LEAFFS_DIR))
+				throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
 		}
 	}
 
@@ -65,16 +62,31 @@ void Package::copyToRoot(bool forceOverwrite){
 	for (std::string dir : _provided_directories){
 		LOGF("Creating directory " + destDir + dir);
 
-		std::filesystem::create_directories(destDir + dir, ec);
+		if (LeafFS::exists(destDir + dir) && LeafFS::is(destDir + dir, LEAFFS_SYMLINK)){
+			LOGI("[Package::copyToRoot] Skipping creation of directory that is a symlink");
+			continue;
+		}
 
-		if (ec)
-			throw new LeafError(Error::CREATEDIR, destDir + dir, ec);
+		LeafFS::create_directories(destDir + dir);
 	}
 
 	LOGI("Copying files...");
 
+	std::deque<std::string> copied_files;
 	//Now copy all the files
 	for (std::string file : _provided_files){
+		if (!proceed){
+			LOGUW("Copy for package " + getFullName() + " aborted, rolling back...");
+			_provided_files = copied_files;
+
+			try {
+				removeFromRoot();
+			} catch (LeafError* e) {
+				e->prepend("When rolling back copy for package " + getFullName() + ": ");
+			}
+
+			throw new LeafError(Error::ABORT);
+		}
 
 		//If leaf should overwrite the files, delete the old files
 		if (forceOverwrite){
@@ -83,7 +95,8 @@ void Package::copyToRoot(bool forceOverwrite){
 
 		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
 		fs::copy(dataDir + file, destDir + file, options, ec);
-		
+		copied_files.push_back(file);
+
 		if (ec)
 			throw new LeafError(Error::COPYFILE, dataDir + file, ec);
 	}

@@ -24,6 +24,7 @@ bool Arguments::parse(int argc, char** argv){
 	args::ValueFlag<int> f_verbosity(parser, "verbosity", "The verbosity level to use (0, 1, 2, 3)", {"verbosity", 'V'});
 	args::ValueFlag<std::string> f_rootPath(parser, "rootpath", "The root path leaf deploys its packages to", {"rootPath"});
 	args::ValueFlag<std::string> f_root(parser, "root", "The root leaf should work on", {"root"});
+	args::ValueFlag<std::string> f_downloadCache(parser, "downloadCache", "The directory leaf stores its download caches in", {"downloadCache"});
 	args::Positional<std::string> a_action(parser, "Action", "The action that should be performed by leaf");
 	args::PositionalList<std::string> a_packages(parser, "packages", "The packages to operate on");
 
@@ -73,6 +74,10 @@ bool Arguments::parse(int argc, char** argv){
 	if (f_root){
 		if (!expandRootDir(args::get(f_root)))
 			return false;
+	}
+
+	if (f_downloadCache){
+		_config.extDownloadCache = args::get(f_downloadCache);
 	}
 
 	if (f_noAsk)

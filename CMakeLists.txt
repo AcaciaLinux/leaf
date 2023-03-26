@@ -15,7 +15,7 @@ option(BUILD_TESTS "Build the test suite" OFF)
 
 set(LOG_MAXLEVEL 15 CACHE STRING "Set the maximum log level")
 set(LOG_NOCHECK ON CACHE BOOL "Disable Log checks")
-set(LOG_NOMUTEX ON CACHE BOOL "Disable Log mutexes")
+set(LOG_NOMUTEX OFF CACHE BOOL "Enable Log mutexes")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	message("Using macOS include path for libarchive, use \"brew install libarchive\" to install it")
@@ -43,7 +43,8 @@ if (BUILD_TESTS)
 	enable_testing(true)
 	add_subdirectory(Log/googletest)
 	add_subdirectory(tests)
-	add_definitions(-DDEBUG)
+	add_subdirectory(cleaf/tests)
+	add_definitions(-DDEBUG -DLEAF_TESTING -DLEAF_TESTING_ROOTDIR="./leaftestroot/" -DLEAF_DEFAULT_NOASK="true")
 endif()
 
 if(BUILD_DOCS)
@@ -66,6 +67,7 @@ endif()
 set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
 
 add_subdirectory(leafcore)
+add_subdirectory(cleaf)
 
 add_subdirectory(Log)
 include_directories(Log/include)

@@ -10,7 +10,10 @@
 #include "package.h"
 #include "leafconfig.h"
 
+#include "leaffs.h"
+
 #include <filesystem>
+#include <fstream>
 
 void Package::runPreinstall(){
 	FUN();
@@ -52,35 +55,42 @@ void Package::runScript(std::string path){
 
 	_db->getCore()->createCacheDirs();
 
-	if (!std::filesystem::exists(getExtractedDir()))
+	if (!LeafFS::exists(getExtractedDir()))
 		throw new LeafError(Error::PKG_NOTEXTRACTED);
 
-	if (!std::filesystem::exists(getExtractedDir() + path)){
+	if (!LeafFS::exists(getExtractedDir() + path)){
 		LOGI("Script " + getExtractedDir() + path + " does not exist, skipping");
 		return;
 	}
 
-	std::string oldWorkDir = std::filesystem::current_path();
+	//Cache the root directory
+	std::string rootDir = this->_db->getCore()->getConfig().rootDir;
 
-	std::filesystem::current_path(getExtractedDir());
+	//The extracted directory relative to the chroot environment
+	std::string relExtractedDir = "/" + std::string(std::filesystem::relative(this->getExtractedDir(), rootDir)) + "/";
 
-	int res = 0;
+	{//Create the executed script
+		std::ofstream outFile(getExtractedDir() + "runscript-" + getFullName() + ".sh");
+		if (!outFile.is_open())
+			throw new LeafError(Error::OPENFILEW, "RunScript file for package " + getFullName());
 
-	std::string envs = "";
-
-	envs += " ROOTDIR=" + _db->getCore()->getConfig().rootDir;
-	envs += " PKGROOT=" + this->getExtractedDir();
-
-	std::string command = "bash -c \"" + envs + " ./" + path + "\"";
-
-	LOGI("Running command: \"" + command + "\" in " + getExtractedDir());
-
-	res = system(command.c_str());
-
-	if (res != 0){
-		std::filesystem::current_path(oldWorkDir);
-		throw new LeafError(Error::PACKAGE_SCRIPT_FAILED, path);
+		//Construct the script
+		outFile << "#!/bin/sh" << std::endl;
+		outFile << "set -e" << std::endl;
+		outFile << "export PKGROOT=" + relExtractedDir << std::endl;
+		outFile << relExtractedDir + path << std::endl;
+		outFile << "unset PKGROOT" << std::endl;
 	}
 
-	std::filesystem::current_path(oldWorkDir);
+	//A breakpoint for the tests to check the script
+	LEAF_DEBUG_EX("Leafcore::runScript::fileCreated");
+
+	std::string command = "bash " + relExtractedDir + "runscript-" + getFullName() + ".sh";
+
+	int res = _db->getCore()->runCommand(command, getExtractedDir());
+
+	//Check the return code
+	if (res != 0)
+		throw new LeafError(Error::PACKAGE_SCRIPT_FAILED, path);
+
 }

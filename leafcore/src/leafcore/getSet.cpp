@@ -22,3 +22,7 @@ void Leafcore::setConfig(leaf_config_t config){
 leaf_config_t& Leafcore::getConfig(){
 	return _config;
 }
+
+leaf_config_t Leafcore::getConfigC() const{
+	return _config;
+}

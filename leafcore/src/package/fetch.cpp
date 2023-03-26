@@ -63,6 +63,7 @@ void Package::fetch(){
 
 		if (skip){
 			LOGI("[Package][fetch] Skipping download of existing validated package file " + getDownloadPath());
+			_local_md5 = existingHash;
 			return;
 		}
 	}

@@ -1,5 +1,8 @@
-#ifndef __T_XXX_H__
-#define __T_XXX_H__
+#ifndef __TESTS_COMMON_H__
+#define __TESTS_COMMON_H__
+
+#define LEAF_TESTING
+#define LEAF_TESTING_ROOTDIR "./leaf_testing_rootdir/"
 
 #include <gtest/gtest.h>
 #include <stdlib.h>
@@ -8,7 +11,5 @@
 #include "error.h"
 #include "leafdebug.h"
 #include "checks.h"
-
-#define FRIEND_XXX
 
 #endif

@@ -13,6 +13,7 @@
 #include "branchmaster.h"
 
 #include <fstream>
+#include <nlohmann/json.hpp>
 
 void Leafcore::a_update(){
 	FUN();
@@ -22,43 +23,63 @@ void Leafcore::a_update(){
 
 	std::string pkgListFilePath = _config.pkgListPath();
 	LOGI("Fetching package list from " + _config.pkgListURL + " to " + pkgListFilePath);
-	//Create the output file stream and check it
-	std::ofstream outFile;
-	outFile.open(pkgListFilePath, std::ios::trunc);
 
-	if (!outFile.is_open()){
-		outFile.close();
-		throw new LeafError(Error::OPENFILEW, pkgListFilePath);
-	}
+	//The temporary storage for the packagelist data
+	std::stringstream ss_pkglist;
 
 	//Create the downloader instance and download the file
-	Downloader dl(_config.pkgListURL, outFile, _config.noProgress);
+	Downloader dl(_config.pkgListURL, ss_pkglist, _config.noProgress);
 	dl.init();
-	size_t dRes = dl.download();
-	outFile.close();
+	size_t dRes = dl.download("Downloading package list from "  + _config.pkgListURL);
 
-	//If everything is ok, return
-	if (dRes < 400)
-		return;
-
-
-	std::ifstream ecFile(pkgListFilePath, std::ios::in);
-	if (!ecFile.is_open()){
-		ecFile.close();
-		throw new LeafError(Error::OPENFILER, pkgListFilePath + "for reading back branchmaster error code");
+	//Handle the HTTP response code
+	if (dRes >= 400){
+		throw new LeafError(
+			Error::DL_BAD_RESPONSE,
+			"When fetching packagelist from " + _config.pkgListURL + ": " +
+			std::to_string(dRes));
 	}
 
-	std::string resString;
-	if (!getline(ecFile, resString)){
-		ecFile.close();
-		throw new LeafError(Error::OPENFILER, pkgListFilePath + "while reading back branchmaster error code");
+	BranchResponse response;
+
+	//Try parsing the JSON data
+	try {
+		nlohmann::json json_res = nlohmann::json::parse(ss_pkglist, nullptr, true);
+
+		//Transfer the data to the struct
+		response.response_code = json_res.at("response_code");
+		response.status = json_res.at("status");
+		response.payload = json_res.at("payload").dump();
+
+	} catch (nlohmann::json::parse_error& e){
+		LOGUW("Failed to parse package list response from " + _config.pkgListURL + ", is the URL valid?");
+		throw new LeafError(Error::JSON_PARSE, e.what());
+	} catch (nlohmann::json::out_of_range& e){
+		LOGUW("Failed to parse package list response from " + _config.pkgListURL + ", is the URL valid?");
+		throw new LeafError(Error::JSON_OUT_OF_RANGE, e.what());
 	}
 
-	BranchMaster::ec ec = BranchMaster::parseEC(dRes, resString);
+	//Check the response code
+	if (response.response_code != 200){
+		throw new LeafError(
+			Error::BRANCHMASTER_ERROR,
+			"When fetching packagelist from " + _config.pkgListURL + ": " +
+			response.payload);
+	}
 
+	//Create the output file stream, check it and write the payload
+	{
+		std::ofstream outFile;
+		outFile.open(pkgListFilePath, std::ios::trunc);
 
-	if (ec == BranchMaster::E_NONE)
-		LOGUW("The package list fetch resulted in a HTTP error code, but the code parsing resulted in no error, something suspicous could be going on!");
-	else
-		throw new LeafError(Error::BRANCHMASTER_ERROR, BranchMaster::getECString(ec));
+		if (!outFile.is_open()){
+			outFile.close();
+			throw new LeafError(Error::OPENFILEW, pkgListFilePath);
+		}
+
+		LOGI("Writing out package list file to " + pkgListFilePath);
+		outFile << response.payload << std::endl;
+
+		outFile.close();
+	}
 }

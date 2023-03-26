@@ -8,6 +8,7 @@
 #include "error.h"
 #include "leafdebug.h"
 #include "leafconfig.h"
+#include "globals.h"
 
 #include <archive.h>
 #include "leafarchive.h"
@@ -23,6 +24,9 @@ int LeafArchive::copy_data(struct archive *ar, struct archive *aw){
 	la_int64_t offset;
 
 	for (;;) {
+		if (!proceed)
+			throw new LeafError(Error::ABORT);
+
 		r = archive_read_data_block(ar, &buff, &size, &offset);
 		if (r == ARCHIVE_EOF)
 			return (ARCHIVE_OK);

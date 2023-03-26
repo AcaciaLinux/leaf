@@ -28,7 +28,7 @@ void Hook::apply(){
 	if (Parser::get("action", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'action' in " + _filePath);
 
-	if (Parser::get("package", "") == "")
+	if (Parser::get("packages", "") == "")
 		throw new LeafError(Error::HOOK_REQUIRED_VALUE, "'packages' in " + _filePath);
 
 	if (Parser::get("when", "") == "")

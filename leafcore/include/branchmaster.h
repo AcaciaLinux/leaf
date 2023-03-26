@@ -2,6 +2,13 @@
 #define __BRANCHMASTER_H__
 
 #include <string>
+#include <stdint.h>
+
+struct BranchResponse{
+	std::string status;
+	uint16_t response_code;
+	std::string payload;
+};
 
 namespace BranchMaster{
 	enum ec{

@@ -19,9 +19,10 @@
 //	13x		BranchMaster
 //	14x		LeafFS
 //	15x		LeafDB
-//	16x		Debugging
-//	17x		Unimplemented feature
-//	18x		None
+//	16x		Config file
+//	17x		Debugging
+//	18x		Unimplemented feature
+//	19x		None
 
 namespace Error{
 	
@@ -34,6 +35,7 @@ namespace Error{
 		NOCACHE = 13,
 		NOPACKAGE = 14,
 		NULLPARAMETER = 15,
+		ABORT = 16,
 
 		//User answers
 		USER_DISAGREE = 20,
@@ -43,6 +45,10 @@ namespace Error{
 		BAD_ISTREAM = 31,
 		BAD_OSTREAM = 32,
 		REMOVE = 33,
+		FS_EXISTS = 34,
+		FS_GETWDIR = 35,
+		FS_CHWDIR = 36,
+		FS_CHECK_TYPE = 37,
 		
 		//FS - files
 		CREATEFILE = 40,
@@ -57,6 +63,7 @@ namespace Error{
 		OPENDIR = 52,
 		NOTDIR = 53,
 		CHDIR = 54,
+		MKDIR = 55,
 
 		//Actions
 		PKG_NOTFOUND = 60,
@@ -82,6 +89,7 @@ namespace Error{
 		DL_NOT_INIT = 81,
 		DL_BAD_STREAM = 82,
 		DL_CURL_ERR = 83,
+		DL_BAD_RESPONSE = 84,
 
 		//Package
 		PACKAGE_UNEXPECTED_EOF = 90,
@@ -101,6 +109,7 @@ namespace Error{
 
 		//JSON
 		JSON_OUT_OF_RANGE = 120,
+		JSON_PARSE = 121,
 
 		//BranchMaster
 		BRANCHMASTER_ERROR = 130,
@@ -115,13 +124,16 @@ namespace Error{
 		LEAFDB_PKG_DEP_NOTFOUND = 150,
 		LEAFDB_PKG_NOT_FOUND = 151,
 
+		//Config file
+		CONFF_INV_CONF = 160,
+
 		//Debugging exception
-		DEBUG_EXCEPTION = 160,
+		DEBUG_EXCEPTION = 170,
 		
 		//Unimplemented feature
-		FEATURE_NOT_IMPLEMENTED = 170,
+		FEATURE_NOT_IMPLEMENTED = 180,
 
-		NONE = 180
+		NONE = 190
 	};
 
 }
@@ -129,45 +141,33 @@ namespace Error{
 class LeafError{
 
 public:
-	LeafError(Error::ec errorCode){
-		_errorCode = errorCode;
-	}
+	LeafError(const Error::ec& errorCode);
+	LeafError(const Error::ec& errorCode, const std::string& additional);
+	LeafError(const Error::ec& errorCode, const std::error_code& stdErrorCode);
+	LeafError(const Error::ec& errorCode, const std::string& additional, const std::error_code& stdErrorCode);
+	~LeafError() noexcept(false);
 
-	LeafError(Error::ec errorCode, std::string additional){
-		_errorCode = errorCode;
-		_additional = additional;
-	}
+	Error::ec getErrorCode() const;
 
-	LeafError(Error::ec errorCode, std::error_code stdErrorCode){
-		_errorCode = errorCode;
-		_stdErrorCode = stdErrorCode;
-	}
+	std::string getErrorCodeMessage() const;
 
-	LeafError(Error::ec errorCode, std::string additional, std::error_code stdErrorCode){
-		_errorCode = errorCode;
-		_additional = additional;
-		_stdErrorCode = stdErrorCode;
-	}
+	std::string getAdditional() const;
 
-	std::string getErrorCodeMessage();
+	std::string what() const;
 
-	static std::string errorCode(Error::ec e);
+	/**
+	 * @brief	Prepend the supplied strig to the additional part of the error
+	 * @param	str		The string to prepend
+	 */
+	void				prepend(const std::string& str);
 
-	std::string what(){
-		std::string ret = getErrorCodeMessage();
+	/**
+	 * @brief	Append the supplied strig to the additional part of the error
+	 * @param	str		The string to append
+	 */
+	void				append(const std::string& str);
 
-		if (!_additional.empty())
-			ret += ": " + _additional;
-
-		if (_stdErrorCode)
-			ret += ": " + _stdErrorCode.message();
-
-		return ret;
-	}
-
-	Error::ec getErrorCode(){
-		return _errorCode;
-	}
+	static std::string errorCodeToString(Error::ec e);
 
 private:
 	Error::ec			_errorCode;

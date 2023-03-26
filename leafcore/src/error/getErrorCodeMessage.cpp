@@ -1,10 +1,10 @@
 #include "error.h"
 
-std::string LeafError::getErrorCodeMessage(){
-	return errorCode(_errorCode);
+std::string LeafError::getErrorCodeMessage() const{
+	return errorCodeToString(_errorCode);
 }
 
-std::string LeafError::errorCode(Error::ec e){
+std::string LeafError::errorCodeToString(Error::ec e){
 	using namespace Error;
 
 	switch(e){
@@ -22,6 +22,8 @@ std::string LeafError::errorCode(Error::ec e){
 			return "No packages have been supplied for processing";
 		case NULLPARAMETER:
 			return "An argument has been a nullptr (THIS IS A BUG!!!)";
+		case ABORT:
+			return "The current action was aborted";
 
 		//2x User answers
 		case USER_DISAGREE:
@@ -36,6 +38,14 @@ std::string LeafError::errorCode(Error::ec e){
 			return "Bad output stream";
 		case REMOVE:
 			return "Could not remove filesystem entry";
+		case FS_EXISTS:
+			return "Could not check if fs entry exists";
+		case FS_GETWDIR:
+			return "Could not get the current workdirectory";
+		case FS_CHWDIR:
+			return "Could not change the working directory";
+		case FS_CHECK_TYPE:
+			return "Could not check type of filesystem entry";
 
 		//4x FS - files
 		case CREATEFILE:
@@ -60,6 +70,8 @@ std::string LeafError::errorCode(Error::ec e){
 			return "Path is not a directory";
 		case CHDIR:
 			return "Could not change to directory";
+		case MKDIR:
+			return "Could not create directory";
 
 		//6x Actions
 		case PKG_NOTFOUND:
@@ -104,6 +116,8 @@ std::string LeafError::errorCode(Error::ec e){
 			return "Downloader has encountered a bad stream";
 		case DL_CURL_ERR:
 			return "Libcurl had an error";
+		case DL_BAD_RESPONSE:
+			return "Downloader has received a bad response code";
 
 		//9x Package
 		case PACKAGE_UNEXPECTED_EOF:
@@ -134,6 +148,8 @@ std::string LeafError::errorCode(Error::ec e){
 		//12x JSON
 		case JSON_OUT_OF_RANGE:
 			return "JSON: Out of range";
+		case JSON_PARSE:
+			return "JSON: Failed to parse";
 
 		//13x BranchMaster
 		case BRANCHMASTER_ERROR:
@@ -155,15 +171,19 @@ std::string LeafError::errorCode(Error::ec e){
 		case LEAFDB_PKG_NOT_FOUND:
 			return "LeafDB: Package not found";
 
-		//16x Debugging exception
+		//16x Config file
+		case CONFF_INV_CONF:
+			return "Config file: Invalid configuration";
+
+		//17x Debugging exception
 		case DEBUG_EXCEPTION:
 			return "Debugging exception at function";
 
-		//17x Unimplemented feature
+		//18x Unimplemented feature
 		case FEATURE_NOT_IMPLEMENTED:
 			return "Feature is currently not implemented";
 
-		//18x NONE
+		//19x NONE
 		case NONE:
 			return "No error";
 

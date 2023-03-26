@@ -10,12 +10,12 @@
 
 #include "hook.h"
 
-int Hook::execPost(leaf_config_t& config){
+int Hook::execPost(const Leafcore& core){
 	FUN();
 
 	if (_execTime == HOOK_EXEC_POST)
-		if (shouldEngage(config))
-			return exec();
+		if (shouldEngage(core.getConfigC()))
+			return exec(core);
 
 	return 0;
 }

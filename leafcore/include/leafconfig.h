@@ -5,17 +5,25 @@
 #include <deque>
 #include <stdint.h>
 
+#ifndef LEAF_DEFAULT_NOASK
+	#define LEAF_DEFAULT_NOASK false
+#endif
+
 enum config_verbosity{
 	CONFIG_V_DEFAULT = 0,
 	CONFIG_V_VERBOSE = 1,
 	CONFIG_V_SUPERVERBOSE = 2,
-	CONFIG_V_ULTRAVERBOSE = 3
+	CONFIG_V_ULTRAVERBOSE = 3,
+
+	COUNT_CONFIG_V
 };
 
 enum config_redownload{
 	CONFIG_REDOWNLOAD_NONE = 0,
 	CONFIG_REDOWNLOAD_SPECIFIED = 1,
-	CONFIG_REDOWNLOAD_ALL = 2
+	CONFIG_REDOWNLOAD_ALL = 2,
+
+	COUNT_CONFIG_REDOWNLOAD
 };
 
 enum leaf_action{
@@ -24,16 +32,26 @@ enum leaf_action{
 	ACTION_INSTALL = 2,
 	ACTION_REMOVE = 3,
 	ACTION_INSTALLLOCAL = 4,
-	ACTION_UPGRADE = 5
+	ACTION_UPGRADE = 5,
+
+	COUNT_CONFIG_ACTION
 };
 
 typedef struct leafconfig_struct{
 
 	//The root directory leaf should work on (normally "/")
-	std::string					rootDir = "/";
+	//If we are in a testing file, redirect this path to a safe location
+	#ifdef LEAF_TESTING
+		std::string					rootDir = LEAF_TESTING_ROOTDIR;
+	#else
+		std::string					rootDir = "/";
+	#endif
 
 	//The URL for fetching the main package list
 	std::string					pkgListURL = "https://api.acacialinux.org/?get=packagelist";
+
+	//The chrooting command leaf uses
+	std::string					chroot_cmd = "chroot {ROOTDIR} {COMMAND}";
 
 	//The action leaf 
 	leaf_action					action = ACTION_NONE;
@@ -48,7 +66,7 @@ typedef struct leafconfig_struct{
 	config_redownload			redownload = CONFIG_REDOWNLOAD_NONE;
 
 	//If this flag is set, leaf will not ask for any permissions and just do the things assuming yes was chosen
-	bool						noAsk = false;
+	bool						noAsk = LEAF_DEFAULT_NOASK;
 
 	//If leaf should keep its package caches after a transaction
 	bool						noClean = false;
@@ -74,6 +92,9 @@ typedef struct leafconfig_struct{
 	//If leaf should check the remote hash against the installed and decide if the package has an upgrade available
 	bool						checkRemoteHashUpgrade = false;
 
+	//The download cache directory leaf should use if not cacheDir() + "downloads()"
+	std::string					extDownloadCache = "";
+
 	//The directory leaf can do its temporary work in
 	std::string					cacheDir(){
 		return rootDir + "var/cache/leaf/";
@@ -81,7 +102,10 @@ typedef struct leafconfig_struct{
 
 	//The directory packages get downloaded to
 	std::string					downloadDir(){
-		return cacheDir() + "downloads/";
+		if (extDownloadCache == "")
+			return cacheDir() + "downloads/";
+		else
+			return extDownloadCache + "/";
 	}
 
 	//The directory extracted packages live in
@@ -89,9 +113,18 @@ typedef struct leafconfig_struct{
 		return cacheDir() + "packages/";
 	}
 
+	std::string					runScriptsDir(){
+		return cacheDir() + "runScripts/";
+	}
+
 	//Where the leaf configuration lives
 	std::string					configDir(){
 		return rootDir + "etc/leaf/";
+	}
+
+	//Where the leaf configuration file lives
+	std::string					configFile(){
+		return configDir() + "leaf.conf";
 	}
 
 	//The directory leaf stores the installed packages information
@@ -117,7 +150,5 @@ typedef struct leafconfig_struct{
 	}
 
 } leaf_config_t;
-
-//extern leaf_config_t lConfig;
 
 #endif

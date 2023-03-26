@@ -1,4 +1,4 @@
-# leaf - The AcaciaLinux package manager
+![Leaf banner](LeafBanner.png)
 
 This is the package manager made for AcaciaLinux, written in C++ and supporting a really simple packaging format
 

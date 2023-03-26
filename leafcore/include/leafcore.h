@@ -6,6 +6,7 @@ class Leafcore;
 #include <string>
 #include <list>
 #include <deque>
+#include <filesystem>
 
 #include "leafdb.h"
 #include "parser.h"
@@ -106,7 +107,7 @@ public:
 	 * @param	question		The question to ask
 	 * @param	defaultOption	If agreeing option should be checked or the negating option
 	 */
-	bool						askUserOK(std::string question, bool defaultOption = true);
+	bool						askUserOK(std::string question, bool defaultOption = true) const;
 
 	/**
 	 * @brief	Sets the config this Leafcore instance will use
@@ -116,11 +117,27 @@ public:
 
 	/**
 	 * @brief	Get a reference to the current leaf config
-	 * @return	leaf_config_t
+	 * @return	leaf_config_t&
 	 */
 	leaf_config_t&				getConfig();
 
+	/**
+	 * @brief	Returns a copy of the currently loaded configuration
+	 * @return	leaf_config_t
+	 */
+	leaf_config_t				getConfigC() const;
+
+	/**
+	 * @brief	Executes a command, chroots into another root if necessary
+	 * @param	command			The command to execute
+	 * @param	workdir			The directory the command should be executed in
+	 * @return	The commands return value
+	 */
+	int							runCommand(const std::string& command, const std::filesystem::path& workdir) const;
+
+#ifndef FRIEND_LEAFCORE
 private:
+#endif
 
 	//Where the currently loaded package list file is
 	bool						_loadedPkgList = false;
@@ -139,6 +156,29 @@ private:
 
 	//The current leaf config to use
 	leaf_config_t				_config;
+
+	///
+	///	Some utility functions
+	///
+
+	/**
+	 * @brief	Downlads the supplied list of packages into the download cache
+	 * @param	packages		The packages to process
+	 */
+	void						download_packages(const std::deque<Package*>& packages);
+
+	/**
+	 * @brief	Checks the supplied list of packages for their validity using the MD5 hash
+	 * @param	packages		The packages to check
+	 */
+	void						check_pkg_hashes(const std::deque<Package*>& packages);
+
+	/**
+	 * @brief	Installs the supplied list of packages into the system
+	 * @param	packages		The packages to install
+	 */
+	void						install_packages(const std::deque<Package*>& packages);
+
 };
 
 #endif

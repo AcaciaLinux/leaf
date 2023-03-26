@@ -21,18 +21,18 @@ void PackageListParser::parse(std::istream& in){
 	if (!in.good())
 		throw new LeafError(Error::PKGPRS_BAD_STREAM);
 
-	//Parse, but allow no exceptions
-	nlohmann::json json = nlohmann::json::parse(in, nullptr, false);
+	//Parse the json data and throw an error if parsing failed
+	nlohmann::json json;
+	try {
+		json = nlohmann::json::parse(in, nullptr, true);
+	} catch (nlohmann::json::parse_error& e) {
+		throw new LeafError(Error::JSON_PARSE, e.what());
+	}
 
 	try {
 
-		//Check if the package list has been parsed successfully
-		if (json.at("status") != "SUCCESS"){
-			throw new LeafError(Error::PKGPRS_LIST_N_SUCCESS);
-		}
-
 		//Go over every package
-		for(nlohmann::json json_pkg : json.at("payload")){
+		for(nlohmann::json json_pkg : json){
 			LOGD("Found package: " + std::string(json_pkg["name"]));
 		
 			//Construct the new package
@@ -41,7 +41,9 @@ void PackageListParser::parse(std::istream& in){
 			//Fill the new package
 			newPackage->_realVersion = std::stoi(std::string(json_pkg.at("real_version")));
 			newPackage->_description = json_pkg.at("description");
-			newPackage->_dependencies = parseDependenciesString(json_pkg.at("dependencies"));
+			for (nlohmann::json json_dep : json_pkg.at("dependencies")){
+				newPackage->_dependencies.push_back(std::string(json_dep));
+			}
 
 			//Check for the 'hash' tag
 			if (json_pkg.count("hash") != 0)
@@ -63,5 +65,7 @@ void PackageListParser::parse(std::istream& in){
 
 	} catch (nlohmann::json::out_of_range& e){
 		throw new LeafError(Error::JSON_OUT_OF_RANGE, e.what());
+	}  catch (nlohmann::json::exception& e) {
+		throw new LeafError(Error::JSON_PARSE, e.what());
 	}
 }

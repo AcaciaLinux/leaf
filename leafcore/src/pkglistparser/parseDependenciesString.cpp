@@ -8,6 +8,7 @@
 #include "log.h"
 #include "pkglistparser.h"
 
+//DEPRECATED
 std::deque<std::string> PackageListParser::parseDependenciesString(std::string deps){
 	FUN();
 
