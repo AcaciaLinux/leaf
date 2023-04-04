@@ -12,6 +12,7 @@ option(LEAF_STATIC "Build a static version of leaf" OFF)
 option(LEAF_NONCURSES "Build leaf without ncurses dependency" OFF)
 option(BUILD_DOCS "Build the documentation for leafcore" OFF)
 option(BUILD_TESTS "Build the test suite" OFF)
+option(ENABLE_CLEAF "Enable the cleaf library" ON)
 
 set(LOG_MAXLEVEL 15 CACHE STRING "Set the maximum log level")
 set(LOG_NOCHECK ON CACHE BOOL "Disable Log checks")
@@ -43,7 +44,6 @@ if (BUILD_TESTS)
 	enable_testing(true)
 	add_subdirectory(Log/googletest)
 	add_subdirectory(tests)
-	add_subdirectory(cleaf/tests)
 	add_definitions(-DDEBUG -DLEAF_TESTING -DLEAF_TESTING_ROOTDIR="./leaftestroot/" -DLEAF_DEFAULT_NOASK="true")
 endif()
 
@@ -67,7 +67,16 @@ endif()
 set(LOG_MAXLEVEL 13 CACHE STRING "Set the maximum log level")
 
 add_subdirectory(leafcore)
-add_subdirectory(cleaf)
+
+if (ENABLE_CLEAF)
+	add_subdirectory(cleaf)
+
+	if (BUILD_TESTS)
+		add_subdirectory(cleaf/tests)
+	endif()
+else()
+	message(WARNING "The cleaf library is disabled! It will not possible to control this leaf distribution from other languages!")
+endif()
 
 add_subdirectory(Log)
 include_directories(Log/include)
