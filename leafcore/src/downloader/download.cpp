@@ -45,6 +45,9 @@ int Downloader::progressFunc(void* ptr, curl_off_t dltotal, curl_off_t dlnow, cu
 	Log::Progress* progress = (Log::Progress*)(self->_progress.get());
 	progress->update(dltotal, dlnow, preProgress);
 
+	if (!proceed)
+		return -1;
+
 	return 0;
 }
 
