@@ -10,3 +10,6 @@
 	path = Log
 	url = https://github.com/maxkofler/Log
 	shallow = true
+[submodule "leafcore/inifile-cpp"]
+	path = leafcore/inifile-cpp
+	url = https://github.com/Rookfighter/inifile-cpp
