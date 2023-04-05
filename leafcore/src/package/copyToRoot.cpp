@@ -88,9 +88,15 @@ void Package::copyToRoot(bool forceOverwrite){
 			throw new LeafError(Error::ABORT);
 		}
 
+		std::string fPath = destDir + file;
+
 		//If leaf should overwrite the files, delete the old files
 		if (forceOverwrite){
-			removeFile(destDir + file, false);
+			bool remove = 	LeafFS::is(fPath, LEAFFS_SYMLINK, false) ||	//If the entry is a symlink (even broken)
+							LeafFS::exists(fPath, false);				//or exists, remove it
+
+			if (remove)
+				LeafFS::remove_all(fPath);
 		}
 
 		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
