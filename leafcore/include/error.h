@@ -125,7 +125,8 @@ namespace Error{
 		LEAFDB_PKG_NOT_FOUND = 151,
 
 		//Config file
-		CONFF_INV_CONF = 160,
+		CONFF_NOT_FOUND = 160,
+		CONFF_INV_CONF = 161,
 
 		//Debugging exception
 		DEBUG_EXCEPTION = 170,

@@ -172,6 +172,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "LeafDB: Package not found";
 
 		//16x Config file
+		case CONFF_NOT_FOUND:
+			return "Config file: Not found";
 		case CONFF_INV_CONF:
 			return "Config file: Invalid configuration";
 
