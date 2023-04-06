@@ -163,12 +163,12 @@ namespace Leaf{
         /// @brief  An external directory for caches
         std::filesystem::path       extCacheDir = "";
         /// @brief  Returns the cache directory
-        std::filesystem::path       cacheDir();
+        std::filesystem::path       cacheDir() const;
 
         /// @brief  An external directory for persistent / config data
         std::filesystem::path       extConfDir = "";
         /// @brief  Returns the configuration directory
-        std::filesystem::path       configDir();
+        std::filesystem::path       configDir() const;
 
         //
         // CACHES - These caches can be external for performance and are not critical to persist
@@ -177,17 +177,17 @@ namespace Leaf{
         /// @brief  An external download cache (overrides extCacheDir)
         std::filesystem::path       extDLCache = "";
         /// @brief  Returns the download cache directory
-        std::filesystem::path       downloadDir();
+        std::filesystem::path       downloadDir() const;
 
         /// @brief  An external package cache (overrides extCacheDir)
         std::filesystem::path       extPKGCache = "";
         /// @brief  Returns the package cache directory
-        std::filesystem::path       packagesDir();
+        std::filesystem::path       packagesDir() const;
 
         /// @brief  An external run cache (overrides extCacheDir)
         std::filesystem::path       extRUNCache = "";
         /// @brief  Returns the run cache directory
-        std::filesystem::path       runDir();
+        std::filesystem::path       runDir() const;
 
         //
         // PERSISTENT - These directories are persistent, installed files and hooks are placed in here
@@ -196,17 +196,17 @@ namespace Leaf{
         /// @brief  An external directory for installed packages (overrides extConfDir)
         std::filesystem::path       extInstalledDir = "";
         /// @brief  Returns the directory for .leafinstallled files
-        std::filesystem::path       installedDir();
+        std::filesystem::path       installedDir() const;
 
         /// @brief  An external directory for hooks (overrides extConfDir)
         std::filesystem::path       extHooksDir = "";
         /// @brief  Returns the directory to use for hooks
-        std::filesystem::path       hooksDir();
+        std::filesystem::path       hooksDir() const;
 
         /// @brief  An external director for mirror caches (overrides extConfDir)
         std::filesystem::path       extMirrorsDir = "";
         /// @brief  Returns the directory to use for storing mirrors
-        std::filesystem::path       mirrorsDir();
+        std::filesystem::path       mirrorsDir() const;
 
     };
 
