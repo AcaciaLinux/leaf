@@ -56,6 +56,14 @@ namespace LeafUtil
          */
     bool                            askUserOK(Leaf::config& conf, std::string question, bool defaultOption = true);
 
+    /**
+     * @brief   Executes a command, chroots into another root if necessary
+     * @param   command             The command to execute
+     * @param   workdir             The directory the command should be executed in
+     * @return  The commands return value
+     */
+    int                             runCommand(const Leaf::config& conf, const std::string& command, const std::filesystem::path& workdir);
+
 } // namespace LeafUtil
 
 #endif
