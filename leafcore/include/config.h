@@ -66,14 +66,17 @@ namespace Leaf{
 
     /// @brief  Describes an update action (A_UPDATE)
     struct conf_update : conf_action{
-        conf_update() {
+        conf_update(config& parent) : parent(parent) {
             a_type = A_UPDATE;
         }
+
+        /// @brief  The parent config
+        config&                     parent;
     };
 
     /// @brief  An action that represents a transaction (A_TRANSACTION)
     struct conf_tr : conf_action{
-        conf_tr(config& conf) : parent(conf) {
+        conf_tr(config& parent) : parent(parent){
             a_type = A_TRANSACTION;
         }
 
@@ -199,6 +202,11 @@ namespace Leaf{
         std::filesystem::path       extHooksDir = "";
         /// @brief  Returns the directory to use for hooks
         std::filesystem::path       hooksDir();
+
+        /// @brief  An external director for mirror caches (overrides extConfDir)
+        std::filesystem::path       extMirrorsDir = "";
+        /// @brief  Returns the directory to use for storing mirrors
+        std::filesystem::path       mirrorsDir();
 
     };
 

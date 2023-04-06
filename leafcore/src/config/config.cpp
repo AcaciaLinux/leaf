@@ -61,4 +61,11 @@ namespace Leaf {
             return extHooksDir;
     }
 
+    std::filesystem::path config::mirrorsDir(){
+        if (extMirrorsDir.empty())
+            return configDir().append("mirrors");
+        else
+            return extMirrorsDir;
+    }
+
 }
