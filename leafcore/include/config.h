@@ -150,6 +150,9 @@ namespace Leaf{
         /// @brief  If pre/postinstall/... scripts should be run
         bool                        runScripts = true;
 
+        /// @brief  The command to use to chroot when executing commands in an other root
+        std::string                 chroot_cmd = "chroot {ROOTDIR} {COMMAND}";
+
         //
         // ROOT - These directories govern all the following directories
         //

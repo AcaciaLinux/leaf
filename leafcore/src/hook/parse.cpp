@@ -2,7 +2,7 @@
  * @file		hook/parse.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
  * @brief		The implementation of Hook::parse()
- * @copyright	Copyright (c) 2022
+ * @copyright	Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
  */
 #include "log.h"
 #include "error.h"
@@ -17,7 +17,7 @@
 #include <map>
 #include <regex>
 
-void Hook::parse(std::string inFile){
+void Leaf::Hook::parse(std::string inFile){
 	FUN();
 	LEAF_DEBUG_EX("Hook::parse()");
 

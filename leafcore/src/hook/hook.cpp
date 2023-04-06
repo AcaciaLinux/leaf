@@ -2,7 +2,7 @@
  * @file		hook/hook.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
  * @brief		The implementation of the Hook class
- * @copyright	Copyright (c) 2022
+ * @copyright	Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
  */
 #include "log.h"
 #include "error.h"
@@ -11,10 +11,10 @@
 
 #include "hook.h"
 
-Hook::Hook(){
+Leaf::Hook::Hook(){
 	FUN();
 }
 
-Hook::~Hook(){
+Leaf::Hook::~Hook(){
 	FUN();
 }

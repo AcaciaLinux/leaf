@@ -2,7 +2,7 @@
  * @file		hook/checkPackage.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
  * @brief		The implementation of Hook::checkPackage()
- * @copyright	Copyright (c) 2022
+ * @copyright	Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
  */
 #include "log.h"
 #include "error.h"
@@ -12,12 +12,12 @@
 
 #include <regex>
 
-bool Hook::checkPackage(std::string& packageName){
+bool Leaf::Hook::checkPackage(std::string& packageName) const{
 	FUN();
 
 	bool engage = false;
 
-	for (std::string& hookPackage : _packages){
+	for (const std::string& hookPackage : _packages){
 		try {
 			if (std::regex_match(packageName, std::regex(hookPackage))){
 				engage = true;

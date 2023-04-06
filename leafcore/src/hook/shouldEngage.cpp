@@ -2,7 +2,7 @@
  * @file		hook/shouldEngage.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
  * @brief		The implementation of Hook::shouldEngage()
- * @copyright	Copyright (c) 2022
+ * @copyright	Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
  */
 #include "log.h"
 #include "error.h"
@@ -10,21 +10,21 @@
 
 #include "hook.h"
 
-bool Hook::shouldEngage(const leaf_config_t& config){
+bool Leaf::Hook::shouldEngage(const conf_tr& conf) const{
 	FUN();
 
 	bool actionMatch = false;
 	bool packageMatch = false;
 
-	for (std::string conf_package : config.packages){
+	for (std::string conf_package : conf.packages){
 			if (checkPackage(conf_package)){
 				packageMatch = true;
 				break;
 			}
 	}
 
-	for (leaf_action hook_action : _actions){
-		if (hook_action == config.action){
+	for (conf_tr_type hook_action : _actions){
+		if (hook_action == conf.tr_type){
 			actionMatch = true;
 			break;
 		}

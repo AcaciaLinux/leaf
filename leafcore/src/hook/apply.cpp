@@ -2,7 +2,7 @@
  * @file		hook/apply.cpp
  * @author		Max Kofler (kofler.max.dev@gmail.com)
  * @brief		The implementation of Hook::apply()
- * @copyright	Copyright (c) 2022
+ * @copyright	Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
  */
 #include "log.h"
 #include "error.h"
@@ -10,18 +10,17 @@
 #include "leafconfig.h"
 
 #include "hook.h"
-
-#include "pkglistparser.h"
+#include "util.h"
 
 #include <algorithm>
 #include <deque>
 #include <regex>
 
 static std::deque<std::string> splitBy(const std::string& str, char separator);
-static leaf_action parseAction(const std::string& str);
-static hook_exec_time parseExecTime(const std::string& str);
+static Leaf::conf_tr_type parseAction(const std::string& str);
+static Leaf::hook_exec_time parseExecTime(const std::string& str);
 
-void Hook::apply(){
+void Leaf::Hook::apply(){
 	FUN();
 	LEAF_DEBUG_EX("Hook::apply()");
 
@@ -44,7 +43,7 @@ void Hook::apply(){
 		std::deque<std::string> actions = splitBy(Parser::get("action", ""), ',');
 
 		for (std::string actionString : actions){
-			leaf_action action = parseAction(actionString);
+			conf_tr_type action = parseAction(actionString);
 			LOGF("[Hook][apply] Adding action " + std::to_string(action) + " to hook");
 			_actions.push_back(action);
 		}
@@ -60,7 +59,7 @@ void Hook::apply(){
 	}
 
 	_execTime = parseExecTime(Parser::get("when", ""));
-	_runDeps = PackageListParser::parseDependenciesString(Parser::get("rundeps", ""));
+	_runDeps = LeafUtil::parseDependenciesString(Parser::get("rundeps", ""));
 	_exec = Parser::get("exec", "");
 }
 
@@ -87,33 +86,31 @@ static std::deque<std::string> splitBy(const std::string& str, char separator){
 	return res;
 }
 
-static leaf_action parseAction(const std::string& buf){
+static Leaf::conf_tr_type parseAction(const std::string& buf){
 	FUN();
 
-	leaf_action action;
-	if (buf == "update")
-		action = ACTION_UPDATE;
-	else if (buf == "install")
-		action = ACTION_INSTALL;
+	Leaf::conf_tr_type action;
+	if (buf == "install")
+		action = Leaf::TR_INSTALL;
+	else if (buf == "change")
+		action = Leaf::TR_CHANGE;
 	else if (buf == "remove")
-		action = ACTION_REMOVE;
-	else if (buf == "installLocal")
-		action = ACTION_INSTALLLOCAL;
+		action = Leaf::TR_REMOVE;
 	else
-		action = ACTION_NONE;
+		action = Leaf::TR_NONE;
 
 	return action;
 }
 
-static hook_exec_time parseExecTime(const std::string& str){
+static Leaf::hook_exec_time parseExecTime(const std::string& str){
 	FUN();
 
-	hook_exec_time time = HOOK_EXEC_NEVER;
+	Leaf::hook_exec_time time = Leaf::HOOK_EXEC_NEVER;
 
 	if (str == "pre")
-		time = HOOK_EXEC_PRE;
+		time = Leaf::HOOK_EXEC_PRE;
 	else if (str == "post")
-		time = HOOK_EXEC_POST;
+		time = Leaf::HOOK_EXEC_POST;
 
 	return time;
 }
