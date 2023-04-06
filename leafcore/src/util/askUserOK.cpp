@@ -14,7 +14,7 @@
 #include <filesystem>
 #include <iostream>
 
-bool LeafUtil::askUserOK(Leaf::config& conf, std::string question, bool defaultOption){
+bool LeafUtil::askUserOK(const Leaf::config& conf, std::string question, bool defaultOption){
     FUN();
     LEAF_DEBUG("LeafUtil::askUserOK()");
 

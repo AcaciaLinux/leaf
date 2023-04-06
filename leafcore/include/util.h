@@ -54,7 +54,7 @@ namespace LeafUtil
          * @param   question        The question to ask
          * @param   defaultOption   If agreeing option should be checked or the negating option
          */
-    bool                            askUserOK(Leaf::config& conf, std::string question, bool defaultOption = true);
+    bool                            askUserOK(const Leaf::config& conf, std::string question, bool defaultOption = true);
 
     /**
      * @brief   Executes a command, chroots into another root if necessary
