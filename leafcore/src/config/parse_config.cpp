@@ -1,5 +1,5 @@
 /**
- * @file        leafconfig/parse_config.cpp
+ * @file        config/parse_config.cpp
  * @author      Max Kofler (kofler.max.dev@gmail.com)
  * @brief       The implementation of leafconfig.h -> parse_config()
  * @copyright   Copyright (c) 2023 Max Kofler and the AcaciaLinux developers
