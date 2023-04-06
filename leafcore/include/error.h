@@ -13,7 +13,7 @@
 //	7x		Archive
 //	8x		Downloader
 //	9x		Package
-//	10x		PackageListParser
+//	10x		Mirror
 //	11x		Hooks
 //	12x		JSON
 //	13x		BranchMaster
@@ -99,10 +99,9 @@ namespace Error{
 		PACKAGE_SCRIPT_FAILED = 94,
 		PACKAGE_PARSE_INSTALLEDFILE = 95,
 
-		//PackageListParser
-		PKGPRS_BAD_STREAM = 101,
-		PKGPRS_APPLY_DB = 102,
-		PKGPRS_LIST_N_SUCCESS = 103,
+		//Mirror
+		MIRROR_CACHE_NOT_FOUND = 100,
+		MIRROR_NOT_LOADED = 101,
 
 		//Hooks
 		HOOK_REQUIRED_VALUE = 110,

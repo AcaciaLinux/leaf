@@ -133,13 +133,11 @@ std::string LeafError::errorCodeToString(Error::ec e){
 		case PACKAGE_PARSE_INSTALLEDFILE:
 			return "Failed to parse leafinstalled file";
 
-		//10x PackageListParser
-		case PKGPRS_BAD_STREAM:
-			return "Package list parser: Bad stream";
-		case PKGPRS_APPLY_DB:
-			return "Package list parser: Apply to database";
-		case PKGPRS_LIST_N_SUCCESS:
-			return "Package list parser: Package list fetch not successfull";
+		//10x Mirror
+		case MIRROR_CACHE_NOT_FOUND:
+			return "The mirror cache has not been found (try update)";
+		case MIRROR_NOT_LOADED:
+			return "The mirror cache is not loaded";
 
 		//11x Hooks
 		case HOOK_REQUIRED_VALUE:
