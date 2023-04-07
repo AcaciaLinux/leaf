@@ -82,6 +82,12 @@ namespace LeafUtil
      */
     bool                            resolveDependencies(Leaf::config& conf, std::deque<std::shared_ptr<Package>>& dependencies, std::shared_ptr<Package>& package, bool canThrow = true);
 
+    /**
+     * @brief   Tries to ensure that every directory needed by leaf exists (asks the user)
+     * @param   conf                The config to consolidate
+     */
+    void                            ensureDirs(const Leaf::config& conf);
+
 } // namespace LeafUtil
 
 #endif
