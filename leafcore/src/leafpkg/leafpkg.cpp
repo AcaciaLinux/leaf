@@ -9,7 +9,7 @@
 #include "leafdebug.h"
 #include "leafpkg.h"
 #include "parser.h"
-#include "pkglistparser.h"
+#include "util.h"
 
 namespace LeafPkg{
 
@@ -32,7 +32,7 @@ namespace LeafPkg{
 		}
 
 		lfpkg.description = parser.get("description", "");
-		lfpkg.dependencies = PackageListParser::parseDependenciesString(parser.get("dependencies"));
+		lfpkg.dependencies = LeafUtil::parseDependenciesString(parser.get("dependencies"));
 
 		return lfpkg;
 	}
