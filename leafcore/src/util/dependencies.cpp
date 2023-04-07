@@ -33,6 +33,16 @@ bool LeafUtil::resolveDependencies(Leaf::config& conf, std::deque<std::shared_pt
     FUN();
     LEAF_DEBUG_EX("LeafUtil::resolveDependencies()");
 
+    {//Check if the work hasn't already been done...
+        std::string pkgName = package->getName();
+        for (size_t i = 0; i < packages.size(); i++){
+            if (packages.at(i)->getName() == pkgName){
+                LOGD("[LeafUtil][resolveDependencies] Skipping already resolved package " + pkgName);
+                return true;
+            }
+        }
+    }
+
     for (const std::string& str_dep : package->getDependencies()){
 
         //Before doing anything, check if the package hasn't already been added
@@ -66,6 +76,17 @@ bool LeafUtil::resolveDependencies(Leaf::config& conf, std::deque<std::shared_pt
         packages.erase(packages.begin() + temp_pos);
         packages.push_back(dependency);
 
+    }
+
+    {//Finally add the supplied package if not done yet
+        std::string pkgName = package->getName();
+        for (size_t i = 0; i < packages.size(); i++){
+            if (packages.at(i)->getName() == pkgName){
+                return true;
+            }
+        }
+
+        packages.push_back(package);
     }
 
     return true;
