@@ -120,6 +120,8 @@ std::string LeafError::errorCodeToString(Error::ec e){
 			return "Downloader has received a bad response code";
 
 		//9x Package
+		case PACKAGE_DEP_NOT_FOUND:
+			return "Package dependency was not found";
 		case PACKAGE_UNEXPECTED_EOF:
 			return "Unexpected EOF when parsing";
 		case PACKAGE_STOI:
