@@ -13,19 +13,19 @@
 
 #include <filesystem>
 
-void Package::indexExtracted(){
-	FUN();
-	LEAF_DEBUG_EX("Package::indexExtracted()");
+void Package::indexExtracted(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::indexExtracted()");
 
-	LOGI("Indexing package " + getFullName() + " at " + getExtractedDir());
+    LOGI("[Package][indexExtracted] Indexing package " + getFullName() + " at " + std::string(getExtractedDir(conf)));
 
-	if (!std::filesystem::exists(getExtractedDir()))
-		throw new LeafError(Error::PKG_NOTEXTRACTED, getFullName());
+    if (!std::filesystem::exists(getExtractedDir(conf)))
+        throw new LeafError(Error::PKG_NOTEXTRACTED, getFullName());
 
-	LeafFS fs(getExtractedDir() + "data/");
+    LeafFS fs(getExtractedDir(conf).append("data"));
 
-	fs.read(true);
+    fs.read(true);
 
-	_provided_files = fs.getFiles();
-	_provided_directories = fs.getDirectories();
+    _provided_files = fs.getFiles();
+    _provided_directories = fs.getDirectories();
 }

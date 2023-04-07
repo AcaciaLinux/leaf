@@ -10,40 +10,30 @@
 #include "package.h"
 #include "leafconfig.h"
 
+#include "leaffs.h"
+
 #include <fstream>
-#include <filesystem>
 
-void Package::removeFromRoot(){
-	FUN();
-	LEAF_DEBUG_EX("Package::removeFromRoot()");
+void Package::removeFromRoot(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::removeFromRoot()");
 
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    std::string rootDir = conf.root;
 
-	std::string rootDir = _db->getCore()->getConfig().rootDir;
+    for (std::string entry : _provided_files){
+        if (LeafFS::is(rootDir + entry, LEAFFS_DIR)){
+            if (LeafFS::is(rootDir + entry, LEAFFS_EMPTY)){
+                LOGF("[Package][removeFromRoot] Removing empty directory " + rootDir + entry);
+            } else {
+                LOGF("[Package][removeFromRoot] Skipping non empty directory " + rootDir + entry);
+                continue;
+            }
+        }
 
-	std::error_code ec;
-	for (std::string entry : _provided_files){
-		if (std::filesystem::is_directory(rootDir + entry)){
-			if (std::filesystem::is_empty(rootDir + entry)){
-				LOGF("Removing empty directory " + rootDir + entry);
-			} else {
-				LOGF("Skipping non empty directory " + rootDir + entry);
-				continue;
-			}
-		}
+        LOGF("[Package][removeFromRoot] Removing entry " + rootDir + entry);
+        LeafFS::remove_all(rootDir + entry);
+    }
 
-		LOGF("Removing entry " + rootDir + entry);
-		std::filesystem::remove_all(rootDir + entry, ec);
-
-		if (ec)
-			throw new LeafError(Error::REMOVE, getFullName() + ": " + rootDir + entry);
-	}
-
-	//Finally remove the leafinstalled file
-	std::filesystem::remove(getInstalledFilePath(), ec);
-
-	if (ec)
-		throw new LeafError(Error::REMOVEFILE, "Leafinstalled file of " + getFullName() + " at " + getInstalledFilePath());
+    //Finally remove the leafinstalled file
+    LeafFS::remove(getInstalledFilePath(conf));
 }

@@ -13,28 +13,27 @@
 
 #include <filesystem>
 
-void Package::clearCache(){
-	FUN();
+//TODO: Tests
+void Package::clearCache(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::clearCache()");
 
-	//TODO: test this function
-	LEAF_DEBUG_EX("Package::clearCache()");
+    if (_isCollection){
+        LOGI("[Package][clearCache] Skipping cache clearing of collection " + getFullName());
+        return;
+    }
 
-	if (_isCollection){
-		LOGI("Skipping cache clearing of collection " + getFullName());
-		return;
-	}
+    std::string extractedDir = getExtractedDir(conf);
 
-	std::string extractedDir = getExtractedDir();
-
-	//If the cache directory exists, delete it
-	if (std::filesystem::exists(extractedDir)){
-		LOGI("Deleting cache at " + extractedDir + " of package " + getFullName() + "...");
-		std::error_code errCode;
-		std::filesystem::remove_all(extractedDir, errCode);
-		if (errCode){
-			throw new LeafError(Error::REMOVEDIR, extractedDir, errCode);
-		}
-	} else {
-		LOGI("Cache directory " + extractedDir + " of package " + getFullName() + " did not exist");
-	}
+    //If the cache directory exists, delete it
+    if (std::filesystem::exists(extractedDir)){
+        LOGI("[Package][clearCache] Deleting cache of package " + getFullName() + " at " + extractedDir + "...");
+        std::error_code errCode;
+        std::filesystem::remove_all(extractedDir, errCode);
+        if (errCode){
+            throw new LeafError(Error::REMOVEDIR, extractedDir, errCode);
+        }
+    } else {
+        LOGI("[Package][clearCache] Cache directory " + extractedDir + " of package " + getFullName() + " did not exist");
+    }
 }

@@ -11,69 +11,61 @@
 #include "leafarchive.h"
 #include "leafconfig.h"
 #include "md5.h"
+#include "util.h"
 
 #include <filesystem>
 #include <fstream>
 
 //TODO: Tests
 
-void Package::extract(){
-	FUN();
-	LEAF_DEBUG_EX("Package::extract()");
+void Package::extract(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::extract()");
 
-	LOGI("Extracting package " + getFullName() + "...");
+    if (_isCollection){
+        LOGI("[Package][extract] Skipping extracting of collection " + getFullName());
+        return;
+    }
 
-	if (_isCollection){
-		LOGI("Skipping extracting of collection " + getFullName());
-		return;
-	}
+    LeafUtil::ensureDirs(conf);
 
-	LOGD("Checking database...");
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    std::string sourcePath;
+    if (_isLocal)
+        sourcePath = _localSourcePath;
+    else
+        sourcePath = getDownloadPath(conf);
 
-	//Check the leaf directories
-	_db->getCore()->createCacheDirs();
+    std::string extractedDir = getExtractedDir(conf);
 
-	std::string sourcePath;
-	if (_isLocal)
-		sourcePath = _localSourcePath;
-	else
-		sourcePath = getDownloadPath();
-	
-	std::string extractedDir = getExtractedDir();
+    std::error_code errCode;
+    //If the directory exists, delete it
+    if (std::filesystem::exists(extractedDir)){
+        LOGD("[Package][extract] Destination directory " + extractedDir + " exists, deleting...");
+        std::error_code errCode;
+        std::filesystem::remove_all(extractedDir, errCode);
+        if (errCode)
+            throw new LeafError(Error::REMOVEDIR, extractedDir);
+    }
 
-	std::error_code errCode;
-	//If the directory exists, delete it
-	if (std::filesystem::exists(extractedDir)){
-		LOGD("Destination directory " + extractedDir + " exists, deleting...");
-		std::error_code errCode;
-		std::filesystem::remove_all(extractedDir, errCode);
-		if (errCode)
-			throw new LeafError(Error::REMOVEDIR, extractedDir);
-	}
+    {//Generate the hash of the input file
+        std::ifstream inFile;
+        inFile.open(sourcePath, std::ios::binary);
 
-	{//Generate the hash of the input file
-		std::ifstream inFile;
-		inFile.open(sourcePath, std::ios::binary);
+        if (!inFile.is_open())
+            throw new LeafError(Error::OPENFILER, "Package source file for validation " + sourcePath);
 
-		if (!inFile.is_open())
-			throw new LeafError(Error::OPENFILER, "Package source file for validation " + sourcePath);
+        _installed_md5 = md5(inFile);
 
-		_installed_md5 = md5(inFile);
+        inFile.close();
+    }
 
-		inFile.close();
-	}
+    //Create the archive instance
+    LeafArchive archive;
 
-	//Create the archive instance
-	LeafArchive archive;
+    //Load the archive
+    archive.load(sourcePath);
 
-	//Load the archive
-	LOGD("Loading archive " + sourcePath + "...");
-	archive.load(sourcePath);
-	
-	//Extract the archive
-	LOGD("Extracting archive " + sourcePath + " into " + extractedDir + "...");
-	archive.extract(_db->getCore()->getConfig().packagesDir());
+    //Extract the archive
+    LOGD("[Package][extract] Extracting archive " + sourcePath + " into " + extractedDir + "...");
+    archive.extract(conf.packagesDir());
 }

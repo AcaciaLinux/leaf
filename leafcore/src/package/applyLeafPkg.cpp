@@ -13,13 +13,13 @@
 //TODO: Tests
 
 void Package::applyLeafPkg(leafpkg_t lfpkg){
-	FUN();
-	LEAF_DEBUG_EX("Package::applyLeafPkg()");
+    FUN();
+    LEAF_DEBUG_EX("Package::applyLeafPkg()");
 
-	_name = lfpkg.name;
-	_versionString = lfpkg.version;
-	_realVersion = lfpkg.real_version;
-	_description = lfpkg.description;
-	_dependencies = lfpkg.dependencies;
+    _name = lfpkg.name;
+    _versionString = lfpkg.version;
+    _realVersion = lfpkg.real_version;
+    _description = lfpkg.description;
+    _dependencies = lfpkg.dependencies;
 
 }

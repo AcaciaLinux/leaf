@@ -21,11 +21,11 @@ void Package::setName(std::string name){
 	_name = name;
 }
 
-std::string Package::getName(){
+std::string Package::getName() const{
 	return _name;
 }
 
-std::string Package::getFullName(){
+std::string Package::getFullName() const{
 	return _name + "-" + _versionString;
 }
 
@@ -33,7 +33,7 @@ void Package::setRealVersion(uint32_t v){
 	_realVersion = v;
 }
 
-uint32_t Package::getRealVersion(){
+uint32_t Package::getRealVersion() const{
 	return _realVersion;
 }
 
@@ -41,7 +41,7 @@ void Package::setVersion(std::string version){
 	_versionString = version;
 }
 
-std::string Package::getVersion(){
+std::string Package::getVersion() const{
 	return _versionString;
 }
 
@@ -49,7 +49,7 @@ void Package::setDescription(std::string description){
 	_description = description;
 }
 
-std::string Package::getDescription(){
+std::string Package::getDescription() const{
 	return _description;
 }
 
@@ -57,57 +57,58 @@ void Package::setFetchURL(std::string url){
 	_fetchURL = url;
 }
 
-std::string Package::getFetchURL(){
+std::string Package::getFetchURL() const{
 	return _fetchURL;
-}
-
-void Package::setDB(LeafDB* db){
-	_db = db;
-}
-
-LeafDB* Package::getDB(){
-	return _db;
 }
 
 void Package::setIsCollection(bool s){
 	_isCollection = s;
 }
 
-bool Package::isCollection(){
+bool Package::isCollection() const{
 	return _isCollection;
 }
 
-std::string Package::getLocalSourcePath(){
+std::filesystem::path Package::getLocalSourcePath() const{
 	return _localSourcePath;
 }
 
-std::string Package::getDownloadPath(){
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
-	
-	return _db->getCore()->getConfig().downloadDir() + getFullName() + ".lfpkg";
+void Package::set_remote_md5(const std::string& md5){
+	_remote_md5 = md5;
+}
+std::string Package::get_remote_md5() const{
+	return _remote_md5;
 }
 
-std::string Package::getExtractedDir(){
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
-	
-	return _db->getCore()->getConfig().packagesDir() + getFullName() + "/";
+void Package::set_local_md5(const std::string& md5){
+	_local_md5 = md5;
+}
+std::string Package::get_local_md5() const{
+	return _local_md5;
 }
 
-std::string Package::getInstalledFilePath(){
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
-	
-	return _db->getCore()->getConfig().installedDir() + getName() + ".leafinstalled";
+void Package::set_installed_md5(const std::string& md5){
+	_installed_md5 = md5;
+}
+std::string Package::get_installed_md5() const{
+	return _installed_md5;
 }
 
-std::string Package::toString(){
+std::filesystem::path Package::getDownloadPath(const Leaf::config& conf) const{
+	return conf.downloadDir().append(getFullName() + ".lfpkg");
+}
+
+std::filesystem::path Package::getExtractedDir(const Leaf::config& conf) const{
+	return conf.packagesDir().append(getFullName());
+}
+
+std::filesystem::path Package::getInstalledFilePath(const Leaf::config& conf) const{
+	return conf.downloadDir().append(getName() + ".leafinstalled");
+}
+
+std::string Package::toString() const{
 	std::string buf = "Package ";
-	buf += _name + _versionString + " (" + std::to_string(_realVersion) + ") " + "(" + _description + ")";
+	buf += _name + "-" + _versionString + " (" + std::to_string(_realVersion) + ") " + "(" + _description + ")";
 	for (std::string dep : _dependencies)
 		buf += " [" + dep + "]";
 	buf += " " + _fetchURL;

@@ -11,54 +11,49 @@
 #include "package.h"
 #include "leafconfig.h"
 
+#include "util.h"
+#include "leaffs.h"
+
 #include <fstream>
 #include <filesystem>
 
-void Package::deploy(){
-	FUN();
-	LEAF_DEBUG_EX("Package::deploy()");
+void Package::deploy(Leaf::conf_tr& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::deploy()");
 
-	if (_isCollection){
-		LOGI("Skipping deployment of collection " + getFullName());
-		return;
-	}
+    if (_isCollection){
+        LOGI("[Package][deploy] Skipping deployment of collection " + getFullName());
+        return;
+    }
 
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    LeafUtil::ensureDirs(conf.parent);
 
-	_db->getCore()->createConfigDirs();
+    bool overwrite = conf.force;
+    if (LeafFS::exists(getInstalledFilePath(conf.parent))){
+        LOGI("[Package][deploy] Leafinstalled file for package " + getName() + " exists, reinstalling...");
+        overwrite = true;
+    }
 
-	bool overwrite = _db->getCore()->getConfig().forceOverwrite || _db->getCore()->getConfig().force;
-	if (std::filesystem::exists(getInstalledFilePath())){
-		LOGI("Leafinstalled file for package " + getName() + " exists, reinstalling...");
-		overwrite = true;
-	}
+    try {
 
-	try {
-		
-		runPreinstall();
-		copyToRoot(overwrite);
-		runPostinstall();
+        runPreinstall(conf.parent);
+        copyToRoot(conf.parent, overwrite);
+        runPostinstall(conf.parent);
 
-	} catch (LeafError* e) {
-		std::error_code ec;
-		std::filesystem::remove(getInstalledFilePath(), ec);
-		if (ec){
-			LOGUE("Failed to remove leafinstalled file " + getInstalledFilePath() + " this is FATAL");
-		}
-		throw e;
-	}
+    } catch (LeafError* e) {
+        LeafFS::remove(getInstalledFilePath(conf.parent));
+        throw e;
+    }
 
-	{//Create the .leafinstalled file
-		std::ofstream installedFile;
-		installedFile.open(getInstalledFilePath(), std::ios::trunc);
+    {//Create the .leafinstalled file
+        std::ofstream installedFile;
+        installedFile.open(getInstalledFilePath(conf.parent), std::ios::trunc);
 
-		if (!installedFile.is_open())
-			throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + getInstalledFilePath() + " for " + getFullName());
+        if (!installedFile.is_open())
+            throw new LeafError(Error::OPENFILEW, "Leafinstalled file " + std::string(getInstalledFilePath(conf.parent)) + " for " + getFullName());
 
-		createInstalledFile(installedFile);
+        createInstalledFile(installedFile);
 
-		installedFile.close();
-	}
+        installedFile.close();
+    }
 } 

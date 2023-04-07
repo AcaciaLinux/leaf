@@ -10,30 +10,22 @@
 #include "leafconfig.h"
 
 #include "package.h"
-
-#include <filesystem>
+#include "leaffs.h"
 
 //TODO: Tests
+void Package::removeDownloadCache(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::removeDownloadCache()");
 
-void Package::removeDownloadCache(){
-	FUN();
-	LEAF_DEBUG_EX("Package::removeDownloadCache()");
+    //Check the existance of the file and omit the removal if not
+    bool exists = LeafFS::exists(getDownloadPath(conf));
 
-	namespace fs = std::filesystem;
-	std::error_code ec;
+    if (!exists){
+        LOGD("[Package][removeDownloadCache] Download cache file " + std::string(getDownloadPath(conf)) + " does not exist, skipping removal");
+        return;
+    }
 
-	//Check the existance of the file and omit the removal if not
-	bool exists = fs::exists(getDownloadPath(), ec);
-	if (ec)
-		throw new LeafError(Error::FS_ERROR, "In checking existance of " + getDownloadPath(), ec);
-	if (!exists){
-		LOGD("Download cache file " + getDownloadPath() + " does not exist, skipping removal");
-		return;
-	}
+    LeafFS::remove(getDownloadPath(conf));
 
-	fs::remove(getDownloadPath(), ec);
-	if (ec)
-		throw new LeafError(Error::REMOVEFILE, "Download cache file " + getDownloadPath(), ec);
-	
-	LOGI("Removed download cache file " + getDownloadPath() + " of " + getFullName());
+    LOGI("[Package][removeDownloadCache] Removed download cache of package " + getFullName() + " at " + std::string(getDownloadPath(conf)));
 }

@@ -12,20 +12,20 @@
 
 //TODO: Tests
 bool Package::dependsOn(Package* p){
-	FUN();
-	LEAF_DEBUG_EX("Package::dependsOn()");
+    FUN();
+    LEAF_DEBUG_EX("Package::dependsOn()");
 
-	bool depends = false;
+    bool depends = false;
 
-	std::string p_name = p->getName();
-	for (std::string depName : _dependencies){
-		if (depName == p_name){
-			depends = true;
-			break;
-		}
-	}
+    std::string p_name = p->getName();
+    for (std::string depName : _dependencies){
+        if (depName == p_name){
+            depends = true;
+            break;
+        }
+    }
 
-	LOGD("[Package][dependsOn] " + getName() + " depends on " + p->getName() + ": " + (depends ? "YES" : "NO"));
+    LOGD("[Package][dependsOn] " + getName() + " depends on " + p->getName() + ": " + (depends ? "YES" : "NO"));
 
-	return depends;
+    return depends;
 }

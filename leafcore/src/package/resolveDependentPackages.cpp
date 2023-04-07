@@ -11,14 +11,10 @@
 #include "leafconfig.h"
 
 bool Package::resolveDependentPackages(){
-	FUN();
-	LEAF_DEBUG_EX("Package::resolveDependentPackages()");
+    FUN();
+    LEAF_DEBUG_EX("Package::resolveDependentPackages()");
 
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    throw new LeafError(Error::FEATURE_NOT_IMPLEMENTED);
 
-	throw new LeafError(Error::FEATURE_NOT_IMPLEMENTED);
-
-	return true;
+    return true;
 }

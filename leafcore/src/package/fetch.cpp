@@ -6,114 +6,107 @@
  */
 
 #include "log.h"
+#include "util.h"
 #include "leafdebug.h"
 #include "package.h"
 #include "downloader.h"
 #include "md5.h"
 #include "leaffs.h"
+#include "branchmaster.h"
 
 #include <fstream>
 #include <filesystem>
 
-void Package::fetch(){
-	FUN();
-	LEAF_DEBUG_EX("Package::fetch()");
+void Package::fetch(const Leaf::config& conf){
+    FUN();
+    LEAF_DEBUG_EX("Package::fetch()");
 
-	LOGI("Fetching package " + getFullName());
+    if (_isCollection){
+        LOGI("[Package][fetch] Skipping fetch of collection " + getFullName());
+        return;
+    }
 
-	if (_isCollection){
-		LOGI("Skipping fetch of collection " + getFullName());
-		return;
-	}
+    LeafUtil::ensureDirs(conf);
 
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    std::string destination = getDownloadPath(conf);
 
-	//Check the leaf directories
-	_db->getCore()->createCacheDirs();
+    if (destination.empty())
+        throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
 
-	std::string destination = getDownloadPath();
-	
-	if (destination.empty())
-		throw new LeafError(Error::PACKAGE_FETCH_DEST_EMPTY, getFullName());
+    //Check if the package has an expected md5 hash
+    if (_remote_md5.length() == 0){
+        if (!LeafUtil::askUserOK(conf, "The package " + getFullName() + " does not have an expected MD5 hash, do you want to continue anyway?", false)){
+            throw new LeafError(Error::USER_DISAGREE, "Continue installing without MD5 checks");
+        }
+    }
 
-	//Check if the package has an expected md5 hash
-	if (_remote_md5.length() == 0){
-		if (!_db->getCore()->askUserOK("The package " + getFullName() + " does not have an expected MD5 hash, do you want to continue anyway?", false)){
-			throw new LeafError(Error::USER_DISAGREE, "Continue installing without MD5 checks");
-		}
-	}
+    if (std::filesystem::exists(getDownloadPath(conf))){
+        bool skip = true;
 
-	if (std::filesystem::exists(getDownloadPath())){
-		bool skip = true;
+        std::ifstream inFile;
+        inFile.open(getDownloadPath(conf), std::ios::binary);
+        if (!inFile.is_open())
+            throw new LeafError(Error::OPENFILER, "Download destination for validation " + std::string(getDownloadPath(conf)));
 
-		std::ifstream inFile;
-		inFile.open(getDownloadPath(), std::ios::binary);
-		if (!inFile.is_open())
-			throw new LeafError(Error::OPENFILER, "Download destination for validation " + getDownloadPath());
+        std::string existingHash = md5(inFile);
 
-		std::string existingHash = md5(inFile);
+        if (_remote_md5 != existingHash){
+            LOGI("[Package][fetch] Existing package file at " + std::string(getDownloadPath(conf)) + " differs from remote, redownloading...");
+            removeFile(getDownloadPath(conf), true);
+            skip = false;
+        }
 
-		if (_remote_md5 != existingHash){
-			LOGI("[Package][fetch] Existing package file at " + getDownloadPath() + " differs from remote, redownloading...");
-			removeFile(getDownloadPath(), true);
-			skip = false;
-		}
+        if (skip){
+            LOGI("[Package][fetch] Skipping download of existing validated package file " + std::string(getDownloadPath(conf)));
+            _local_md5 = existingHash;
+            return;
+        }
+    }
 
-		if (skip){
-			LOGI("[Package][fetch] Skipping download of existing validated package file " + getDownloadPath());
-			_local_md5 = existingHash;
-			return;
-		}
-	}
+    LOGD("Opening destination file " + destination + "...");
+    //Create and open the destination file
+    std::ofstream outFile;
+    outFile.open(destination, std::ios::trunc | std::ios::binary);
 
+    //Check if the destination file is open
+    if (!outFile.is_open())
+        throw new LeafError(Error::OPENFILEW, "Download for " + getFullName() + ": " + destination);
 
-	LOGD("Opening destination file " + destination + "...");
-	//Create and open the destination file
-	std::ofstream outFile;
-	outFile.open(destination, std::ios::trunc | std::ios::binary);
+    //Create the downloader instance
+    Downloader dl(getFetchURL(), outFile, !conf.showProgress);
+    dl.init();
 
-	//Check if the destination file is open
-	if (!outFile.is_open())
-		throw new LeafError(Error::OPENFILEW, "Download for " + getFullName() + ": " + destination);
+    LOGI("[Package][fetch] Downloading package " + getFullName() + " to " + destination);
 
-	//Create the downloader instance
-	Downloader dl(getFetchURL(), outFile, _db->getCore()->getConfig().noProgress);
-	dl.init();
+    //Download the package file
+    if (!conf.showProgress)
+        LOGU("Downloading package " + getFullName() + "...");
 
-	LOGI("Downloading package " + getFullName() + " to " + destination);
-	
-	//Download the package file
-	if (_db->getCore()->getConfig().noProgress)
-		LOGU("Downloading package " + getFullName() + "...");
+    size_t dRes = dl.download("Downloading " + getFullName());
+    _local_md5 = dl.getMD5();
 
-	size_t dRes = dl.download("Downloading " + getFullName());
-	_local_md5 = dl.getMD5();
+    outFile.close();
 
-	outFile.close();
+    //If everything is ok, return
+    if (dRes < 400)
+        return;
 
-	//If everything is ok, return
-	if (dRes < 400)
-		return;
+    std::ifstream ecFile(destination, std::ios::in);
+    if (!ecFile.is_open()){
+        ecFile.close();
+        throw new LeafError(Error::OPENFILER, destination + "for reading back branchmaster error code");
+    }
 
-	std::ifstream ecFile(destination, std::ios::in);
-	if (!ecFile.is_open()){
-		ecFile.close();
-		throw new LeafError(Error::OPENFILER, destination + "for reading back branchmaster error code");
-	}
+    std::string resString;
+    if (!getline(ecFile, resString)){
+        ecFile.close();
+        throw new LeafError(Error::OPENFILER, destination + "while reading back branchmaster error code");
+    }
 
-	std::string resString;
-	if (!getline(ecFile, resString)){
-		ecFile.close();
-		throw new LeafError(Error::OPENFILER, destination + "while reading back branchmaster error code");
-	}
+    BranchMaster::ec ec = BranchMaster::parseEC(dRes, resString);
 
-	BranchMaster::ec ec = BranchMaster::parseEC(dRes, resString);
-
-
-	if (ec == BranchMaster::E_NONE)
-		LOGUW("The package fetch resulted in a HTTP error code, but the code parsing resulted in no error, something suspicous could be going on!");
-	else
-		throw new LeafError(Error::BRANCHMASTER_ERROR, BranchMaster::getECString(ec));
+    if (ec == BranchMaster::E_NONE)
+        LOGUW("The package fetch resulted in a HTTP error code, but the code parsing resulted in no error, something suspicous could be going on!");
+    else
+        throw new LeafError(Error::BRANCHMASTER_ERROR, BranchMaster::getECString(ec));
 }

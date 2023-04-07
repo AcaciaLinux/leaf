@@ -15,95 +15,91 @@
 
 #include <filesystem>
 
-void Package::copyToRoot(bool forceOverwrite){
-	FUN();
-	LEAF_DEBUG_EX("Package::copyToRoot()");
+void Package::copyToRoot(const Leaf::config& conf, bool forceOverwrite){
+    FUN();
+    LEAF_DEBUG_EX("Package::copyToRoot()");
 
-	//Check if the database is ok
-	if (_db == nullptr)
-		throw new LeafError(Error::NODB);
+    std::string rootDir = conf.root;
 
-	std::string rootDir = _db->getCore()->getConfig().rootDir;
+    LOGI("[Package][copyToRoot] Copying package " + getFullName() + " to root " + rootDir);
 
-	LOGI("Copying package " + getFullName() + " to root " + rootDir);
+    namespace fs = std::filesystem;
 
-	namespace fs = std::filesystem;
+    if (!fs::exists(rootDir))
+        throw new LeafError(Error::NOROOT, rootDir);
 
-	if (!fs::exists(rootDir))
-		throw new LeafError(Error::NOROOT, rootDir);
+    if (!fs::exists(getExtractedDir(conf)))
+        throw new LeafError(Error::PKG_NOTEXTRACTED, getFullName());
 
-	if (!fs::exists(getExtractedDir()))
-		throw new LeafError(Error::PKG_NOTEXTRACTED, getFullName());
+    indexExtracted(conf);
 
-	indexExtracted();
+    //If leaf should not overwrite existing files, check for them
+    if (!forceOverwrite){
+        //Got through every entry
+        for (std::string file : _provided_files){
 
-	//If leaf should not overwrite existing files, check for them
-	if (!forceOverwrite){
-		//Got through every entry
-		for (std::string file : _provided_files){
+            //If the entry exists and is not a directory, error out
+            if (LeafFS::exists(rootDir + file) && !LeafFS::is(rootDir + file, LEAFFS_DIR))
+                throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
+        }
+    }
 
-			//If the entry exists and is not a directory, error out
-			if (LeafFS::exists(rootDir + file) && !LeafFS::is(rootDir + file, LEAFFS_DIR))
-				throw new LeafError(Error::PACKAGE_FILE_EXISTS, rootDir + file);
-		}
-	}
+    //Finally, copy the package
+    std::error_code ec;
 
-	//Finally, copy the package
-	std::error_code ec;
+    fs::copy_options options = fs::copy_options::copy_symlinks;
 
-	fs::copy_options options = fs::copy_options::copy_symlinks;
+    std::string dataDir = getExtractedDir(conf).append("data");
+    std::string destDir = rootDir;
 
-	std::string dataDir = getExtractedDir() + "data/";
-	std::string destDir = rootDir;
+    LOGI("[Package][copyToRoot] Creating destination directories...");
 
-	LOGI("Creating destination directories...");
+    //First, create the directories for the files
+    for (std::string dir : _provided_directories){
+        LOGF("[Package][copyToRoot] Creating directory " + destDir + dir);
 
-	//First, create the directories for the files
-	for (std::string dir : _provided_directories){
-		LOGF("Creating directory " + destDir + dir);
+        if (LeafFS::exists(destDir + dir) && LeafFS::is(destDir + dir, LEAFFS_SYMLINK)){
+            LOGI("[Package][copyToRoot] Skipping creation of directory that is a symlink");
+            continue;
+        }
 
-		if (LeafFS::exists(destDir + dir) && LeafFS::is(destDir + dir, LEAFFS_SYMLINK)){
-			LOGI("[Package::copyToRoot] Skipping creation of directory that is a symlink");
-			continue;
-		}
+        LeafFS::create_directories(destDir + dir);
+    }
 
-		LeafFS::create_directories(destDir + dir);
-	}
+    LOGI("[Package][copyToRoot] Copying files...");
 
-	LOGI("Copying files...");
+    std::deque<std::string> copied_files;
+    //Now copy all the files
+    for (std::string file : _provided_files){
+        if (!proceed){
+            LOGUW("Copy for package " + getFullName() + " aborted, rolling back...");
+            _provided_files = copied_files;
 
-	std::deque<std::string> copied_files;
-	//Now copy all the files
-	for (std::string file : _provided_files){
-		if (!proceed){
-			LOGUW("Copy for package " + getFullName() + " aborted, rolling back...");
-			_provided_files = copied_files;
+            try {
+                removeFromRoot(conf);
+            } catch (LeafError* e) {
+                e->prepend("When rolling back copy for package " + getFullName() + ": ");
+            }
 
-			try {
-				removeFromRoot();
-			} catch (LeafError* e) {
-				e->prepend("When rolling back copy for package " + getFullName() + ": ");
-			}
+            throw new LeafError(Error::ABORT);
+        }
 
-			throw new LeafError(Error::ABORT);
-		}
+        std::string fPath = destDir + file;
 
-		std::string fPath = destDir + file;
+        //If leaf should overwrite the files, delete the old files
+        if (forceOverwrite){
+            bool remove = 	LeafFS::is(fPath, LEAFFS_SYMLINK, false) ||	//If the entry is a symlink (even broken)
+                            LeafFS::exists(fPath, false);				//or exists, remove it
 
-		//If leaf should overwrite the files, delete the old files
-		if (forceOverwrite){
-			bool remove = 	LeafFS::is(fPath, LEAFFS_SYMLINK, false) ||	//If the entry is a symlink (even broken)
-							LeafFS::exists(fPath, false);				//or exists, remove it
+            if (remove)
+                LeafFS::remove_all(fPath);
+        }
 
-			if (remove)
-				LeafFS::remove_all(fPath);
-		}
+        LOGF("[Package][copyToRoot] Copying " + dataDir + file + " -> " + destDir + file);
+        fs::copy(dataDir + file, destDir + file, options, ec);
+        copied_files.push_back(file);
 
-		LOGF("Copying " + dataDir + file + " -> " + destDir + file);
-		fs::copy(dataDir + file, destDir + file, options, ec);
-		copied_files.push_back(file);
-
-		if (ec)
-			throw new LeafError(Error::COPYFILE, dataDir + file, ec);
-	}
+        if (ec)
+            throw new LeafError(Error::COPYFILE, dataDir + file, ec);
+    }
 }
