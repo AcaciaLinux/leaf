@@ -64,6 +64,24 @@ namespace LeafUtil
      */
     int                             runCommand(const Leaf::config& conf, const std::string& command, const std::filesystem::path& workdir);
 
+    /**
+     * @brief   Tries to resolve a package by its string using the provided config
+     * @param   conf                The configuration to consolidate for mirrors
+     * @param   name                The name of the package to search for
+     * @param   canThrow            If this function can throw an exception, else return nullptr on not found
+     * @return  The package, if canThrow=false nullptr if the package has not been found
+     */
+    std::shared_ptr<Package>        resolvePackage(Leaf::config& conf, const std::string& name, bool canThrow = true);
+
+    /**
+     * @brief   Tries to resolve the whole dependency tree of the supplied package using the provided config
+     * @param   conf                The configuration to consolidate for mirrors
+     * @param   dependencies        The dependency deque to put the dependencies in
+     * @param   package             The package to resolve the dependencies of
+     * @param   canThrow            If this function can throw an exception, else return false if failed
+     */
+    bool                            resolveDependencies(Leaf::config& conf, std::deque<std::shared_ptr<Package>>& dependencies, std::shared_ptr<Package>& package, bool canThrow = true);
+
 } // namespace LeafUtil
 
 #endif
