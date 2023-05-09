@@ -45,6 +45,7 @@ extern "C" {
             leafcore->parseInstalled();
             leafcore->a_installLocal(cleaf_pkgs_to_v(len_pkgs, pkgs));
         } catch (LeafError* e){
+            LOGUE(e->what());
             #ifdef DEBUG
             //When debugging, rethrow all LeafErrors
                 throw e;

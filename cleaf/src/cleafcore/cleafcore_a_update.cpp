@@ -41,6 +41,7 @@ extern "C" {
         try {
             leafcore->a_update();
         } catch (LeafError* e){
+            LOGUE(e->what());
             #ifdef DEBUG
             //When debugging, rethrow all LeafErrors
                 throw e;
